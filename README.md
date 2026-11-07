@@ -115,6 +115,8 @@ Once M0 is built, the app runs locally or in Docker.
 make install   # uv sync, pnpm install, Playwright's Chromium
 make dev       # migrates the database, then serves the app on http://localhost:5173
                # and the API on http://localhost:8000 (check http://localhost:5173/api/health)
+make seed      # loads the demo roadmap and diagram that the Roadmap and Swimlanes nav links open
+               # (dev only: skips documents already loaded; the Docker image has no docs/)
 make test      # pytest + vitest
 make lint      # ruff, mypy, eslint, tsc
 make e2e       # Playwright journeys; needs `make dev` running in another terminal

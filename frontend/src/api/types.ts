@@ -24,10 +24,725 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/roadmaps": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List Roadmaps
+         * @description Every roadmap, most recently updated first.
+         */
+        get: operations["list_roadmaps_api_roadmaps_get"];
+        put?: never;
+        /**
+         * Create Roadmap
+         * @description Save a roadmap document. Its id is kept unless already taken.
+         */
+        post: operations["create_roadmap_api_roadmaps_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/roadmaps/import-json": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Import Roadmap Json
+         * @description Open a downloaded roadmap `.json` (any supported schemaVersion) as a new roadmap.
+         */
+        post: operations["import_roadmap_json_api_roadmaps_import_json_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/roadmaps/{roadmap_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Roadmap */
+        get: operations["get_roadmap_api_roadmaps__roadmap_id__get"];
+        put?: never;
+        post?: never;
+        /**
+         * Delete Roadmap
+         * @description Delete the roadmap and unlink its diagrams (they are kept).
+         */
+        delete: operations["delete_roadmap_api_roadmaps__roadmap_id__delete"];
+        options?: never;
+        head?: never;
+        /**
+         * Patch Roadmap
+         * @description Autosave: apply ops made against `baseVersion` (G-2).
+         */
+        patch: operations["patch_roadmap_api_roadmaps__roadmap_id__patch"];
+        trace?: never;
+    };
+    "/api/roadmaps/{roadmap_id}/delete-impact": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Roadmap Delete Impact
+         * @description What deleting this roadmap would unlink, for the confirmation dialog.
+         */
+        get: operations["get_roadmap_delete_impact_api_roadmaps__roadmap_id__delete_impact_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/roadmaps/{roadmap_id}/document": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Download Roadmap
+         * @description The exact roadmap document, as a `.json` attachment (Save JSON).
+         */
+        get: operations["download_roadmap_api_roadmaps__roadmap_id__document_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/diagrams": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List Diagrams
+         * @description Every diagram, most recently updated first.
+         */
+        get: operations["list_diagrams_api_diagrams_get"];
+        put?: never;
+        /**
+         * Create Diagram
+         * @description Start a diagram from three blank lanes or from a roadmap's teams (SW-21).
+         */
+        post: operations["create_diagram_api_diagrams_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/diagrams/import-json": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Import Diagram Json
+         * @description Open a downloaded `.swimlane.json` as a new diagram.
+         */
+        post: operations["import_diagram_json_api_diagrams_import_json_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/diagrams/{diagram_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Diagram */
+        get: operations["get_diagram_api_diagrams__diagram_id__get"];
+        put?: never;
+        post?: never;
+        /**
+         * Delete Diagram
+         * @description Delete the diagram and remove it from its roadmap's links (the roadmap is kept).
+         */
+        delete: operations["delete_diagram_api_diagrams__diagram_id__delete"];
+        options?: never;
+        head?: never;
+        /**
+         * Patch Diagram
+         * @description Autosave: apply ops made against `baseVersion` (G-2).
+         */
+        patch: operations["patch_diagram_api_diagrams__diagram_id__patch"];
+        trace?: never;
+    };
+    "/api/diagrams/{diagram_id}/delete-impact": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Diagram Delete Impact
+         * @description What deleting this diagram would unlink, for the confirmation dialog.
+         */
+        get: operations["get_diagram_delete_impact_api_diagrams__diagram_id__delete_impact_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/diagrams/{diagram_id}/document": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Download Diagram
+         * @description The exact diagram document, as a `.swimlane.json` attachment (Save JSON).
+         */
+        get: operations["download_diagram_api_diagrams__diagram_id__document_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/mapping-templates": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List Mapping Templates
+         * @description Every saved mapping template, by name.
+         */
+        get: operations["list_mapping_templates_api_mapping_templates_get"];
+        put?: never;
+        /** Create Mapping Template */
+        post: operations["create_mapping_template_api_mapping_templates_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/mapping-templates/{template_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Mapping Template */
+        get: operations["get_mapping_template_api_mapping_templates__template_id__get"];
+        put?: never;
+        post?: never;
+        /**
+         * Delete Mapping Template
+         * @description Delete the template and return what was deleted.
+         */
+        delete: operations["delete_mapping_template_api_mapping_templates__template_id__delete"];
+        options?: never;
+        head?: never;
+        /**
+         * Update Mapping Template
+         * @description Change only the fields sent (Update mapping template).
+         */
+        patch: operations["update_mapping_template_api_mapping_templates__template_id__patch"];
+        trace?: never;
+    };
+    "/api/watermark-presets": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List Watermark Presets
+         * @description Every watermark preset, by name.
+         */
+        get: operations["list_watermark_presets_api_watermark_presets_get"];
+        put?: never;
+        /**
+         * Create Watermark Preset
+         * @description Save a preset; `isDefault: true` makes it the only default (G-4).
+         */
+        post: operations["create_watermark_preset_api_watermark_presets_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/watermark-presets/{preset_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Watermark Preset */
+        get: operations["get_watermark_preset_api_watermark_presets__preset_id__get"];
+        put?: never;
+        post?: never;
+        /**
+         * Delete Watermark Preset
+         * @description Delete the preset and return what was deleted; deleting the default leaves none.
+         */
+        delete: operations["delete_watermark_preset_api_watermark_presets__preset_id__delete"];
+        options?: never;
+        head?: never;
+        /**
+         * Update Watermark Preset
+         * @description Change only the fields sent.
+         */
+        patch: operations["update_watermark_preset_api_watermark_presets__preset_id__patch"];
+        trace?: never;
+    };
+    "/api/settings": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Settings
+         * @description Every setting, with defaults for the ones never saved (G-4).
+         */
+        get: operations["get_settings_api_settings_get"];
+        /**
+         * Update Settings
+         * @description Change only the fields sent; `null` resets a field to its default.
+         */
+        put: operations["update_settings_api_settings_put"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/assets": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Upload Asset
+         * @description Upload a logo (PNG, SVG, JPEG or WebP, 2 MB at most). The type is read from the bytes.
+         */
+        post: operations["upload_asset_api_assets_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/assets/{asset_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Asset
+         * @description The uploaded file's bytes, served with its sniffed type.
+         */
+        get: operations["get_asset_api_assets__asset_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /** AssetRead */
+        AssetRead: {
+            /**
+             * Id
+             * @description Fetch the bytes from GET /api/assets/{id}
+             */
+            id: string;
+            /**
+             * Kind
+             * @constant
+             */
+            kind: "logo";
+            /**
+             * Mime
+             * @description Sniffed from the bytes, never from the upload
+             */
+            mime: string;
+            /**
+             * Size
+             * @description Stored size in bytes, after SVG sanitising
+             */
+            size: number;
+            /** Sha256 */
+            sha256: string;
+        };
+        /** Body_import_diagram_json_api_diagrams_import_json_post */
+        Body_import_diagram_json_api_diagrams_import_json_post: {
+            /** File */
+            file: string;
+        };
+        /** Body_import_roadmap_json_api_roadmaps_import_json_post */
+        Body_import_roadmap_json_api_roadmaps_import_json_post: {
+            /** File */
+            file: string;
+        };
+        /** Body_upload_asset_api_assets_post */
+        Body_upload_asset_api_assets_post: {
+            /** File */
+            file: string;
+        };
+        /** Connector */
+        Connector: {
+            /** Id */
+            id: string;
+            /**
+             * From
+             * @description Source shape id
+             */
+            from: string;
+            /**
+             * To
+             * @description Target shape id
+             */
+            to: string;
+            /**
+             * Fromside
+             * @enum {string}
+             */
+            fromSide: "l" | "r" | "t" | "b";
+            /**
+             * Toside
+             * @enum {string}
+             */
+            toSide: "l" | "r" | "t" | "b";
+            /** Label */
+            label?: string | null;
+            /**
+             * Style
+             * @enum {string}
+             */
+            style: "flow" | "association";
+            /**
+             * Points
+             * @description Resolved route in absolute diagram coordinates
+             */
+            points: [
+                number,
+                number
+            ][];
+        };
+        /** DeleteImpact */
+        DeleteImpact: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "roadmap" | "diagram";
+            /** Name */
+            name: string;
+            /**
+             * Unlinks
+             * @description Documents that lose their link
+             */
+            unlinks: components["schemas"]["LinkedDocument"][];
+            /**
+             * Message
+             * @description Plain sentence for the confirmation dialog
+             */
+            message: string;
+        };
+        /** DiagramCreate */
+        DiagramCreate: {
+            /**
+             * Name
+             * @default Untitled workflow
+             */
+            name: string;
+            /**
+             * Lanesfrom
+             * @description Start from three blank lanes or from a roadmap's teams
+             * @default blank
+             * @enum {string}
+             */
+            lanesFrom: "blank" | "roadmap";
+            /**
+             * Roadmapid
+             * @description Required when lanesFrom is roadmap
+             */
+            roadmapId?: string | null;
+        };
+        /** DiagramDocument */
+        DiagramDocument: {
+            /** Schemaversion */
+            schemaVersion: number;
+            /**
+             * Kind
+             * @constant
+             */
+            kind: "diagram";
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Name */
+            name: string;
+            /**
+             * Version
+             * @description Increments on Save version
+             */
+            version: number;
+            /** Owner */
+            owner?: string | null;
+            /** Linkedroadmapid */
+            linkedRoadmapId?: string | null;
+            /**
+             * Orientation
+             * @constant
+             */
+            orientation: "horizontal";
+            /**
+             * Width
+             * @description Resolved diagram width
+             */
+            width: number;
+            /**
+             * Minwidth
+             * @description Manual resize, if any
+             */
+            minWidth?: number | null;
+            /** Lanes */
+            lanes: components["schemas"]["DiagramLane"][];
+            /** Shapes */
+            shapes: components["schemas"]["DiagramShape"][];
+            /** Connectors */
+            connectors: components["schemas"]["Connector"][];
+        };
+        /** DiagramLane */
+        DiagramLane: {
+            /** Id */
+            id: string;
+            /** Name */
+            name: string;
+            /**
+             * Position
+             * @description Float ordering key
+             */
+            position: number;
+            /**
+             * Minheight
+             * @description Manual resize, if any
+             */
+            minHeight?: number | null;
+            /**
+             * Height
+             * @description Resolved lane height in diagram units
+             */
+            height: number;
+        };
+        /** DiagramRead */
+        DiagramRead: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Name */
+            name: string;
+            /**
+             * Filename
+             * @description File name Save JSON uses
+             */
+            fileName: string;
+            /**
+             * Revision
+             * @description Send as baseVersion with the next PATCH
+             */
+            revision: number;
+            /**
+             * Createdat
+             * Format: date-time
+             */
+            createdAt: string;
+            /**
+             * Updatedat
+             * Format: date-time
+             */
+            updatedAt: string;
+            document: components["schemas"]["DiagramDocument"];
+        };
+        /** DiagramShape */
+        DiagramShape: {
+            /** Id */
+            id: string;
+            /**
+             * Type
+             * @enum {string}
+             */
+            type: "start" | "end" | "task" | "decision" | "sub" | "doc" | "data" | "note";
+            /** Laneid */
+            laneId: string;
+            /**
+             * X
+             * @description Absolute x in diagram units
+             */
+            x: number;
+            /**
+             * Y
+             * @description y relative to the lane top
+             */
+            y: number;
+            /** Label */
+            label?: string | null;
+            /** Sub */
+            sub?: string | null;
+            /** Owner */
+            owner?: string | null;
+            /**
+             * Fill
+             * @description A `diagram.fills` token key
+             */
+            fill?: ("white" | "blue" | "green" | "amber" | "purple") | null;
+            /** Jirakey */
+            jiraKey?: string | null;
+        };
+        /** DocumentOp */
+        DocumentOp: {
+            /**
+             * Op
+             * @description What to do
+             * @enum {string}
+             */
+            op: "set" | "insert" | "remove" | "move";
+            /**
+             * Path
+             * @description RFC 6901 pointer; array elements with an `id` are addressed by that id
+             */
+            path: string;
+            /** @description New value for set and insert */
+            value?: components["schemas"]["JsonValue"] | null;
+            /**
+             * Position
+             * @description Index for insert and move
+             */
+            position?: number | null;
+        };
+        /** DocumentPatch */
+        DocumentPatch: {
+            /**
+             * Baseversion
+             * @description The revision these ops were made against
+             */
+            baseVersion: number;
+            /** Ops */
+            ops: components["schemas"]["DocumentOp"][];
+        };
+        /** DocumentSummary */
+        DocumentSummary: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "roadmap" | "diagram";
+            /** Name */
+            name: string;
+            /**
+             * Filename
+             * @description File name Save JSON uses
+             */
+            fileName: string;
+            /** Schemaversion */
+            schemaVersion: number;
+            /** Revision */
+            revision: number;
+            /**
+             * Updatedat
+             * Format: date-time
+             */
+            updatedAt: string;
+        };
+        /** ErrorItem */
+        ErrorItem: {
+            /**
+             * Path
+             * @description JSON pointer to the problem, e.g. /items/0/end
+             */
+            path: string;
+            /**
+             * Message
+             * @description Plain sentence the UI can show
+             */
+            message: string;
+        };
+        /** HTTPValidationError */
+        HTTPValidationError: {
+            /** Detail */
+            detail?: components["schemas"]["ValidationError"][];
+        };
         /** HealthRead */
         HealthRead: {
             /**
@@ -36,6 +751,538 @@ export interface components {
              * @constant
              */
             status: "ok";
+        };
+        /** IssueCounts */
+        IssueCounts: {
+            /** Total */
+            total: number;
+            /** Done */
+            done: number;
+            /** Inprogress */
+            inProgress: number;
+        };
+        JsonValue: unknown;
+        /** LinkedDocument */
+        LinkedDocument: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "roadmap" | "diagram";
+            /** Name */
+            name: string;
+        };
+        /** MappingTemplateCreate */
+        MappingTemplateCreate: {
+            /** Name */
+            name: string;
+            /**
+             * Jirasite
+             * @description e.g. acme.atlassian.net
+             */
+            jiraSite?: string | null;
+            /**
+             * Columnmap
+             * @description Jira column name or custom-field id → roadmap field
+             */
+            columnMap: {
+                [key: string]: string;
+            };
+            /**
+             * Statusmap
+             * @description Jira status → roadmap status id
+             */
+            statusMap: {
+                [key: string]: string;
+            };
+        };
+        /** MappingTemplateRead */
+        MappingTemplateRead: {
+            /** Name */
+            name: string;
+            /**
+             * Jirasite
+             * @description e.g. acme.atlassian.net
+             */
+            jiraSite?: string | null;
+            /**
+             * Columnmap
+             * @description Jira column name or custom-field id → roadmap field
+             */
+            columnMap: {
+                [key: string]: string;
+            };
+            /**
+             * Statusmap
+             * @description Jira status → roadmap status id
+             */
+            statusMap: {
+                [key: string]: string;
+            };
+            /** Id */
+            id: string;
+            /**
+             * Updatedat
+             * Format: date-time
+             */
+            updatedAt: string;
+        };
+        /**
+         * MappingTemplateUpdate
+         * @description Only the fields sent are changed; an explicit `null` clears `jiraSite`.
+         */
+        MappingTemplateUpdate: {
+            /** Name */
+            name?: string | null;
+            /** Jirasite */
+            jiraSite?: string | null;
+            /** Columnmap */
+            columnMap?: {
+                [key: string]: string;
+            } | null;
+            /** Statusmap */
+            statusMap?: {
+                [key: string]: string;
+            } | null;
+        };
+        /** Milestone */
+        Milestone: {
+            /** Id */
+            id: string;
+            /** Name */
+            name: string;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "milestone" | "freeze";
+            /**
+             * Date
+             * @description Required for a milestone
+             */
+            date?: string | null;
+            /**
+             * Start
+             * @description Required for a freeze
+             */
+            start?: string | null;
+            /**
+             * End
+             * @description Required for a freeze
+             */
+            end?: string | null;
+        };
+        /** PatchResult */
+        PatchResult: {
+            /**
+             * Revision
+             * @description The document's new revision
+             */
+            revision: number;
+            /**
+             * Filename
+             * @description File name for Save JSON, which follows the name
+             */
+            fileName: string;
+        };
+        /**
+         * PiCadence
+         * @description Defaults for new roadmaps; sprint length stays per roadmap (two weeks, RM-4).
+         */
+        PiCadence: {
+            /**
+             * Sprintsperpi
+             * @default 6
+             */
+            sprintsPerPi: number;
+            /**
+             * Ipsprint
+             * @description Whether the last sprint of each PI is an IP sprint
+             * @default true
+             */
+            ipSprint: boolean;
+        };
+        /** ProblemRead */
+        ProblemRead: {
+            /**
+             * Detail
+             * @description Plain sentence the UI can show
+             */
+            detail: string;
+            /**
+             * Errors
+             * @description One entry per problem, if known
+             */
+            errors?: components["schemas"]["ErrorItem"][] | null;
+        };
+        /** ProgramIncrement */
+        ProgramIncrement: {
+            /** Id */
+            id: string;
+            /** Name */
+            name: string;
+            /**
+             * Start
+             * Format: date
+             */
+            start: string;
+            /**
+             * Sprints
+             * @description Sprints in this PI, including the IP
+             */
+            sprints: number;
+            /**
+             * Ipsprint
+             * @description Whether the last sprint is an IP sprint
+             */
+            ipSprint: boolean;
+            /**
+             * Sprintnames
+             * @description Custom sprint names, in order
+             */
+            sprintNames?: string[] | null;
+        };
+        /** RoadmapDocument */
+        RoadmapDocument: {
+            /** Schemaversion */
+            schemaVersion: number;
+            /**
+             * Kind
+             * @constant
+             */
+            kind: "roadmap";
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Name */
+            name: string;
+            source: components["schemas"]["RoadmapSource"];
+            timeline: components["schemas"]["RoadmapTimeline"];
+            /** Lanes */
+            lanes: components["schemas"]["RoadmapLane"][];
+            /** Statuses */
+            statuses: components["schemas"]["RoadmapStatus"][];
+            /** Items */
+            items: components["schemas"]["RoadmapItem"][];
+            /** Milestones */
+            milestones: components["schemas"]["Milestone"][];
+            /** Linkeddiagrams */
+            linkedDiagrams: string[];
+        };
+        /** RoadmapItem */
+        RoadmapItem: {
+            /** Id */
+            id: string;
+            /**
+             * Key
+             * @description Jira key, e.g. PAY-142
+             */
+            key: string;
+            /** Title */
+            title: string;
+            /**
+             * Type
+             * @description Jira issue type, e.g. Epic
+             */
+            type: string;
+            /** Laneid */
+            laneId: string;
+            /** Statusid */
+            statusId: string;
+            /**
+             * Start
+             * @description Inclusive start; absent when unscheduled
+             */
+            start?: string | null;
+            /**
+             * End
+             * @description Inclusive end; absent when unscheduled
+             */
+            end?: string | null;
+            /** Progress */
+            progress: number;
+            issues: components["schemas"]["IssueCounts"];
+            /** Stories */
+            stories?: components["schemas"]["Story"][] | null;
+            /** Notes */
+            notes?: string | null;
+            /** Jiraurl */
+            jiraUrl?: string | null;
+            /** Position */
+            position: number;
+        };
+        /** RoadmapLane */
+        RoadmapLane: {
+            /** Id */
+            id: string;
+            /** Name */
+            name: string;
+            /**
+             * Color
+             * @description A `team` key of shared/design-tokens.json
+             * @enum {string}
+             */
+            color: "blue" | "deepOrange" | "blueGrey" | "purple" | "teal" | "brown";
+            /**
+             * Position
+             * @description Float ordering key
+             */
+            position: number;
+        };
+        /** RoadmapRead */
+        RoadmapRead: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Name */
+            name: string;
+            /**
+             * Filename
+             * @description File name Save JSON uses
+             */
+            fileName: string;
+            /**
+             * Revision
+             * @description Send as baseVersion with the next PATCH
+             */
+            revision: number;
+            /**
+             * Createdat
+             * Format: date-time
+             */
+            createdAt: string;
+            /**
+             * Updatedat
+             * Format: date-time
+             */
+            updatedAt: string;
+            document: components["schemas"]["RoadmapDocument"];
+        };
+        /** RoadmapSource */
+        RoadmapSource: {
+            /**
+             * Type
+             * @description What the roadmap was built from
+             * @enum {string}
+             */
+            type: "jira-csv" | "jira-json" | "jira-xml" | "json";
+            /**
+             * File
+             * @description Name of the imported file
+             */
+            file: string;
+            /**
+             * Importedat
+             * Format: date-time
+             * @description When the file was imported
+             */
+            importedAt: string;
+            /**
+             * Mappingtemplateid
+             * @description Mapping template used, if any
+             */
+            mappingTemplateId?: string | null;
+        };
+        /** RoadmapStatus */
+        RoadmapStatus: {
+            /** Id */
+            id: string;
+            /** Name */
+            name: string;
+            /**
+             * Color
+             * @description Status colour key
+             */
+            color: string;
+            /**
+             * Jirastatuses
+             * @description Jira statuses that map to this one
+             */
+            jiraStatuses: string[];
+        };
+        /** RoadmapTimeline */
+        RoadmapTimeline: {
+            /**
+             * Start
+             * Format: date
+             */
+            start: string;
+            /** Sprintlengthdays */
+            sprintLengthDays: number;
+            /** Pis */
+            pis: components["schemas"]["ProgramIncrement"][];
+        };
+        /** SettingsRead */
+        SettingsRead: {
+            /**
+             * Displayname
+             * @description Fills the {user} watermark token
+             * @default
+             */
+            displayName: string;
+            /**
+             * Jirabaseurl
+             * @description Links item keys to Jira
+             */
+            jiraBaseUrl?: string | null;
+            /**
+             * Defaultpresetid
+             * @description The default watermark preset
+             */
+            defaultPresetId?: string | null;
+            piCadence?: components["schemas"]["PiCadence"];
+        };
+        /**
+         * SettingsUpdate
+         * @description Only the fields sent are changed; an explicit `null` resets a field to its default.
+         */
+        SettingsUpdate: {
+            /** Displayname */
+            displayName?: string | null;
+            /** Jirabaseurl */
+            jiraBaseUrl?: string | null;
+            /** Defaultpresetid */
+            defaultPresetId?: string | null;
+            piCadence?: components["schemas"]["PiCadence"] | null;
+        };
+        /** Story */
+        Story: {
+            /** Key */
+            key: string;
+            /** Title */
+            title: string;
+            /** Statusid */
+            statusId: string;
+        };
+        /** ValidationError */
+        ValidationError: {
+            /** Location */
+            loc: (string | number)[];
+            /** Message */
+            msg: string;
+            /** Error Type */
+            type: string;
+            /** Input */
+            input?: unknown;
+            /** Context */
+            ctx?: Record<string, never>;
+        };
+        /** WatermarkPresetCreate */
+        WatermarkPresetCreate: {
+            /** Name */
+            name: string;
+            /**
+             * Type
+             * @enum {string}
+             */
+            type: "text" | "image";
+            /**
+             * Text
+             * @description May contain {user} and {date}
+             */
+            text?: string | null;
+            /**
+             * Imageassetid
+             * @description An uploaded logo from POST /api/assets
+             */
+            imageAssetId?: string | null;
+            /**
+             * Position
+             * @default diagonal
+             * @enum {string}
+             */
+            position: "diagonal" | "tiled" | "corner";
+            /**
+             * Opacity
+             * @default 0.14
+             */
+            opacity: number;
+            /**
+             * Color
+             * @default red
+             * @enum {string}
+             */
+            color: "red" | "grey" | "blue" | "black";
+            /**
+             * Isdefault
+             * @default false
+             */
+            isDefault: boolean;
+        };
+        /** WatermarkPresetRead */
+        WatermarkPresetRead: {
+            /** Name */
+            name: string;
+            /**
+             * Type
+             * @enum {string}
+             */
+            type: "text" | "image";
+            /**
+             * Text
+             * @description May contain {user} and {date}
+             */
+            text?: string | null;
+            /**
+             * Imageassetid
+             * @description An uploaded logo from POST /api/assets
+             */
+            imageAssetId?: string | null;
+            /**
+             * Position
+             * @default diagonal
+             * @enum {string}
+             */
+            position: "diagonal" | "tiled" | "corner";
+            /**
+             * Opacity
+             * @default 0.14
+             */
+            opacity: number;
+            /**
+             * Color
+             * @default red
+             * @enum {string}
+             */
+            color: "red" | "grey" | "blue" | "black";
+            /**
+             * Isdefault
+             * @default false
+             */
+            isDefault: boolean;
+            /** Id */
+            id: string;
+        };
+        /**
+         * WatermarkPresetUpdate
+         * @description Only the fields sent are changed; the merged preset must still be valid.
+         */
+        WatermarkPresetUpdate: {
+            /** Name */
+            name?: string | null;
+            /** Type */
+            type?: ("text" | "image") | null;
+            /** Text */
+            text?: string | null;
+            /** Imageassetid */
+            imageAssetId?: string | null;
+            /** Position */
+            position?: ("diagonal" | "tiled" | "corner") | null;
+            /** Opacity */
+            opacity?: number | null;
+            /** Color */
+            color?: ("red" | "grey" | "blue" | "black") | null;
+            /** Isdefault */
+            isDefault?: boolean | null;
         };
     };
     responses: never;
@@ -62,6 +1309,1150 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HealthRead"];
+                };
+            };
+        };
+    };
+    list_roadmaps_api_roadmaps_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DocumentSummary"][];
+                };
+            };
+        };
+    };
+    create_roadmap_api_roadmaps_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RoadmapDocument"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RoadmapRead"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProblemRead"];
+                };
+            };
+        };
+    };
+    import_roadmap_json_api_roadmaps_import_json_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": components["schemas"]["Body_import_roadmap_json_api_roadmaps_import_json_post"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RoadmapRead"];
+                };
+            };
+            /** @description Request Entity Too Large */
+            413: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProblemRead"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProblemRead"];
+                };
+            };
+        };
+    };
+    get_roadmap_api_roadmaps__roadmap_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                roadmap_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RoadmapRead"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProblemRead"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    delete_roadmap_api_roadmaps__roadmap_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                roadmap_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DeleteImpact"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProblemRead"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProblemRead"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    patch_roadmap_api_roadmaps__roadmap_id__patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                roadmap_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DocumentPatch"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PatchResult"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProblemRead"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProblemRead"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProblemRead"];
+                };
+            };
+        };
+    };
+    get_roadmap_delete_impact_api_roadmaps__roadmap_id__delete_impact_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                roadmap_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DeleteImpact"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProblemRead"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    download_roadmap_api_roadmaps__roadmap_id__document_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                roadmap_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RoadmapDocument"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProblemRead"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_diagrams_api_diagrams_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DocumentSummary"][];
+                };
+            };
+        };
+    };
+    create_diagram_api_diagrams_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DiagramCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DiagramRead"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProblemRead"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProblemRead"];
+                };
+            };
+        };
+    };
+    import_diagram_json_api_diagrams_import_json_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": components["schemas"]["Body_import_diagram_json_api_diagrams_import_json_post"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DiagramRead"];
+                };
+            };
+            /** @description Request Entity Too Large */
+            413: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProblemRead"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProblemRead"];
+                };
+            };
+        };
+    };
+    get_diagram_api_diagrams__diagram_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                diagram_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DiagramRead"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProblemRead"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    delete_diagram_api_diagrams__diagram_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                diagram_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DeleteImpact"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProblemRead"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProblemRead"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    patch_diagram_api_diagrams__diagram_id__patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                diagram_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DocumentPatch"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PatchResult"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProblemRead"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProblemRead"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProblemRead"];
+                };
+            };
+        };
+    };
+    get_diagram_delete_impact_api_diagrams__diagram_id__delete_impact_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                diagram_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DeleteImpact"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProblemRead"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    download_diagram_api_diagrams__diagram_id__document_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                diagram_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DiagramDocument"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProblemRead"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_mapping_templates_api_mapping_templates_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MappingTemplateRead"][];
+                };
+            };
+        };
+    };
+    create_mapping_template_api_mapping_templates_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MappingTemplateCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MappingTemplateRead"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProblemRead"];
+                };
+            };
+        };
+    };
+    get_mapping_template_api_mapping_templates__template_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                template_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MappingTemplateRead"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProblemRead"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    delete_mapping_template_api_mapping_templates__template_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                template_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MappingTemplateRead"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProblemRead"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_mapping_template_api_mapping_templates__template_id__patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                template_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MappingTemplateUpdate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MappingTemplateRead"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProblemRead"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProblemRead"];
+                };
+            };
+        };
+    };
+    list_watermark_presets_api_watermark_presets_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WatermarkPresetRead"][];
+                };
+            };
+        };
+    };
+    create_watermark_preset_api_watermark_presets_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["WatermarkPresetCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WatermarkPresetRead"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProblemRead"];
+                };
+            };
+        };
+    };
+    get_watermark_preset_api_watermark_presets__preset_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                preset_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WatermarkPresetRead"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProblemRead"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    delete_watermark_preset_api_watermark_presets__preset_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                preset_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WatermarkPresetRead"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProblemRead"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_watermark_preset_api_watermark_presets__preset_id__patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                preset_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["WatermarkPresetUpdate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WatermarkPresetRead"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProblemRead"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProblemRead"];
+                };
+            };
+        };
+    };
+    get_settings_api_settings_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SettingsRead"];
+                };
+            };
+        };
+    };
+    update_settings_api_settings_put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SettingsUpdate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SettingsRead"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProblemRead"];
+                };
+            };
+        };
+    };
+    upload_asset_api_assets_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": components["schemas"]["Body_upload_asset_api_assets_post"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AssetRead"];
+                };
+            };
+            /** @description Request Entity Too Large */
+            413: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProblemRead"];
+                };
+            };
+            /** @description Unsupported Media Type */
+            415: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProblemRead"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_asset_api_assets__asset_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                asset_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "image/png": unknown;
+                    "image/jpeg": unknown;
+                    "image/webp": unknown;
+                    "image/svg+xml": unknown;
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProblemRead"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };

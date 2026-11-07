@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "kind": "roadmap",
+  "id": "c196a538-7c75-52ed-af5e-bc6db18d89b5",
+  "name": "Payments Platform H1 2027",
+  "source": {
+    "type": "jira-csv",
+    "file": "jira-export-payments-2026-11-06.csv",
+    "importedAt": "2026-11-06T17:10:00+05:30"
+  },
+  "timeline": {
+    "start": "2026-11-01",
+    "sprintLengthDays": 14,
+    "pis": [
+      {"id": "pi-1", "name": "PI 4 · 2026", "start": "2026-10-05", "sprints": 6, "ipSprint": true},
+      {"id": "pi-2", "name": "PI 1 · 2027", "start": "2026-12-28", "sprints": 6, "ipSprint": true},
+      {"id": "pi-3", "name": "PI 2 · 2027", "start": "2027-03-22", "sprints": 6, "ipSprint": true}
+    ]
+  },
+  "lanes": [
+    {"id": "checkout", "name": "Checkout", "color": "blue", "position": 1000},
+    {"id": "risk-fraud", "name": "Risk & Fraud", "color": "deepOrange", "position": 2000},
+    {"id": "platform", "name": "Platform", "color": "blueGrey", "position": 3000},
+    {"id": "merchant-experience", "name": "Merchant Experience", "color": "purple", "position": 4000}
+  ],
+  "statuses": [
+    {"id": "not-started", "name": "Not started", "color": "grey", "jiraStatuses": ["To Do", "Open", "Backlog"]},
+    {"id": "in-progress", "name": "In progress", "color": "blue", "jiraStatuses": ["In Progress", "In Review"]},
+    {"id": "at-risk", "name": "At risk", "color": "deepOrange", "jiraStatuses": ["Blocked"]},
+    {"id": "done", "name": "Done", "color": "green", "jiraStatuses": ["Done", "Closed"]}
+  ],
+  "items": [
+    {"id": "it-pay-142", "key": "PAY-142", "title": "Saved cards & one-click checkout", "type": "Epic", "laneId": "checkout", "statusId": "in-progress", "start": "2026-11-16", "end": "2027-01-29", "progress": 61, "issues": {"total": 18, "done": 11, "inProgress": 0}, "position": 1000},
+    {"id": "it-pay-155", "key": "PAY-155", "title": "UPI AutoPay mandates", "type": "Epic", "laneId": "checkout", "statusId": "in-progress", "start": "2026-12-01", "end": "2027-03-12", "progress": 20, "issues": {"total": 14, "done": 3, "inProgress": 0}, "position": 2000},
+    {"id": "it-pay-161", "key": "PAY-161", "title": "Checkout A/B framework", "type": "Epic", "laneId": "checkout", "statusId": "not-started", "start": "2027-02-01", "end": "2027-03-05", "progress": 0, "issues": {"total": 9, "done": 0, "inProgress": 0}, "position": 3000},
+    {"id": "it-rsk-031", "key": "RSK-031", "title": "Real-time fraud scoring v2", "type": "Epic", "laneId": "risk-fraud", "statusId": "at-risk", "start": "2026-11-09", "end": "2027-02-19", "progress": 45, "issues": {"total": 22, "done": 10, "inProgress": 0}, "position": 4000},
+    {"id": "it-rsk-036", "key": "RSK-036", "title": "3DS2 frictionless flow", "type": "Epic", "laneId": "risk-fraud", "statusId": "not-started", "start": "2027-01-04", "end": "2027-02-26", "progress": 0, "issues": {"total": 11, "done": 0, "inProgress": 0}, "position": 5000},
+    {"id": "it-plt-190", "key": "PLT-190", "title": "PCI DSS 4.0 controls", "type": "Epic", "laneId": "platform", "statusId": "in-progress", "start": "2026-11-01", "end": "2026-12-20", "progress": 80, "issues": {"total": 16, "done": 13, "inProgress": 0}, "position": 6000},
+    {"id": "it-plt-208", "key": "PLT-208", "title": "Ledger service migration", "type": "Epic", "laneId": "platform", "statusId": "in-progress", "start": "2027-01-04", "end": "2027-04-23", "progress": 10, "issues": {"total": 25, "done": 3, "inProgress": 0}, "position": 7000},
+    {"id": "it-mx-070", "key": "MX-070", "title": "Settlement reports export", "type": "Epic", "laneId": "merchant-experience", "statusId": "at-risk", "start": "2026-11-02", "end": "2026-12-18", "progress": 30, "issues": {"total": 8, "done": 2, "inProgress": 0}, "position": 8000},
+    {"id": "it-mx-077", "key": "MX-077", "title": "Merchant payouts dashboard", "type": "Epic", "laneId": "merchant-experience", "statusId": "not-started", "start": "2027-02-01", "end": "2027-04-09", "progress": 0, "issues": {"total": 13, "done": 0, "inProgress": 0}, "position": 9000},
+    {"id": "it-mx-081", "key": "MX-081", "title": "Dispute self-service", "type": "Epic", "laneId": "merchant-experience", "statusId": "not-started", "start": "2027-03-01", "end": "2027-04-30", "progress": 0, "issues": {"total": 12, "done": 0, "inProgress": 0}, "position": 10000}
+  ],
+  "milestones": [
+    {"id": "ms-beta", "name": "Beta", "kind": "milestone", "date": "2027-01-15"},
+    {"id": "ms-ga", "name": "GA", "kind": "milestone", "date": "2027-04-20"},
+    {"id": "ms-code-freeze", "name": "Code freeze", "kind": "freeze", "start": "2027-03-15", "end": "2027-03-31"}
+  ],
+  "linkedDiagrams": []
+}

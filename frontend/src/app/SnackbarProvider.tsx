@@ -74,7 +74,16 @@ export function SnackbarProvider({ children }: { children: ReactNode }) {
           message={current.kind === 'error' ? undefined : current.message}
           action={
             current.kind === 'undo' ? (
-              <Button color="inherit" size="small" onClick={handleUndo} sx={{ fontWeight: 'bold' }}>
+              <Button
+                size="small"
+                onClick={handleUndo}
+                sx={{
+                  typography: 'caption',
+                  color: 'neutral.snackbarAction',
+                  textTransform: 'uppercase',
+                  fontWeight: 'fontWeightBold',
+                }}
+              >
                 Undo
               </Button>
             ) : undefined

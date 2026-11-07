@@ -52,7 +52,9 @@ export const custom = {
   radius: tokens.radius,
   shadow: tokens.shadow,
   layout: tokens.layout,
-  // MUI's `breakpoints.down(n)` stops at n − 0.05px; the prototype's mobile layout includes 720px.
+  // Use `theme.custom.media.mobile` for the 720px layout, never `theme.breakpoints.down(...)`.
+  // MUI's breakpoints keep their defaults (600/900), and `down(n)` stops at n − 0.05px, so it
+  // would exclude the boundary; the prototype's mobile layout includes 720px.
   media: { mobile: `@media (max-width:${String(tokens.layout.breakpointMobile)}px)` },
 };
 export type CustomTheme = typeof custom;

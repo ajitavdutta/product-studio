@@ -10,4 +10,9 @@ def test_today_is_frozen_in_tests() -> None:
 def test_freeze_none_restores_real_date() -> None:
     clock.freeze(None)
 
-    assert clock.today() == datetime.now(UTC).date()
+    # Capture both sides so a run that crosses midnight UTC still passes.
+    before = datetime.now(UTC).date()
+    today = clock.today()
+    after = datetime.now(UTC).date()
+
+    assert today in {before, after}

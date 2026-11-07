@@ -1,6 +1,7 @@
 import { act, screen, within } from '@testing-library/react';
 import { afterEach, describe, expect, it } from 'vitest';
 import { renderApp } from '../test/renderApp';
+import { DEMO_DIAGRAM_ID, DEMO_ROADMAP_ID } from './demoDocuments';
 import { useSaveStateStore } from './saveState';
 
 afterEach(() => {
@@ -24,6 +25,18 @@ describe('AppShell', () => {
         .map((link) => link.textContent),
     ).toEqual(['Import', 'Roadmap', 'Swimlanes', 'Exports']);
     expect(screen.queryByRole('status')).not.toBeInTheDocument();
+  });
+
+  it('G-1 Roadmap and Swimlanes link to the seeded demo documents', () => {
+    renderApp('/');
+
+    expect({
+      roadmap: within(mainNav()).getByRole('link', { name: 'Roadmap' }).getAttribute('href'),
+      swimlanes: within(mainNav()).getByRole('link', { name: 'Swimlanes' }).getAttribute('href'),
+    }).toEqual({
+      roadmap: `/roadmaps/${DEMO_ROADMAP_ID}`,
+      swimlanes: `/diagrams/${DEMO_DIAGRAM_ID}`,
+    });
   });
 
   it('G-1 marks nothing active on Home', () => {
@@ -64,6 +77,12 @@ describe('AppShell', () => {
     renderApp('/');
 
     expect(screen.getByRole('status')).toHaveTextContent('Unsaved changes');
+  });
+
+  it('G-4 shows a labelled Settings button', () => {
+    renderApp('/');
+
+    expect(screen.getByRole('button', { name: 'Settings' })).toBeInTheDocument();
   });
 
   it('renders Page not found with a link home for an unknown path', () => {

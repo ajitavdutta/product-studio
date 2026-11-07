@@ -1,6 +1,7 @@
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
 import { matchPath, Link as RouterLink, useLocation } from 'react-router';
+import { DEMO_DIAGRAM_ID, DEMO_ROADMAP_ID } from './demoDocuments';
 
 interface NavItem {
   label: string;
@@ -9,12 +10,12 @@ interface NavItem {
   activePrefix: string;
 }
 
-// ASSUMPTION: with no document open, Roadmap and Swimlanes open the `demo` ids, which
-// match the parity script's route map. M2/M3 point them at the last-opened document.
+// ASSUMPTION: with no document open, Roadmap and Swimlanes open the seeded example documents.
+// Their real UUIDs are used (not a `demo` id) because `id` is a UUID in the document schema.
 const NAV_ITEMS: readonly NavItem[] = [
   { label: 'Import', to: '/import', activePrefix: '/import' },
-  { label: 'Roadmap', to: '/roadmaps/demo', activePrefix: '/roadmaps' },
-  { label: 'Swimlanes', to: '/diagrams/demo', activePrefix: '/diagrams' },
+  { label: 'Roadmap', to: `/roadmaps/${DEMO_ROADMAP_ID}`, activePrefix: '/roadmaps' },
+  { label: 'Swimlanes', to: `/diagrams/${DEMO_DIAGRAM_ID}`, activePrefix: '/diagrams' },
   { label: 'Exports', to: '/exports', activePrefix: '/exports' },
 ];
 

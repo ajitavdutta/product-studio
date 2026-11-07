@@ -35,7 +35,8 @@
     "canvasBackground": "#eef1f4",
     "canvasDot": "#cfd8dc",
     "today": "#d32f2f",
-    "todayLabel": "#c62828"
+    "todayLabel": "#c62828",
+    "snackbarAction": "#90caf9"
   },
   "status": {
     "not-started": { "label": "Not started", "color": "#757575" },

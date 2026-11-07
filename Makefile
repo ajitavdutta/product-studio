@@ -1,4 +1,4 @@
-.PHONY: install dev test e2e lint gen
+.PHONY: install dev seed test e2e lint gen
 
 install:
 	uv sync --directory backend
@@ -9,6 +9,10 @@ install:
 dev:
 	uv run --directory backend alembic upgrade head
 	trap 'kill 0' EXIT; uv run --directory backend uvicorn app.main:app --reload --port 8000 & pnpm -C frontend dev & wait
+
+# Loads the demo roadmap and diagram from docs/examples; safe to run again.
+seed:
+	uv run --directory backend alembic upgrade head && uv run --directory backend python -m app.seed
 
 test:
 	uv run --directory backend pytest -q

@@ -1,0 +1,103 @@
+from typing import Annotated
+from uuid import UUID
+
+from fastapi import APIRouter, Depends, UploadFile, status
+from fastapi.responses import JSONResponse
+from sqlalchemy.orm import Session
+
+from app.api.errors import problem_responses
+from app.api.uploads import read_capped
+from app.core.limits import MAX_UPLOAD_BYTES, MAX_UPLOAD_MESSAGE
+from app.db import get_session
+from app.schemas.document_api import (
+    DeleteImpact,
+    DocumentPatch,
+    DocumentSummary,
+    PatchResult,
+    RoadmapRead,
+)
+from app.schemas.documents import RoadmapDocument
+from app.services import documents as service
+
+router = APIRouter(prefix="/roadmaps", tags=["roadmaps"])
+
+# Routes returning a document use response_model_exclude_none: absent optional fields stay
+# absent, as in the document format, so a document read here re-imports losslessly (ADR-4).
+
+SessionDep = Annotated[Session, Depends(get_session)]
+
+
+@router.get("", response_model=list[DocumentSummary])
+def list_roadmaps(session: SessionDep) -> list[DocumentSummary]:
+    """Every roadmap, most recently updated first."""
+    return service.list_documents(session, "roadmap")
+
+
+@router.post(
+    "",
+    response_model=RoadmapRead,
+    response_model_exclude_none=True,
+    status_code=status.HTTP_201_CREATED,
+    responses=problem_responses(422),
+)
+def create_roadmap(document: RoadmapDocument, session: SessionDep) -> RoadmapRead:
+    """Save a roadmap document. Its id is kept unless already taken."""
+    return service.create_document(session, document)
+
+
+# Declared before /{roadmap_id} so "import-json" is never read as an id.
+@router.post(
+    "/import-json",
+    response_model=RoadmapRead,
+    response_model_exclude_none=True,
+    status_code=status.HTTP_201_CREATED,
+    responses=problem_responses(413, 422),
+)
+def import_roadmap_json(file: UploadFile, session: SessionDep) -> RoadmapRead:
+    """Open a downloaded roadmap `.json` (any supported schemaVersion) as a new roadmap."""
+    data = read_capped(file, MAX_UPLOAD_BYTES, MAX_UPLOAD_MESSAGE)
+    return service.import_json(session, "roadmap", data)
+
+
+@router.get(
+    "/{roadmap_id}",
+    response_model=RoadmapRead,
+    response_model_exclude_none=True,
+    responses=problem_responses(404),
+)
+def get_roadmap(roadmap_id: UUID, session: SessionDep) -> RoadmapRead:
+    return service.get_roadmap(session, roadmap_id)
+
+
+@router.patch(
+    "/{roadmap_id}", response_model=PatchResult, responses=problem_responses(404, 409, 422)
+)
+def patch_roadmap(roadmap_id: UUID, patch: DocumentPatch, session: SessionDep) -> PatchResult:
+    """Autosave: apply ops made against `baseVersion` (G-2)."""
+    return service.patch_document(session, "roadmap", roadmap_id, patch)
+
+
+@router.get(
+    "/{roadmap_id}/delete-impact", response_model=DeleteImpact, responses=problem_responses(404)
+)
+def get_roadmap_delete_impact(roadmap_id: UUID, session: SessionDep) -> DeleteImpact:
+    """What deleting this roadmap would unlink, for the confirmation dialog."""
+    return service.delete_impact(session, "roadmap", roadmap_id)
+
+
+@router.delete("/{roadmap_id}", response_model=DeleteImpact, responses=problem_responses(404, 409))
+def delete_roadmap(roadmap_id: UUID, session: SessionDep) -> DeleteImpact:
+    """Delete the roadmap and unlink its diagrams (they are kept)."""
+    return service.delete_document(session, "roadmap", roadmap_id)
+
+
+@router.get(
+    "/{roadmap_id}/document", response_model=RoadmapDocument, responses=problem_responses(404)
+)
+def download_roadmap(roadmap_id: UUID, session: SessionDep) -> JSONResponse:
+    """The exact roadmap document, as a `.json` attachment (Save JSON)."""
+    body, file_name = service.download(session, "roadmap", roadmap_id)
+    # file_name comes from file_name_for, so it is already limited to [a-z0-9.-].
+    return JSONResponse(
+        content=body, headers={"Content-Disposition": f'attachment; filename="{file_name}"'}
+    )

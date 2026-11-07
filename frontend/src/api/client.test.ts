@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { ApiError, apiRequest } from './client';
+import { ApiError, apiRequest, apiUpload } from './client';
 
 function jsonResponse(status: number, body: unknown): Response {
   return new Response(JSON.stringify(body), {
@@ -79,6 +79,81 @@ describe('apiRequest', () => {
         body: JSON.stringify({ name: 'Payments' }),
         headers: expect.objectContaining({ 'Content-Type': 'application/json' }) as unknown,
       }),
+    );
+  });
+});
+
+describe('ApiError errors list', () => {
+  const fetchMock = vi.fn<typeof fetch>();
+
+  beforeEach(() => {
+    vi.stubGlobal('fetch', fetchMock);
+  });
+
+  afterEach(() => {
+    fetchMock.mockReset();
+    vi.unstubAllGlobals();
+  });
+
+  it('RM-16 exposes the server errors list on 422', async () => {
+    const errors = [{ path: '/items/0/end', message: 'Item PAY-142 has an end date before its start date' }];
+    fetchMock.mockResolvedValue(jsonResponse(422, { detail: errors[0]?.message, errors }));
+
+    await expect(apiRequest('POST', '/roadmaps/import-json')).rejects.toMatchObject({
+      status: 422,
+      errors,
+    });
+  });
+
+  it('leaves errors empty when the body has no well-formed errors list', async () => {
+    fetchMock.mockResolvedValue(jsonResponse(422, { detail: 'Bad', errors: [{ path: 3 }] }));
+
+    await expect(apiRequest('POST', '/roadmaps')).rejects.toMatchObject({ errors: [] });
+  });
+});
+
+describe('apiUpload', () => {
+  const fetchMock = vi.fn<typeof fetch>();
+
+  beforeEach(() => {
+    vi.stubGlobal('fetch', fetchMock);
+  });
+
+  afterEach(() => {
+    fetchMock.mockReset();
+    vi.unstubAllGlobals();
+  });
+
+  it('uploads a file as multipart with field "file"', async () => {
+    fetchMock.mockResolvedValue(jsonResponse(201, { id: 'r1' }));
+    const file = new Blob(['{"kind":"roadmap"}'], { type: 'application/json' });
+
+    await apiUpload('/roadmaps/import-json', file, 'plan.json');
+
+    const [url, init] = fetchMock.mock.calls[0] ?? [];
+    const body = init?.body;
+    expect({
+      url,
+      method: init?.method,
+      fileName: body instanceof FormData ? (body.get('file') as File | null)?.name : undefined,
+    }).toEqual({ url: '/api/roadmaps/import-json', method: 'POST', fileName: 'plan.json' });
+  });
+
+  it('apiUpload throws ApiError status 0 on network failure', async () => {
+    fetchMock.mockRejectedValue(new TypeError('Failed to fetch'));
+
+    const error: unknown = await apiUpload('/assets', new Blob(['x']), 'logo.png').catch(
+      (caught: unknown) => caught,
+    );
+
+    expect(error).toEqual(new ApiError(0, "Couldn't reach the server"));
+  });
+
+  it('throws ApiError with the server detail on 413', async () => {
+    fetchMock.mockResolvedValue(jsonResponse(413, { detail: 'This file is larger than 20 MB' }));
+
+    await expect(apiUpload('/roadmaps/import-json', new Blob(['x']), 'big.json')).rejects.toMatchObject(
+      { status: 413, detail: 'This file is larger than 20 MB' },
     );
   });
 });

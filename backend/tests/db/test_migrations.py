@@ -7,16 +7,33 @@ from sqlalchemy import create_engine, inspect
 
 BACKEND_DIR = Path(__file__).resolve().parents[2]
 
-DOCUMENT_COLUMNS = {
-    "id",
-    "kind",
-    "name",
-    "schema_version",
-    "revision",
-    "body",
-    "created_at",
-    "updated_at",
+COLUMNS_BY_TABLE = {
+    "documents": {
+        "id",
+        "kind",
+        "name",
+        "schema_version",
+        "revision",
+        "body",
+        "created_at",
+        "updated_at",
+    },
+    "mapping_templates": {"id", "name", "jira_site", "column_map", "status_map", "updated_at"},
+    "watermark_presets": {
+        "id",
+        "name",
+        "type",
+        "text",
+        "image_asset_id",
+        "position",
+        "opacity",
+        "color",
+        "is_default",
+    },
+    "assets": {"id", "kind", "mime", "bytes", "sha256"},
+    "settings": {"key", "value"},
 }
+TABLES_ADDED_IN_0002 = {"mapping_templates", "watermark_presets", "assets", "settings"}
 
 
 @pytest.fixture
@@ -43,12 +60,11 @@ def column_names(database_url: str, table: str) -> set[str]:
         engine.dispose()
 
 
-def test_upgrade_head_creates_documents_table(
-    alembic_config: Config, tmp_database_url: str
-) -> None:
+def test_upgrade_head_creates_all_tables(alembic_config: Config, tmp_database_url: str) -> None:
     command.upgrade(alembic_config, "head")
 
-    assert column_names(tmp_database_url, "documents") == DOCUMENT_COLUMNS
+    columns = {table: column_names(tmp_database_url, table) for table in COLUMNS_BY_TABLE}
+    assert columns == COLUMNS_BY_TABLE
 
 
 def test_models_match_migrations(alembic_config: Config) -> None:
@@ -64,3 +80,11 @@ def test_downgrade_base_drops_documents(alembic_config: Config, tmp_database_url
     command.downgrade(alembic_config, "base")
 
     assert "documents" not in table_names(tmp_database_url)
+
+
+def test_downgrade_to_0001_drops_new_tables(alembic_config: Config, tmp_database_url: str) -> None:
+    command.upgrade(alembic_config, "head")
+
+    command.downgrade(alembic_config, "0001")
+
+    assert table_names(tmp_database_url) & TABLES_ADDED_IN_0002 == set()

@@ -4,6 +4,7 @@ from typing import Any
 from sqlalchemy import JSON, CheckConstraint, DateTime, Integer, String, func
 from sqlalchemy.orm import Mapped, mapped_column
 
+from app.core import clock
 from app.db import Base
 
 
@@ -19,7 +20,15 @@ class Document(Base):
     schema_version: Mapped[int] = mapped_column(Integer, index=True)
     revision: Mapped[int] = mapped_column(Integer, default=0, index=True)
     body: Mapped[dict[str, Any]] = mapped_column(JSON)
-    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+    # Python-side defaults come from the clock so tests can freeze them and services never
+    # call datetime.now(); server_default stays for rows written outside the ORM.
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=clock.now, server_default=func.now()
+    )
     updated_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), server_default=func.now(), index=True
+        DateTime(timezone=True),
+        default=clock.now,
+        onupdate=clock.now,
+        server_default=func.now(),
+        index=True,
     )

@@ -43,3 +43,20 @@ Rules:
 ## Migrations
 
 `backend/app/documents/migrations.py` holds `MIGRATIONS: dict[int, Callable[[dict], dict]]`, where each step goes from N to N+1. `load_document(raw)` applies the steps until it reaches `CURRENT`, then validates. Every migration has a fixture test (`tests/documents/test_migrations.py`).
+
+Version 0 is the prototype's pre-contract roadmap. `docs/examples/roadmap.v0.json` says `"schemaVersion": 1` but has no `kind`, no ids and string `lanes`, so a document with no `kind` whose `lanes` are strings is treated as v0 whatever its `schemaVersion` says. Version 0 only exists for roadmaps.
+
+## Autosave ops
+
+The editors save with `PATCH /api/{roadmaps|diagrams}/{id}` and the body `{baseVersion, ops: [{op, path, value?, position?}]}` (1–500 ops). The server applies every op to a copy, validates the result and returns `{revision, fileName}`. A stale `baseVersion` returns 409. Any failing op or an invalid result returns 422 and nothing is saved.
+
+- `path` is an RFC 6901 JSON Pointer over the camelCase document, with `~0` for `~` and `~1` for `/`.
+- **Array segments.** If the array's elements are objects with an `id`, the segment is that id (`/items/it-pay-142/end`, `/connectors/c9/points`). Otherwise it is a non-negative integer index (`/items/it-pay-142/stories/2`). Addressing by id lets a client re-apply its pending ops after a 409.
+- `set` creates or replaces the object key, or replaces the array element, at `path`. `value` is required; `null` is rejected with "Use remove to clear a field".
+- `insert`: `path` is an array. Inserts `value` at `position`, or appends when `position` is absent. A duplicate `id` or `position` past the end is rejected.
+- `remove` deletes the key or element at `path`. A missing target is an error.
+- `move`: `path` is an array element and `position` is its new index in the same array.
+- `/id`, `/kind` and `/schemaVersion` can't be set or removed: "The document's id, kind and schema version can't be changed".
+- A `/name` change also renames the document's file name.
+
+`shared/document-ops.cases.json` holds the cases that `backend/app/documents/ops.py` and `frontend/src/lib/documentOps/applyOps.ts` must both pass.

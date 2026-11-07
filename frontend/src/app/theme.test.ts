@@ -50,4 +50,8 @@ describe('theme', () => {
       primaryTintSoft: tokens.color.primaryTintSoft,
     });
   });
+
+  it('G-3 exposes the snackbar action colour from tokens', () => {
+    expect(theme.palette.neutral.snackbarAction).toBe(tokens.color.snackbarAction);
+  });
 });

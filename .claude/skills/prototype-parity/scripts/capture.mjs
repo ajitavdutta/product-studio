@@ -14,8 +14,8 @@ const ROUTES = {
   home: '/',
   import: '/import',
   map: '/import?step=map&sample=1',
-  roadmap: '/roadmaps/demo',
-  swimlanes: '/diagrams/demo',
+  roadmap: '/roadmaps/0d3c9a52-6f0b-4b7e-8a51-2f1e9c7d6b31',
+  swimlanes: '/diagrams/5b1f6c0e-2c1d-4c8e-9d43-7a1b2f3e4d50',
   export: '/exports',
 };
 const VIEWPORTS = [

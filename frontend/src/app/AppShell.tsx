@@ -1,7 +1,11 @@
+import SettingsOutlined from '@mui/icons-material/SettingsOutlined';
 import Box from '@mui/material/Box';
+import IconButton from '@mui/material/IconButton';
+import { useState } from 'react';
 import { Outlet } from 'react-router';
 import { SaveStateIndicator } from '../components/SaveStateIndicator';
 import { Wordmark } from '../components/Wordmark';
+import { SettingsDialog } from '../features/settings/SettingsDialog';
 import { MainNav } from './MainNav';
 import { useSaveStateStore } from './saveState';
 
@@ -10,6 +14,30 @@ function SaveStateSlot() {
   const fileName = useSaveStateStore((store) => store.fileName);
   if (state === null) return null;
   return <SaveStateIndicator state={state} fileName={fileName ?? undefined} />;
+}
+
+/** G-4: the gear that opens Settings. Not in the prototype; G-4 needs a way in. */
+function SettingsButton() {
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      <IconButton
+        aria-label="Settings"
+        onClick={() => {
+          setOpen(true);
+        }}
+        sx={{ color: 'neutral.muted' }}
+      >
+        <SettingsOutlined />
+      </IconButton>
+      <SettingsDialog
+        open={open}
+        onClose={() => {
+          setOpen(false);
+        }}
+      />
+    </>
+  );
 }
 
 /** The root layout: the 56px top bar (G-1) above the routed page. */
@@ -39,6 +67,7 @@ export function AppShell() {
         <MainNav />
         <Box sx={{ flex: 1 }} />
         <SaveStateSlot />
+        <SettingsButton />
       </Box>
       <Box component="main">
         <Outlet />

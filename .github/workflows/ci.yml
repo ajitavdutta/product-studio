@@ -94,6 +94,9 @@ jobs:
       - name: Install Chromium system deps only (browser cached)
         if: steps.playwright-cache.outputs.cache-hit == 'true'
         run: pnpm -C frontend exec playwright install-deps chromium
+      # The journeys open the demo roadmap and diagram, so seed them before the servers start.
+      - name: Seed the demo documents
+        run: make seed
       - name: Start make dev
         run: |
           nohup make dev > dev.log 2>&1 &

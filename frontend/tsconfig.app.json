@@ -20,5 +20,5 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src", "../shared/design-tokens.json"]
+  "include": ["src", "../shared/design-tokens.json", "../shared/document-ops.cases.json"]
 }

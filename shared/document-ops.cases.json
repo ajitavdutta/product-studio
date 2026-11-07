@@ -1,0 +1,1177 @@
+{
+  "$description": "Autosave op cases. backend/app/documents/ops.py and frontend/src/lib/documentOps/applyOps.ts must both pass every case (G-2). Semantics: docs/data-model.md, \"Autosave ops\". Treat like a fixture.",
+  "cases": [
+    {
+      "name": "set a scalar",
+      "before": {
+        "schemaVersion": 1,
+        "kind": "roadmap",
+        "id": "11111111-1111-4111-8111-111111111111",
+        "name": "Plan",
+        "items": [
+          {
+            "id": "it-1",
+            "key": "A-1",
+            "title": "One",
+            "notes": "Check scope",
+            "stories": [
+              {
+                "key": "A-2",
+                "title": "S1"
+              },
+              {
+                "key": "A-3",
+                "title": "S2"
+              },
+              {
+                "key": "A-4",
+                "title": "S3"
+              }
+            ]
+          },
+          {
+            "id": "it-2",
+            "key": "A-5",
+            "title": "Two"
+          }
+        ],
+        "labels": {
+          "a/b": "slash",
+          "c~d": "tilde"
+        }
+      },
+      "ops": [
+        {
+          "op": "set",
+          "path": "/name",
+          "value": "Renamed"
+        }
+      ],
+      "after": {
+        "schemaVersion": 1,
+        "kind": "roadmap",
+        "id": "11111111-1111-4111-8111-111111111111",
+        "name": "Renamed",
+        "items": [
+          {
+            "id": "it-1",
+            "key": "A-1",
+            "title": "One",
+            "notes": "Check scope",
+            "stories": [
+              {
+                "key": "A-2",
+                "title": "S1"
+              },
+              {
+                "key": "A-3",
+                "title": "S2"
+              },
+              {
+                "key": "A-4",
+                "title": "S3"
+              }
+            ]
+          },
+          {
+            "id": "it-2",
+            "key": "A-5",
+            "title": "Two"
+          }
+        ],
+        "labels": {
+          "a/b": "slash",
+          "c~d": "tilde"
+        }
+      }
+    },
+    {
+      "name": "set a new optional key",
+      "before": {
+        "schemaVersion": 1,
+        "kind": "roadmap",
+        "id": "11111111-1111-4111-8111-111111111111",
+        "name": "Plan",
+        "items": [
+          {
+            "id": "it-1",
+            "key": "A-1",
+            "title": "One",
+            "notes": "Check scope",
+            "stories": [
+              {
+                "key": "A-2",
+                "title": "S1"
+              },
+              {
+                "key": "A-3",
+                "title": "S2"
+              },
+              {
+                "key": "A-4",
+                "title": "S3"
+              }
+            ]
+          },
+          {
+            "id": "it-2",
+            "key": "A-5",
+            "title": "Two"
+          }
+        ],
+        "labels": {
+          "a/b": "slash",
+          "c~d": "tilde"
+        }
+      },
+      "ops": [
+        {
+          "op": "set",
+          "path": "/items/it-2/notes",
+          "value": "New"
+        }
+      ],
+      "after": {
+        "schemaVersion": 1,
+        "kind": "roadmap",
+        "id": "11111111-1111-4111-8111-111111111111",
+        "name": "Plan",
+        "items": [
+          {
+            "id": "it-1",
+            "key": "A-1",
+            "title": "One",
+            "notes": "Check scope",
+            "stories": [
+              {
+                "key": "A-2",
+                "title": "S1"
+              },
+              {
+                "key": "A-3",
+                "title": "S2"
+              },
+              {
+                "key": "A-4",
+                "title": "S3"
+              }
+            ]
+          },
+          {
+            "id": "it-2",
+            "key": "A-5",
+            "title": "Two",
+            "notes": "New"
+          }
+        ],
+        "labels": {
+          "a/b": "slash",
+          "c~d": "tilde"
+        }
+      }
+    },
+    {
+      "name": "set a whole element by id",
+      "before": {
+        "schemaVersion": 1,
+        "kind": "roadmap",
+        "id": "11111111-1111-4111-8111-111111111111",
+        "name": "Plan",
+        "items": [
+          {
+            "id": "it-1",
+            "key": "A-1",
+            "title": "One",
+            "notes": "Check scope",
+            "stories": [
+              {
+                "key": "A-2",
+                "title": "S1"
+              },
+              {
+                "key": "A-3",
+                "title": "S2"
+              },
+              {
+                "key": "A-4",
+                "title": "S3"
+              }
+            ]
+          },
+          {
+            "id": "it-2",
+            "key": "A-5",
+            "title": "Two"
+          }
+        ],
+        "labels": {
+          "a/b": "slash",
+          "c~d": "tilde"
+        }
+      },
+      "ops": [
+        {
+          "op": "set",
+          "path": "/items/it-2",
+          "value": {
+            "id": "it-2",
+            "key": "A-5",
+            "title": "Two again"
+          }
+        }
+      ],
+      "after": {
+        "schemaVersion": 1,
+        "kind": "roadmap",
+        "id": "11111111-1111-4111-8111-111111111111",
+        "name": "Plan",
+        "items": [
+          {
+            "id": "it-1",
+            "key": "A-1",
+            "title": "One",
+            "notes": "Check scope",
+            "stories": [
+              {
+                "key": "A-2",
+                "title": "S1"
+              },
+              {
+                "key": "A-3",
+                "title": "S2"
+              },
+              {
+                "key": "A-4",
+                "title": "S3"
+              }
+            ]
+          },
+          {
+            "id": "it-2",
+            "key": "A-5",
+            "title": "Two again"
+          }
+        ],
+        "labels": {
+          "a/b": "slash",
+          "c~d": "tilde"
+        }
+      }
+    },
+    {
+      "name": "set null is rejected",
+      "before": {
+        "schemaVersion": 1,
+        "kind": "roadmap",
+        "id": "11111111-1111-4111-8111-111111111111",
+        "name": "Plan",
+        "items": [
+          {
+            "id": "it-1",
+            "key": "A-1",
+            "title": "One",
+            "notes": "Check scope",
+            "stories": [
+              {
+                "key": "A-2",
+                "title": "S1"
+              },
+              {
+                "key": "A-3",
+                "title": "S2"
+              },
+              {
+                "key": "A-4",
+                "title": "S3"
+              }
+            ]
+          },
+          {
+            "id": "it-2",
+            "key": "A-5",
+            "title": "Two"
+          }
+        ],
+        "labels": {
+          "a/b": "slash",
+          "c~d": "tilde"
+        }
+      },
+      "ops": [
+        {
+          "op": "set",
+          "path": "/items/it-1/title",
+          "value": null
+        }
+      ],
+      "error": {
+        "path": "/items/it-1/title"
+      }
+    },
+    {
+      "name": "insert appends without a position",
+      "before": {
+        "schemaVersion": 1,
+        "kind": "roadmap",
+        "id": "11111111-1111-4111-8111-111111111111",
+        "name": "Plan",
+        "items": [
+          {
+            "id": "it-1",
+            "key": "A-1",
+            "title": "One",
+            "notes": "Check scope",
+            "stories": [
+              {
+                "key": "A-2",
+                "title": "S1"
+              },
+              {
+                "key": "A-3",
+                "title": "S2"
+              },
+              {
+                "key": "A-4",
+                "title": "S3"
+              }
+            ]
+          },
+          {
+            "id": "it-2",
+            "key": "A-5",
+            "title": "Two"
+          }
+        ],
+        "labels": {
+          "a/b": "slash",
+          "c~d": "tilde"
+        }
+      },
+      "ops": [
+        {
+          "op": "insert",
+          "path": "/items",
+          "value": {
+            "id": "it-3",
+            "key": "A-6",
+            "title": "Three"
+          }
+        }
+      ],
+      "after": {
+        "schemaVersion": 1,
+        "kind": "roadmap",
+        "id": "11111111-1111-4111-8111-111111111111",
+        "name": "Plan",
+        "items": [
+          {
+            "id": "it-1",
+            "key": "A-1",
+            "title": "One",
+            "notes": "Check scope",
+            "stories": [
+              {
+                "key": "A-2",
+                "title": "S1"
+              },
+              {
+                "key": "A-3",
+                "title": "S2"
+              },
+              {
+                "key": "A-4",
+                "title": "S3"
+              }
+            ]
+          },
+          {
+            "id": "it-2",
+            "key": "A-5",
+            "title": "Two"
+          },
+          {
+            "id": "it-3",
+            "key": "A-6",
+            "title": "Three"
+          }
+        ],
+        "labels": {
+          "a/b": "slash",
+          "c~d": "tilde"
+        }
+      }
+    },
+    {
+      "name": "insert at a position",
+      "before": {
+        "schemaVersion": 1,
+        "kind": "roadmap",
+        "id": "11111111-1111-4111-8111-111111111111",
+        "name": "Plan",
+        "items": [
+          {
+            "id": "it-1",
+            "key": "A-1",
+            "title": "One",
+            "notes": "Check scope",
+            "stories": [
+              {
+                "key": "A-2",
+                "title": "S1"
+              },
+              {
+                "key": "A-3",
+                "title": "S2"
+              },
+              {
+                "key": "A-4",
+                "title": "S3"
+              }
+            ]
+          },
+          {
+            "id": "it-2",
+            "key": "A-5",
+            "title": "Two"
+          }
+        ],
+        "labels": {
+          "a/b": "slash",
+          "c~d": "tilde"
+        }
+      },
+      "ops": [
+        {
+          "op": "insert",
+          "path": "/items",
+          "value": {
+            "id": "it-3",
+            "key": "A-6",
+            "title": "Three"
+          },
+          "position": 0
+        }
+      ],
+      "after": {
+        "schemaVersion": 1,
+        "kind": "roadmap",
+        "id": "11111111-1111-4111-8111-111111111111",
+        "name": "Plan",
+        "items": [
+          {
+            "id": "it-3",
+            "key": "A-6",
+            "title": "Three"
+          },
+          {
+            "id": "it-1",
+            "key": "A-1",
+            "title": "One",
+            "notes": "Check scope",
+            "stories": [
+              {
+                "key": "A-2",
+                "title": "S1"
+              },
+              {
+                "key": "A-3",
+                "title": "S2"
+              },
+              {
+                "key": "A-4",
+                "title": "S3"
+              }
+            ]
+          },
+          {
+            "id": "it-2",
+            "key": "A-5",
+            "title": "Two"
+          }
+        ],
+        "labels": {
+          "a/b": "slash",
+          "c~d": "tilde"
+        }
+      }
+    },
+    {
+      "name": "insert a duplicate id is rejected",
+      "before": {
+        "schemaVersion": 1,
+        "kind": "roadmap",
+        "id": "11111111-1111-4111-8111-111111111111",
+        "name": "Plan",
+        "items": [
+          {
+            "id": "it-1",
+            "key": "A-1",
+            "title": "One",
+            "notes": "Check scope",
+            "stories": [
+              {
+                "key": "A-2",
+                "title": "S1"
+              },
+              {
+                "key": "A-3",
+                "title": "S2"
+              },
+              {
+                "key": "A-4",
+                "title": "S3"
+              }
+            ]
+          },
+          {
+            "id": "it-2",
+            "key": "A-5",
+            "title": "Two"
+          }
+        ],
+        "labels": {
+          "a/b": "slash",
+          "c~d": "tilde"
+        }
+      },
+      "ops": [
+        {
+          "op": "insert",
+          "path": "/items",
+          "value": {
+            "id": "it-1",
+            "key": "A-9",
+            "title": "Dup"
+          }
+        }
+      ],
+      "error": {
+        "path": "/items"
+      }
+    },
+    {
+      "name": "insert past the end is rejected",
+      "before": {
+        "schemaVersion": 1,
+        "kind": "roadmap",
+        "id": "11111111-1111-4111-8111-111111111111",
+        "name": "Plan",
+        "items": [
+          {
+            "id": "it-1",
+            "key": "A-1",
+            "title": "One",
+            "notes": "Check scope",
+            "stories": [
+              {
+                "key": "A-2",
+                "title": "S1"
+              },
+              {
+                "key": "A-3",
+                "title": "S2"
+              },
+              {
+                "key": "A-4",
+                "title": "S3"
+              }
+            ]
+          },
+          {
+            "id": "it-2",
+            "key": "A-5",
+            "title": "Two"
+          }
+        ],
+        "labels": {
+          "a/b": "slash",
+          "c~d": "tilde"
+        }
+      },
+      "ops": [
+        {
+          "op": "insert",
+          "path": "/items",
+          "value": {
+            "id": "it-3",
+            "key": "A-6",
+            "title": "Three"
+          },
+          "position": 3
+        }
+      ],
+      "error": {
+        "path": "/items"
+      }
+    },
+    {
+      "name": "remove an element by id",
+      "before": {
+        "schemaVersion": 1,
+        "kind": "roadmap",
+        "id": "11111111-1111-4111-8111-111111111111",
+        "name": "Plan",
+        "items": [
+          {
+            "id": "it-1",
+            "key": "A-1",
+            "title": "One",
+            "notes": "Check scope",
+            "stories": [
+              {
+                "key": "A-2",
+                "title": "S1"
+              },
+              {
+                "key": "A-3",
+                "title": "S2"
+              },
+              {
+                "key": "A-4",
+                "title": "S3"
+              }
+            ]
+          },
+          {
+            "id": "it-2",
+            "key": "A-5",
+            "title": "Two"
+          }
+        ],
+        "labels": {
+          "a/b": "slash",
+          "c~d": "tilde"
+        }
+      },
+      "ops": [
+        {
+          "op": "remove",
+          "path": "/items/it-2"
+        }
+      ],
+      "after": {
+        "schemaVersion": 1,
+        "kind": "roadmap",
+        "id": "11111111-1111-4111-8111-111111111111",
+        "name": "Plan",
+        "items": [
+          {
+            "id": "it-1",
+            "key": "A-1",
+            "title": "One",
+            "notes": "Check scope",
+            "stories": [
+              {
+                "key": "A-2",
+                "title": "S1"
+              },
+              {
+                "key": "A-3",
+                "title": "S2"
+              },
+              {
+                "key": "A-4",
+                "title": "S3"
+              }
+            ]
+          }
+        ],
+        "labels": {
+          "a/b": "slash",
+          "c~d": "tilde"
+        }
+      }
+    },
+    {
+      "name": "remove an optional key",
+      "before": {
+        "schemaVersion": 1,
+        "kind": "roadmap",
+        "id": "11111111-1111-4111-8111-111111111111",
+        "name": "Plan",
+        "items": [
+          {
+            "id": "it-1",
+            "key": "A-1",
+            "title": "One",
+            "notes": "Check scope",
+            "stories": [
+              {
+                "key": "A-2",
+                "title": "S1"
+              },
+              {
+                "key": "A-3",
+                "title": "S2"
+              },
+              {
+                "key": "A-4",
+                "title": "S3"
+              }
+            ]
+          },
+          {
+            "id": "it-2",
+            "key": "A-5",
+            "title": "Two"
+          }
+        ],
+        "labels": {
+          "a/b": "slash",
+          "c~d": "tilde"
+        }
+      },
+      "ops": [
+        {
+          "op": "remove",
+          "path": "/items/it-1/notes"
+        }
+      ],
+      "after": {
+        "schemaVersion": 1,
+        "kind": "roadmap",
+        "id": "11111111-1111-4111-8111-111111111111",
+        "name": "Plan",
+        "items": [
+          {
+            "id": "it-1",
+            "key": "A-1",
+            "title": "One",
+            "stories": [
+              {
+                "key": "A-2",
+                "title": "S1"
+              },
+              {
+                "key": "A-3",
+                "title": "S2"
+              },
+              {
+                "key": "A-4",
+                "title": "S3"
+              }
+            ]
+          },
+          {
+            "id": "it-2",
+            "key": "A-5",
+            "title": "Two"
+          }
+        ],
+        "labels": {
+          "a/b": "slash",
+          "c~d": "tilde"
+        }
+      }
+    },
+    {
+      "name": "remove a missing target is rejected",
+      "before": {
+        "schemaVersion": 1,
+        "kind": "roadmap",
+        "id": "11111111-1111-4111-8111-111111111111",
+        "name": "Plan",
+        "items": [
+          {
+            "id": "it-1",
+            "key": "A-1",
+            "title": "One",
+            "notes": "Check scope",
+            "stories": [
+              {
+                "key": "A-2",
+                "title": "S1"
+              },
+              {
+                "key": "A-3",
+                "title": "S2"
+              },
+              {
+                "key": "A-4",
+                "title": "S3"
+              }
+            ]
+          },
+          {
+            "id": "it-2",
+            "key": "A-5",
+            "title": "Two"
+          }
+        ],
+        "labels": {
+          "a/b": "slash",
+          "c~d": "tilde"
+        }
+      },
+      "ops": [
+        {
+          "op": "remove",
+          "path": "/items/it-9"
+        }
+      ],
+      "error": {
+        "path": "/items/it-9"
+      }
+    },
+    {
+      "name": "move an element by id",
+      "before": {
+        "schemaVersion": 1,
+        "kind": "roadmap",
+        "id": "11111111-1111-4111-8111-111111111111",
+        "name": "Plan",
+        "items": [
+          {
+            "id": "it-1",
+            "key": "A-1",
+            "title": "One",
+            "notes": "Check scope",
+            "stories": [
+              {
+                "key": "A-2",
+                "title": "S1"
+              },
+              {
+                "key": "A-3",
+                "title": "S2"
+              },
+              {
+                "key": "A-4",
+                "title": "S3"
+              }
+            ]
+          },
+          {
+            "id": "it-2",
+            "key": "A-5",
+            "title": "Two"
+          }
+        ],
+        "labels": {
+          "a/b": "slash",
+          "c~d": "tilde"
+        }
+      },
+      "ops": [
+        {
+          "op": "move",
+          "path": "/items/it-2",
+          "position": 0
+        }
+      ],
+      "after": {
+        "schemaVersion": 1,
+        "kind": "roadmap",
+        "id": "11111111-1111-4111-8111-111111111111",
+        "name": "Plan",
+        "items": [
+          {
+            "id": "it-2",
+            "key": "A-5",
+            "title": "Two"
+          },
+          {
+            "id": "it-1",
+            "key": "A-1",
+            "title": "One",
+            "notes": "Check scope",
+            "stories": [
+              {
+                "key": "A-2",
+                "title": "S1"
+              },
+              {
+                "key": "A-3",
+                "title": "S2"
+              },
+              {
+                "key": "A-4",
+                "title": "S3"
+              }
+            ]
+          }
+        ],
+        "labels": {
+          "a/b": "slash",
+          "c~d": "tilde"
+        }
+      }
+    },
+    {
+      "name": "index addressing on stories",
+      "before": {
+        "schemaVersion": 1,
+        "kind": "roadmap",
+        "id": "11111111-1111-4111-8111-111111111111",
+        "name": "Plan",
+        "items": [
+          {
+            "id": "it-1",
+            "key": "A-1",
+            "title": "One",
+            "notes": "Check scope",
+            "stories": [
+              {
+                "key": "A-2",
+                "title": "S1"
+              },
+              {
+                "key": "A-3",
+                "title": "S2"
+              },
+              {
+                "key": "A-4",
+                "title": "S3"
+              }
+            ]
+          },
+          {
+            "id": "it-2",
+            "key": "A-5",
+            "title": "Two"
+          }
+        ],
+        "labels": {
+          "a/b": "slash",
+          "c~d": "tilde"
+        }
+      },
+      "ops": [
+        {
+          "op": "set",
+          "path": "/items/it-1/stories/2/title",
+          "value": "S3 renamed"
+        },
+        {
+          "op": "remove",
+          "path": "/items/it-1/stories/0"
+        }
+      ],
+      "after": {
+        "schemaVersion": 1,
+        "kind": "roadmap",
+        "id": "11111111-1111-4111-8111-111111111111",
+        "name": "Plan",
+        "items": [
+          {
+            "id": "it-1",
+            "key": "A-1",
+            "title": "One",
+            "notes": "Check scope",
+            "stories": [
+              {
+                "key": "A-3",
+                "title": "S2"
+              },
+              {
+                "key": "A-4",
+                "title": "S3 renamed"
+              }
+            ]
+          },
+          {
+            "id": "it-2",
+            "key": "A-5",
+            "title": "Two"
+          }
+        ],
+        "labels": {
+          "a/b": "slash",
+          "c~d": "tilde"
+        }
+      }
+    },
+    {
+      "name": "pointer escaping with ~1 and ~0",
+      "before": {
+        "schemaVersion": 1,
+        "kind": "roadmap",
+        "id": "11111111-1111-4111-8111-111111111111",
+        "name": "Plan",
+        "items": [
+          {
+            "id": "it-1",
+            "key": "A-1",
+            "title": "One",
+            "notes": "Check scope",
+            "stories": [
+              {
+                "key": "A-2",
+                "title": "S1"
+              },
+              {
+                "key": "A-3",
+                "title": "S2"
+              },
+              {
+                "key": "A-4",
+                "title": "S3"
+              }
+            ]
+          },
+          {
+            "id": "it-2",
+            "key": "A-5",
+            "title": "Two"
+          }
+        ],
+        "labels": {
+          "a/b": "slash",
+          "c~d": "tilde"
+        }
+      },
+      "ops": [
+        {
+          "op": "set",
+          "path": "/labels/a~1b",
+          "value": "changed"
+        },
+        {
+          "op": "remove",
+          "path": "/labels/c~0d"
+        }
+      ],
+      "after": {
+        "schemaVersion": 1,
+        "kind": "roadmap",
+        "id": "11111111-1111-4111-8111-111111111111",
+        "name": "Plan",
+        "items": [
+          {
+            "id": "it-1",
+            "key": "A-1",
+            "title": "One",
+            "notes": "Check scope",
+            "stories": [
+              {
+                "key": "A-2",
+                "title": "S1"
+              },
+              {
+                "key": "A-3",
+                "title": "S2"
+              },
+              {
+                "key": "A-4",
+                "title": "S3"
+              }
+            ]
+          },
+          {
+            "id": "it-2",
+            "key": "A-5",
+            "title": "Two"
+          }
+        ],
+        "labels": {
+          "a/b": "changed"
+        }
+      }
+    },
+    {
+      "name": "a protected path is rejected",
+      "before": {
+        "schemaVersion": 1,
+        "kind": "roadmap",
+        "id": "11111111-1111-4111-8111-111111111111",
+        "name": "Plan",
+        "items": [
+          {
+            "id": "it-1",
+            "key": "A-1",
+            "title": "One",
+            "notes": "Check scope",
+            "stories": [
+              {
+                "key": "A-2",
+                "title": "S1"
+              },
+              {
+                "key": "A-3",
+                "title": "S2"
+              },
+              {
+                "key": "A-4",
+                "title": "S3"
+              }
+            ]
+          },
+          {
+            "id": "it-2",
+            "key": "A-5",
+            "title": "Two"
+          }
+        ],
+        "labels": {
+          "a/b": "slash",
+          "c~d": "tilde"
+        }
+      },
+      "ops": [
+        {
+          "op": "set",
+          "path": "/kind",
+          "value": "diagram"
+        }
+      ],
+      "error": {
+        "path": "/kind"
+      }
+    },
+    {
+      "name": "a failing op reports its own path",
+      "before": {
+        "schemaVersion": 1,
+        "kind": "roadmap",
+        "id": "11111111-1111-4111-8111-111111111111",
+        "name": "Plan",
+        "items": [
+          {
+            "id": "it-1",
+            "key": "A-1",
+            "title": "One",
+            "notes": "Check scope",
+            "stories": [
+              {
+                "key": "A-2",
+                "title": "S1"
+              },
+              {
+                "key": "A-3",
+                "title": "S2"
+              },
+              {
+                "key": "A-4",
+                "title": "S3"
+              }
+            ]
+          },
+          {
+            "id": "it-2",
+            "key": "A-5",
+            "title": "Two"
+          }
+        ],
+        "labels": {
+          "a/b": "slash",
+          "c~d": "tilde"
+        }
+      },
+      "ops": [
+        {
+          "op": "set",
+          "path": "/name",
+          "value": "Renamed"
+        },
+        {
+          "op": "set",
+          "path": "/items/it-9/title",
+          "value": "x"
+        }
+      ],
+      "error": {
+        "path": "/items/it-9/title"
+      }
+    }
+  ]
+}
