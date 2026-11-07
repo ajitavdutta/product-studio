@@ -1,0 +1,26 @@
+# Claude Code — personal files
+.claude/settings.local.json
+CLAUDE.local.md
+
+# Parity screenshots and render samples
+parity/
+backend/tests/render/out/
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+*.db
+
+# Node
+node_modules/
+dist/
+playwright-report/
+test-results/
+
+# Env
+.env
+.env.*

@@ -1,0 +1,116 @@
+{
+  "$description": "Single source of design tokens for the Product Studio UI theme (frontend/src/app/theme.ts) AND the export renderer (backend/app/render/theme.py). Values come from the approved prototype.",
+  "font": {
+    "family": "Roboto, system-ui, sans-serif",
+    "mono": "'Roboto Mono', ui-monospace, monospace",
+    "weights": { "regular": 400, "medium": 500, "bold": 700 },
+    "size": { "eyebrow": 11, "caption": 12, "body": 13, "subtitle": 14, "title": 16, "h1": 22, "stat": 20 }
+  },
+  "color": {
+    "primary": "#1976d2",
+    "primaryHover": "#1565c0",
+    "primaryDark": "#0d47a1",
+    "primaryTint": "#e3f2fd",
+    "primaryTintSoft": "#f5f9ff",
+    "progressTrack": "#bbdefb",
+    "danger": "#d32f2f",
+    "dangerTint": "#ffebee",
+    "success": "#2e7d32",
+    "warning": "#e65100",
+    "warningText": "#bf360c",
+    "warningTint": "#fff3e0",
+    "noticeTint": "#fff8e1",
+    "text": "#212121",
+    "textSecondary": "#424242",
+    "textMuted": "#616161",
+    "border": "#e0e0e0",
+    "borderInput": "#c4c4c4",
+    "borderSubtle": "#eeeeee",
+    "surface": "#ffffff",
+    "background": "#fafafa",
+    "hover": "#f5f5f5",
+    "codeBackground": "#263238",
+    "codeText": "#cfd8dc",
+    "guideBackground": "#1f2a30",
+    "canvasBackground": "#eef1f4",
+    "canvasDot": "#cfd8dc",
+    "today": "#d32f2f",
+    "todayLabel": "#c62828"
+  },
+  "status": {
+    "not-started": { "label": "Not started", "color": "#757575" },
+    "in-progress": { "label": "In progress", "color": "#1976d2" },
+    "at-risk": { "label": "At risk", "color": "#bf360c" },
+    "done": { "label": "Done", "color": "#2e7d32" }
+  },
+  "team": {
+    "blue": "#1976d2",
+    "deepOrange": "#bf360c",
+    "blueGrey": "#455a64",
+    "purple": "#6a1b9a",
+    "teal": "#00796b",
+    "brown": "#5d4037"
+  },
+  "milestone": {
+    "color": "#6a1b9a",
+    "label": "#4a148c",
+    "freezeStripeA": "#546e7a",
+    "freezeStripeB": "#90a4ae",
+    "freezeChip": "#455a64"
+  },
+  "timeline": {
+    "labelColumnWidth": 220,
+    "headerHeight": 56,
+    "milestoneRowHeight": 34,
+    "teamRowHeight": 30,
+    "epicRowHeight": 44,
+    "sprintMinWidth": 104,
+    "piBand": "#eceff1",
+    "piBorder": "#90a4ae",
+    "columnLine": "#e0e0e0",
+    "piLine": "#b0bec5",
+    "ipHatch": "rgba(120,144,156,.18)",
+    "currentSprint": "#e3f2fd"
+  },
+  "lane": [
+    { "band": "#f5f9fe", "header": "#e3f2fd", "text": "#0d47a1" },
+    { "band": "#fffaf3", "header": "#fff3e0", "text": "#8a3a00" },
+    { "band": "#f6fbf6", "header": "#e8f5e9", "text": "#1b5e20" },
+    { "band": "#faf6fb", "header": "#f3e5f5", "text": "#4a148c" },
+    { "band": "#f3f9f9", "header": "#e0f2f1", "text": "#004d40" },
+    { "band": "#faf8f6", "header": "#efebe9", "text": "#3e2723" }
+  ],
+  "diagram": {
+    "laneMinHeight": 132,
+    "laneLabelWidth": 104,
+    "lanePad": 34,
+    "minWidth": 1016,
+    "snap": 8,
+    "shapeStroke": "#90a4ae",
+    "connector": "#546e7a",
+    "association": "#78909c",
+    "decisionFill": "#ffcc80",
+    "noteFill": "#fffde7",
+    "noteStroke": "#e6ee9c",
+    "startFill": "#e8f5e9",
+    "startStroke": "#2e7d32",
+    "endFill": "#ffebee",
+    "endStroke": "#c62828",
+    "selection": "#1976d2",
+    "labelYes": "#1b5e20",
+    "labelNo": "#b71c1c",
+    "fills": { "white": "#ffffff", "blue": "#bbdefb", "green": "#c8e6c9", "amber": "#ffe0b2", "purple": "#e1bee7" }
+  },
+  "watermark": {
+    "colors": { "red": "#b71c1c", "grey": "#424242", "blue": "#1565c0", "black": "#000000" },
+    "defaultOpacity": 0.14,
+    "rotationDeg": -28
+  },
+  "radius": { "sm": 4, "md": 6, "lg": 8 },
+  "shadow": {
+    "button": "0 1px 3px rgba(0,0,0,.2)",
+    "menu": "0 5px 5px -3px rgba(0,0,0,.2), 0 8px 10px 1px rgba(0,0,0,.14)",
+    "dialog": "0 11px 15px -7px rgba(0,0,0,.2), 0 24px 38px 3px rgba(0,0,0,.14)"
+  },
+  "layout": { "appBarHeight": 56, "sidePanelWidth": 320, "railWidth": 48, "breakpointMobile": 720 }
+}

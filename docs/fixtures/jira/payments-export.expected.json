@@ -1,0 +1,189 @@
+{
+  "epics": [
+    {
+      "key": "PAY-142",
+      "title": "Saved cards & one-click checkout",
+      "team": "Checkout",
+      "start": "2026-11-16",
+      "end": "2027-01-29",
+      "issues": {
+        "total": 5,
+        "done": 3,
+        "inProgress": 1
+      },
+      "progress": 70
+    },
+    {
+      "key": "PAY-155",
+      "title": "UPI AutoPay mandates",
+      "team": "Checkout",
+      "start": "2026-12-01",
+      "end": "2027-03-12",
+      "issues": {
+        "total": 3,
+        "done": 0,
+        "inProgress": 0
+      },
+      "progress": 0
+    },
+    {
+      "key": "PAY-161",
+      "title": "Checkout A/B framework",
+      "team": "Checkout",
+      "start": "2027-02-01",
+      "end": "2027-03-05",
+      "issues": {
+        "total": 4,
+        "done": 0,
+        "inProgress": 0
+      },
+      "progress": 0
+    },
+    {
+      "key": "RSK-031",
+      "title": "Real-time fraud scoring v2",
+      "team": "Risk & Fraud",
+      "start": "2026-11-09",
+      "end": "2027-02-19",
+      "issues": {
+        "total": 6,
+        "done": 1,
+        "inProgress": 4
+      },
+      "progress": 50
+    },
+    {
+      "key": "RSK-036",
+      "title": "3DS2 frictionless flow",
+      "team": "Risk & Fraud",
+      "start": "2027-01-04",
+      "end": "2027-02-26",
+      "issues": {
+        "total": 5,
+        "done": 0,
+        "inProgress": 0
+      },
+      "progress": 0
+    },
+    {
+      "key": "PLT-190",
+      "title": "PCI DSS 4.0 controls",
+      "team": "Platform",
+      "start": "2026-11-01",
+      "end": "2026-12-20",
+      "issues": {
+        "total": 3,
+        "done": 2,
+        "inProgress": 1
+      },
+      "progress": 83
+    },
+    {
+      "key": "PLT-208",
+      "title": "Ledger service migration",
+      "team": "Platform",
+      "start": "2027-01-04",
+      "end": "2027-04-23",
+      "issues": {
+        "total": 3,
+        "done": 0,
+        "inProgress": 2
+      },
+      "progress": 33
+    },
+    {
+      "key": "MX-070",
+      "title": "Settlement reports export",
+      "team": "Merchant Experience",
+      "start": "2026-11-02",
+      "end": "2026-12-18",
+      "issues": {
+        "total": 4,
+        "done": 2,
+        "inProgress": 1
+      },
+      "progress": 62
+    },
+    {
+      "key": "MX-077",
+      "title": "Merchant payouts dashboard",
+      "team": "Merchant Experience",
+      "start": "2027-02-01",
+      "end": "2027-04-09",
+      "issues": {
+        "total": 3,
+        "done": 0,
+        "inProgress": 0
+      },
+      "progress": 0
+    },
+    {
+      "key": "MX-081",
+      "title": "Dispute self-service",
+      "team": "Merchant Experience",
+      "start": "2027-03-01",
+      "end": "2027-04-30",
+      "issues": {
+        "total": 4,
+        "done": 0,
+        "inProgress": 0
+      },
+      "progress": 0
+    }
+  ],
+  "unscheduled": [
+    "PAY-170",
+    "RSK-040",
+    "PLT-215",
+    "MX-090",
+    "PAY-174"
+  ],
+  "storiesWithoutDates": [
+    "PAY-1552"
+  ],
+  "storiesWithoutTeam": [
+    "MX-771"
+  ],
+  "file": "payments-export.csv",
+  "format": "csv",
+  "encoding": "utf-8-sig",
+  "rowCount": 55,
+  "expectedMapping": {
+    "Issue key": "Key",
+    "Summary": "Title",
+    "Issue Type": "Type",
+    "Parent": "Epic",
+    "Epic Link": "Epic (fallback when Parent is empty)",
+    "Custom field (Team)": "Swimlane / Team",
+    "Status": "Status",
+    "Sprint": "Sprint (2 repeated columns → keep the latest)",
+    "Fix versions": "Release",
+    "Custom field (Story Points)": "Points",
+    "Custom field (Start date)": "Start",
+    "Due date": "End",
+    "Labels": "Tags (2 repeated columns → list)"
+  },
+  "notMapped": [
+    "Issue id",
+    "Priority",
+    "Assignee",
+    "Created",
+    "Description"
+  ],
+  "needsChoice": [
+    "Components"
+  ],
+  "statusMapping": {
+    "To Do": "Not started",
+    "In Progress": "In progress",
+    "Blocked": "At risk",
+    "Done": "Done"
+  },
+  "dateFormat": "dd/Mon/yy hh:mm AM (Jira default) → ISO date",
+  "warnings": [
+    "5 epics have no dates → Unscheduled",
+    "1 issue has no dates → excluded from its epic's range",
+    "1 issue has no team → Unassigned lane",
+    "\"Components\" isn't mapped yet"
+  ]
+}

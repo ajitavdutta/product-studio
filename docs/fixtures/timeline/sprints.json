@@ -1,0 +1,250 @@
+{
+  "today": "2026-11-06",
+  "timelineStart": "2026-11-01",
+  "view": "sprints",
+  "range": {
+    "start": "2026-11-02",
+    "endExclusive": "2027-05-03"
+  },
+  "pis": [
+    {
+      "name": "PI 4 · 2026",
+      "start": "2026-10-05",
+      "end": "2026-12-27",
+      "sprints": 6,
+      "ipSprint": true
+    },
+    {
+      "name": "PI 1 · 2027",
+      "start": "2026-12-28",
+      "end": "2027-03-21",
+      "sprints": 6,
+      "ipSprint": true
+    },
+    {
+      "name": "PI 2 · 2027",
+      "start": "2027-03-22",
+      "end": "2027-06-13",
+      "sprints": 6,
+      "ipSprint": true
+    }
+  ],
+  "columns": [
+    {
+      "row": "pi",
+      "label": "PI 4 · 2026",
+      "start": "2026-11-02",
+      "endExclusive": "2026-12-28",
+      "clipped": true
+    },
+    {
+      "row": "pi",
+      "label": "PI 1 · 2027",
+      "start": "2026-12-28",
+      "endExclusive": "2027-03-22"
+    },
+    {
+      "row": "pi",
+      "label": "PI 2 · 2027",
+      "start": "2027-03-22",
+      "endExclusive": "2027-05-03",
+      "clipped": true
+    },
+    {
+      "row": "sprint",
+      "label": "S3",
+      "start": "2026-11-02",
+      "endExclusive": "2026-11-16",
+      "dates": "2 Nov – 15 Nov",
+      "current": true
+    },
+    {
+      "row": "sprint",
+      "label": "S4",
+      "start": "2026-11-16",
+      "endExclusive": "2026-11-30",
+      "dates": "16 Nov – 29 Nov"
+    },
+    {
+      "row": "sprint",
+      "label": "S5",
+      "start": "2026-11-30",
+      "endExclusive": "2026-12-14",
+      "dates": "30 Nov – 13 Dec"
+    },
+    {
+      "row": "sprint",
+      "label": "S6 · IP",
+      "start": "2026-12-14",
+      "endExclusive": "2026-12-28",
+      "dates": "14 Dec – 27 Dec",
+      "ip": true
+    },
+    {
+      "row": "sprint",
+      "label": "S1",
+      "start": "2026-12-28",
+      "endExclusive": "2027-01-11",
+      "dates": "28 Dec – 10 Jan"
+    },
+    {
+      "row": "sprint",
+      "label": "S2",
+      "start": "2027-01-11",
+      "endExclusive": "2027-01-25",
+      "dates": "11 Jan – 24 Jan"
+    },
+    {
+      "row": "sprint",
+      "label": "S3",
+      "start": "2027-01-25",
+      "endExclusive": "2027-02-08",
+      "dates": "25 Jan – 7 Feb"
+    },
+    {
+      "row": "sprint",
+      "label": "S4",
+      "start": "2027-02-08",
+      "endExclusive": "2027-02-22",
+      "dates": "8 Feb – 21 Feb"
+    },
+    {
+      "row": "sprint",
+      "label": "S5",
+      "start": "2027-02-22",
+      "endExclusive": "2027-03-08",
+      "dates": "22 Feb – 7 Mar"
+    },
+    {
+      "row": "sprint",
+      "label": "S6 · IP",
+      "start": "2027-03-08",
+      "endExclusive": "2027-03-22",
+      "dates": "8 Mar – 21 Mar",
+      "ip": true
+    },
+    {
+      "row": "sprint",
+      "label": "S1",
+      "start": "2027-03-22",
+      "endExclusive": "2027-04-05",
+      "dates": "22 Mar – 4 Apr"
+    },
+    {
+      "row": "sprint",
+      "label": "S2",
+      "start": "2027-04-05",
+      "endExclusive": "2027-04-19",
+      "dates": "5 Apr – 18 Apr"
+    },
+    {
+      "row": "sprint",
+      "label": "S3",
+      "start": "2027-04-19",
+      "endExclusive": "2027-05-03",
+      "dates": "19 Apr – 2 May"
+    }
+  ],
+  "compactDates": [
+    {
+      "colW": 120,
+      "sprint": "PI 4 · 2026 S3",
+      "label": "2 Nov – 15 Nov"
+    },
+    {
+      "colW": 96,
+      "sprint": "PI 4 · 2026 S3",
+      "label": "2 Nov – 15 Nov"
+    },
+    {
+      "colW": 80,
+      "sprint": "PI 4 · 2026 S3",
+      "label": "2–15 Nov"
+    },
+    {
+      "colW": 70,
+      "sprint": "PI 4 · 2026 S3",
+      "label": "2–15 Nov"
+    },
+    {
+      "colW": 60,
+      "sprint": "PI 4 · 2026 S3",
+      "label": "2 Nov"
+    },
+    {
+      "colW": 44,
+      "sprint": "PI 4 · 2026 S3",
+      "label": "2 Nov"
+    },
+    {
+      "colW": 30,
+      "sprint": "PI 4 · 2026 S3",
+      "label": ""
+    },
+    {
+      "colW": 120,
+      "sprint": "PI 4 · 2026 S5 (crosses months)",
+      "label": "30 Nov – 13 Dec"
+    },
+    {
+      "colW": 80,
+      "sprint": "PI 4 · 2026 S5 (crosses months)",
+      "label": "30 Nov–13 Dec"
+    },
+    {
+      "colW": 60,
+      "sprint": "PI 4 · 2026 S5 (crosses months)",
+      "label": "30 Nov"
+    }
+  ],
+  "boundaries": [
+    {
+      "date": "2026-11-16",
+      "strong": false
+    },
+    {
+      "date": "2026-11-30",
+      "strong": false
+    },
+    {
+      "date": "2026-12-14",
+      "strong": false
+    },
+    {
+      "date": "2026-12-28",
+      "strong": true
+    },
+    {
+      "date": "2027-01-11",
+      "strong": false
+    },
+    {
+      "date": "2027-01-25",
+      "strong": false
+    },
+    {
+      "date": "2027-02-08",
+      "strong": false
+    },
+    {
+      "date": "2027-02-22",
+      "strong": false
+    },
+    {
+      "date": "2027-03-08",
+      "strong": false
+    },
+    {
+      "date": "2027-03-22",
+      "strong": true
+    },
+    {
+      "date": "2027-04-05",
+      "strong": false
+    },
+    {
+      "date": "2027-04-19",
+      "strong": false
+    }
+  ]
+}

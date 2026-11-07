@@ -1,0 +1,1450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Product Studio — Prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--p:#1976d2;--p2:#1565c0;--pd:#0d47a1;--pt:#e3f2fd;--tx:#212121;--t2:#424242;--t3:#616161;--bd:#e0e0e0;--bi:#c4c4c4;--bg:#fafafa;--ok:#2e7d32;--risk:#bf360c;--err:#d32f2f;--ms:#6a1b9a}
+*{box-sizing:border-box}
+body{min-height:100vh}
+html{scroll-padding-bottom:130px}
+html:has(body.noguide){scroll-padding-bottom:0}
+body{margin:0;font-family:Roboto,system-ui,sans-serif;color:var(--tx);background:var(--bg);font-size:13px;padding-bottom:120px}
+body.noguide{padding-bottom:0}
+button,input,select,textarea{font:inherit;color:inherit}
+a{color:var(--p)}
+h1,h2,h3{margin:0;font-weight:500}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.appbar{min-height:56px;background:#fff;border-bottom:1px solid var(--bd);display:flex;align-items:center;gap:20px;padding:0 20px;position:sticky;top:0;z-index:30;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;font-size:16px;font-weight:500;background:none;border:0;cursor:pointer;padding:0}
+.nav{display:flex;align-self:stretch;gap:2px}
+.nav a{display:flex;align-items:center;padding:0 14px;font-size:14px;font-weight:500;color:var(--t2);text-decoration:none;border-bottom:2px solid transparent;min-height:56px}
+.nav a.on{color:var(--p);border-bottom-color:var(--p)}
+.spacer{flex:1}
+.saved{display:flex;align-items:center;gap:6px;color:var(--ok);font-size:13px}
+.unsaved{color:var(--t3)}
+.btn{height:34px;padding:0 12px;border-radius:4px;border:1px solid var(--bi);background:#fff;color:var(--t2);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:6px;font-size:13px;white-space:nowrap;text-decoration:none}
+.btn:hover{background:#f5f5f5}
+.btn.pri{background:var(--p);border-color:var(--p);color:#fff;font-weight:500;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.btn.pri:hover{background:var(--p2)}
+.btn.out{border-color:var(--p);color:var(--p);font-weight:500}
+.btn.out:hover{background:#f5f9ff}
+.btn.txt{border:0;background:transparent;color:var(--p);font-weight:500;padding:0 6px}
+.btn.danger{border-color:var(--err);color:var(--err)}
+.btn.sm{height:30px;font-size:12px}
+.btn.lg{height:40px;padding:0 18px}
+.btn[disabled]{opacity:.5;cursor:default}
+:focus-visible{outline:2px solid var(--p);outline-offset:2px}
+.seg{display:inline-flex;border:1px solid var(--bi);border-radius:4px;overflow:hidden;background:#fff}
+.seg button{height:30px;padding:0 12px;border:0;border-left:1px solid var(--bi);background:#fff;cursor:pointer;color:var(--t2)}
+.seg button:first-child{border-left:0}
+.seg button.on{background:var(--pt);color:var(--pd);font-weight:500}
+.seg.full{display:grid;grid-auto-flow:column;grid-auto-columns:1fr}
+.card{background:#fff;border:1px solid var(--bd);border-radius:8px}
+.pad{padding:16px}
+.field{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--t3)}
+.input,.select{height:34px;border:1px solid var(--bi);border-radius:4px;padding:0 8px;background:#fff;color:var(--tx);font-size:13px;width:100%}
+textarea.input{height:auto;padding:8px;resize:vertical}
+.check{display:flex;gap:8px;align-items:center;font-size:13px;cursor:pointer}
+.check input{width:18px;height:18px;accent-color:var(--p);margin:0}
+.mono{font-family:'Roboto Mono',monospace}
+.key{font-family:'Roboto Mono',monospace;color:var(--p2);font-size:11px}
+.muted{color:var(--t3)}
+.eyebrow{font-size:11px;font-weight:500;letter-spacing:.6px;color:var(--t3);text-transform:uppercase}
+.toolbar{background:#fff;border-bottom:1px solid var(--bd);padding:10px 20px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.vsep{width:1px;height:24px;background:var(--bd)}
+.chip{display:inline-flex;align-items:center;gap:8px;font-size:12px;color:var(--t2);background:var(--pt);border-radius:14px;padding:5px 12px}
+.page{max-width:1440px;margin:0 auto;padding:24px;display:flex;flex-direction:column;gap:20px}
+.h1{font-size:22px}
+.lede{margin:4px 0 0;font-size:14px;color:var(--t3)}
+.row{display:flex;gap:20px;align-items:flex-start;flex-wrap:wrap}
+.grow{flex:999 1 520px;min-width:0}
+.side{flex:1 1 300px;max-width:380px;min-width:0}
+.dot{width:10px;height:10px;border-radius:5px;display:inline-block;flex:none}
+.sq{width:10px;height:10px;border-radius:3px;display:inline-block;flex:none}
+.diamond{width:10px;height:10px;background:var(--ms);transform:rotate(45deg);display:inline-block;flex:none}
+/* home */
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.tile{background:#fff;border:1px solid var(--bd);border-radius:8px;padding:20px;text-align:left;cursor:pointer;display:flex;flex-direction:column;gap:8px}
+.tile:hover{border-color:var(--p);background:#f5f9ff}
+.tile b{font-size:15px;font-weight:500}
+.tile span{color:var(--t3);font-size:13px;line-height:1.45}
+.list-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #eee}
+.list-row:last-child{border-bottom:0}
+.list-row .grow{flex:1}
+/* import */
+.stepper{display:flex;align-items:center;gap:10px;list-style:none;margin:0;padding:0;font-size:13px}
+.stepper li{display:flex;align-items:center;gap:8px;color:var(--t3)}
+.stepper .n{width:24px;height:24px;border-radius:12px;border:1px solid #9e9e9e;display:flex;align-items:center;justify-content:center;font-size:12px}
+.stepper li.on{color:var(--p);font-weight:500}.stepper li.on .n{background:var(--p);border-color:var(--p);color:#fff}
+.stepper li.done{color:var(--ok);font-weight:500}.stepper li.done .n{background:var(--ok);border-color:var(--ok);color:#fff}
+.stepper .ln{width:32px;height:1px;background:var(--bi)}
+.drop{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;border:2px dashed #90caf9;background:#f5f9ff;border-radius:10px;min-height:220px;cursor:pointer;text-align:center;padding:24px}
+.drop.over{background:var(--pt);border-color:var(--p)}
+.drop b{font-size:16px;font-weight:500}
+.or{display:flex;align-items:center;gap:12px;color:var(--t3);margin:16px 0}
+.or:before,.or:after{content:"";flex:1;height:1px;background:var(--bd)}
+table.map{width:100%;border-collapse:collapse;min-width:520px}
+table.map th{text-align:left;font-size:12px;font-weight:500;color:var(--t3);padding:10px 16px;border-bottom:1px solid var(--bd)}
+table.map td{padding:6px 16px;border-bottom:1px solid #eee}
+.select.warn{border:2px solid #e65100;background:#fff3e0;color:#bf360c}
+.badge{font-size:12px;font-weight:500;padding:4px 10px;border-radius:12px}
+.badge.ok{color:#1b5e20;background:#e8f5e9}.badge.warn{color:#8a3a00;background:#fff3e0}
+.warnbox{list-style:none;margin:0;padding:10px 12px;background:#fff8e1;border-radius:6px;display:flex;flex-direction:column;gap:6px;font-size:12px;color:#5d4037}
+.code{background:#263238;color:#cfd8dc;border-radius:8px;padding:14px 16px;font-family:'Roboto Mono',monospace;font-size:11.5px;line-height:1.55;white-space:pre;overflow:auto;margin:0;max-height:360px}
+.stat{border:1px solid var(--bd);border-radius:8px;padding:10px 12px;display:flex;flex-direction:column;gap:2px}
+.stat .l{font-size:11px;color:var(--t3)}.stat .v{font-size:20px;font-weight:500}
+.actionbar{display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap}
+/* roadmap */
+.insights{background:#fff;border-bottom:1px solid var(--bd);padding:12px 20px;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.bar4{height:4px;background:#bbdefb;border-radius:2px}.bar4>i{display:block;height:4px;background:var(--p);border-radius:2px}
+.work{display:flex;flex-wrap:wrap;align-items:stretch;min-height:calc(100vh - 260px)}
+.tlwrap{flex:999 1 640px;min-width:0;display:flex;flex-direction:column;background:#fff}
+.tlscroll{overflow-x:auto;flex:1}
+.tl{position:relative}
+.tl-head{position:relative;height:56px;border-bottom:1px solid var(--bd);background:#fff}
+.tl-corner{position:absolute;left:0;top:0;width:220px;height:55px;padding:0 16px;display:flex;flex-direction:column;justify-content:center;border-right:1px solid var(--bd);font-size:11px;color:var(--t3)}
+.hc{position:absolute;border-left:1px solid var(--bd);padding:0 8px;display:flex;flex-direction:column;justify-content:center;overflow:hidden;white-space:nowrap;line-height:1.25;background:#fff}
+.hc b{font-size:13px;font-weight:500}.hc small{font-size:10px;color:var(--t3)}
+.hc.center{align-items:center;text-align:center}
+.hc.piband{background:#eceff1;border-left:2px solid #90a4ae;border-bottom:1px solid var(--bd)}.hc.piband b{font-size:11px;font-weight:700;color:#37474f}
+.hc.pibig{border-left:2px solid #90a4ae;border-bottom:1px solid var(--bd)}
+.hc.first{border-left:2px solid #90a4ae}
+.hc.sprint b{font-size:12px}
+.hc.tick{padding:0}.hc.tick b{font-size:10px;font-weight:400;color:var(--t2)}
+.hc.ip{background:repeating-linear-gradient(135deg,rgba(120,144,156,.18) 0 4px,#f7f9fa 4px 8px)}
+.hc.cur{background:var(--pt)}.hc.cur b,.hc.cur small{color:var(--pd);font-weight:700}
+.tl-ms{position:relative;height:34px;border-bottom:1px solid var(--bd);background:#fcfcfc}
+.tl-ms .lbl{position:absolute;left:0;top:0;width:220px;height:33px;padding:0 16px;display:flex;align-items:center;font-size:12px;color:var(--t3)}
+.msbtn{position:absolute;top:6px;height:22px;border:0;background:transparent;padding:0;display:flex;align-items:center;gap:8px;font-size:12px;font-weight:500;color:#4a148c;cursor:pointer;white-space:nowrap}
+.msbtn .diamond{width:12px;height:12px;box-shadow:0 0 0 2px #fcfcfc}
+.freeze{position:absolute;top:6px;height:22px;border-radius:4px;background:repeating-linear-gradient(135deg,#546e7a 0 4px,#90a4ae 4px 8px);display:flex;align-items:center;justify-content:center;overflow:hidden}
+.freeze span{font-size:11px;font-weight:500;color:#fff;background:#455a64;padding:0 5px;border-radius:3px;white-space:nowrap}
+.lanehd{height:30px;display:flex;align-items:center;gap:8px;background:#f5f5f5;border-bottom:1px solid var(--bd);padding:0 16px;font-size:12px;font-weight:500;position:relative}
+.erow{position:relative;height:44px;border-bottom:1px solid #eee}
+.erow.sel{background:rgba(227,242,253,.6)}
+.elabel{position:absolute;left:0;top:0;width:220px;height:43px;padding:0 16px;display:flex;flex-direction:column;justify-content:center;background:#fff;border-right:1px solid var(--bd);cursor:pointer;text-align:left;border-top:0;border-bottom:0;border-left:0}
+.elabel span:last-child{font-size:12px;color:var(--t2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ebar{position:absolute;top:7px;height:30px;border:0;border-radius:6px;color:#fff;padding:0 8px;display:flex;flex-direction:column;justify-content:center;gap:3px;cursor:pointer;text-align:left;min-width:0}
+.ebar .t{font-size:12px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%}
+.ebar .pg{display:block;width:100%;height:3px;background:rgba(255,255,255,.35);border-radius:2px}.ebar .pg i{display:block;height:3px;background:#fff;border-radius:2px}
+.ebar.sel{box-shadow:0 0 0 2px #fff,0 0 0 4px var(--pd)}
+.ov{position:absolute;bottom:0;pointer-events:none}
+.today-lbl{position:absolute;top:64px;height:18px;display:flex;align-items:center;font-size:10px;font-weight:700;letter-spacing:.4px;color:#fff;background:#c62828;border-radius:3px;padding:0 6px;white-space:nowrap;pointer-events:none}
+.tray{border-top:1px solid var(--bd);padding:12px 16px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;background:#fafafa}
+.trayitem{font-size:12px;background:#fff;border:1px solid var(--bi);border-radius:4px;padding:4px 8px;display:flex;gap:6px;cursor:pointer}
+.legend{padding:8px 16px;display:flex;gap:16px;flex-wrap:wrap;font-size:12px;color:var(--t2);border-top:1px solid var(--bd);background:#fff}
+.legend span{display:flex;align-items:center;gap:6px}
+.detail{flex:1 1 320px;max-width:360px;background:#fff;border-left:1px solid var(--bd);display:flex;flex-direction:column}
+.detail .sec{padding:16px;border-bottom:1px solid var(--bd)}
+.g2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.story{display:flex;align-items:center;gap:8px;padding:6px 0;font-size:12px;border-bottom:1px solid #f5f5f5}
+/* swimlanes */
+.palette{background:#fff;border-bottom:1px solid var(--bd);padding:6px 20px;display:flex;align-items:center;gap:2px;flex-wrap:wrap}
+.tool{height:36px;padding:0 10px;border:0;border-radius:4px;background:transparent;color:var(--t2);font-size:12px;display:flex;align-items:center;gap:6px;cursor:pointer}
+.tool:hover{background:#f5f5f5}.tool.on{background:var(--pt);color:var(--pd);font-weight:500}
+.canvas{flex:999 1 640px;min-width:0;overflow:auto;padding:16px;background-color:#eef1f4;background-image:radial-gradient(#cfd8dc 1px,transparent 1px);background-size:16px 16px;display:flex;flex-direction:column;align-items:flex-start;gap:8px}
+.canvas>.frame{margin:0 auto}.canvas>p{align-self:center}
+.frame{background:#fff;padding:24px;box-shadow:0 1px 3px rgba(0,0,0,.12),0 1px 2px rgba(0,0,0,.08);border-radius:4px;position:relative;overflow:hidden;display:flex;flex-direction:column;gap:16px;flex:none}
+.frame.placing svg .bgrect{cursor:crosshair}
+.insp{flex:1 1 300px;max-width:320px;background:#fff;border-left:1px solid var(--bd);display:flex;flex-direction:column}
+.tabs{display:flex;border-bottom:1px solid var(--bd)}
+.tabs button{flex:1;height:44px;border:0;background:#fff;border-bottom:2px solid transparent;color:var(--t2);font-weight:500;cursor:pointer}
+.tabs button.on{color:var(--p);border-bottom-color:var(--p)}
+.swatches{display:flex;gap:8px;flex-wrap:wrap}
+.sw{width:28px;height:28px;border-radius:14px;border:0;cursor:pointer;box-shadow:0 0 0 1px var(--bi)}
+.sw.on{box-shadow:0 0 0 1px var(--bi),0 0 0 3px #fff,0 0 0 5px var(--p)}
+.lanerow{display:flex;align-items:center;gap:8px;padding:6px 8px;border:1px solid var(--bd);border-radius:6px}
+.lanerow input{flex:1;min-width:0;height:28px;border:1px solid transparent;border-radius:4px;padding:0 4px}
+.lanerow input:hover,.lanerow input:focus{border-color:var(--bi)}
+.zoomctl{display:inline-flex;align-items:center;border:1px solid var(--bi);border-radius:4px;overflow:hidden;background:#fff;height:32px}
+.zoomctl button{height:30px;min-width:30px;border:0;background:#fff;cursor:pointer;color:var(--t2);display:inline-flex;align-items:center;justify-content:center;font-size:13px;padding:0 8px}
+.zoomctl button:hover{background:#f5f5f5}
+.zoomctl .zl{min-width:56px;border-left:1px solid var(--bi);border-right:1px solid var(--bi);font-variant-numeric:tabular-nums;font-weight:500}
+.zoomctl .zf{border-left:1px solid var(--bi)}
+.zoomctl button[disabled]{opacity:.4;cursor:default}
+.iconbtn{width:32px;height:32px;border:0;border-radius:16px;background:transparent;cursor:pointer;display:inline-flex;align-items:center;justify-content:center}
+.iconbtn:hover{background:#f5f5f5}
+.rail{flex:0 0 48px;width:48px;background:#fff;border-left:1px solid var(--bd);display:flex;flex-direction:column;align-items:center;gap:6px;padding:8px 0}
+.rail .vlabel{writing-mode:vertical-rl;transform:rotate(180deg);font-size:12px;color:var(--t2);font-weight:500;margin-top:8px;white-space:nowrap;max-height:60vh;overflow:hidden;text-overflow:ellipsis;cursor:pointer;background:none;border:0;padding:6px 0}
+.rail .vlabel:hover{color:var(--p)}
+.rail .iconbtn[aria-pressed="true"]{background:var(--pt)}
+.panelhead{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.statusbar{background:#fff;border-top:1px solid var(--bd);padding:8px 20px;display:flex;gap:16px;flex-wrap:wrap;font-size:12px;color:var(--t3)}
+.hint{font-size:12px;color:#0d47a1;background:var(--pt);border-radius:4px;padding:6px 10px}
+#svgHost svg{user-select:none;-webkit-user-select:none;touch-action:none}
+#svgHost svg .shape{cursor:move}
+.frame.placing #svgHost svg .shape{cursor:pointer}
+svg .handles{opacity:0;transition:opacity .12s}
+svg g.shape:hover .handles,svg g.shape.sel .handles,svg g.shape:focus-visible .handles{opacity:1}
+svg.dragging .handles{opacity:0!important}
+svg .hdl{cursor:crosshair}
+.picker{position:fixed;z-index:78;background:#fff;border-radius:8px;box-shadow:0 5px 5px -3px rgba(0,0,0,.2),0 8px 10px 1px rgba(0,0,0,.14);padding:8px;display:none;width:196px}
+.picker.open{display:block}
+.picker .ph{font-size:11px;font-weight:500;color:var(--t3);margin:0 2px 6px;letter-spacing:.3px}
+.picker .pg{display:grid;grid-template-columns:repeat(4,1fr);gap:4px}
+.picker button{height:44px;border:1px solid transparent;border-radius:6px;background:#fff;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:9.5px;color:var(--t2);padding:0}
+.picker button:hover,.picker button:focus-visible{background:var(--pt);border-color:#90caf9;color:var(--pd);outline:none}
+.picker button svg{width:22px;height:22px}
+.addrow{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.addrow button{height:36px;border:1px solid var(--bd);border-radius:6px;background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0}
+.addrow button:hover{background:var(--pt);border-color:#90caf9}
+svg .hdl circle{fill:#1976d2;fill-opacity:.85}
+svg .hdl:hover circle{fill:#0d47a1;fill-opacity:1}
+svg .ehit{cursor:pointer}
+svg .lres{cursor:ns-resize}svg .wres{cursor:ew-resize}
+svg .lres:hover,svg .wres:hover{fill:rgba(25,118,210,.22)}
+svg g.edge:hover .evis{stroke:#1976d2}
+svg .shape:hover .body{filter:brightness(.97)}
+/* export */
+.pv{background:#eef1f4;border:1px solid var(--bd);border-radius:8px;padding:20px;display:flex;flex-direction:column;gap:12px}
+.sheet{background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.15);border-radius:2px;position:relative;overflow:hidden;padding:3.5%;display:flex;flex-direction:column;gap:2.5%;container-type:inline-size;margin:0 auto}
+.sheet .ttl{font-size:2.2cqw;font-weight:700}.sheet .sub{font-size:1.3cqw;color:var(--t3)}
+.sheet .content{flex:1;min-height:0;display:flex;align-items:center;justify-content:center}
+.sheet .content svg{width:100%;height:100%}
+.sheet .stamp{display:flex;justify-content:space-between;font-size:1.1cqw;color:var(--t3);border-top:1px solid var(--bd);padding-top:.6cqw}
+.wm{position:absolute;inset:0;pointer-events:none;display:flex;align-items:center;justify-content:center;container-type:inline-size}
+.wm.tiled{display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(4,1fr);place-items:center}
+.wm .t{font-weight:700;white-space:nowrap;letter-spacing:.15em;transform:rotate(-28deg)}
+.slegend{display:flex;flex-direction:column;gap:.5cqw;align-items:flex-end;font-size:.92cqw;color:#424242;max-width:62%}
+.slegend .row{display:flex;gap:.4cqw 1.2cqw;flex-wrap:wrap;justify-content:flex-end}
+.slegend .it{display:inline-flex;align-items:center;gap:.45cqw;white-space:nowrap}
+.slegend .k{font-weight:700;color:#37474f}.slegend .mk{color:#4a148c}.slegend .tk{color:#c62828}
+.slegend .sym{display:inline-block;width:.85cqw;height:.85cqw;border-radius:.15cqw;flex:none}
+.slegend .dm{background:#6a1b9a;transform:rotate(45deg);border-radius:0;width:.7cqw;height:.7cqw}
+.slegend .fz{background:repeating-linear-gradient(45deg,rgba(84,110,122,.45) 0 .2cqw,transparent .2cqw .45cqw);outline:1px dashed #546e7a}
+.slegend .td{width:.22cqw;height:1.1cqw;background:#d32f2f;border-radius:0}
+.slegend .ip{background:repeating-linear-gradient(45deg,#cfd8dc 0 .2cqw,#f7f9fa .2cqw .45cqw);outline:1px solid #b0bec5}
+.slegend .cu{background:#e3f2fd;outline:1px solid #90caf9}
+.thumbs{display:flex;gap:10px;overflow-x:auto;padding:2px 2px 6px}
+.thumb{flex:0 0 168px;border:0;background:none;padding:0;cursor:pointer;display:flex;flex-direction:column;gap:4px;text-align:left}
+.thumb .tn{display:block;border-radius:3px;outline:2px solid transparent;outline-offset:2px;pointer-events:none}
+.thumb.on .tn{outline-color:var(--p)}
+.thumb .tn .sheet{box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.thumb .tl{font-size:12px;color:var(--t2)}.thumb.on .tl{color:var(--pd);font-weight:500}
+.optcard{border:1px solid var(--bi);background:#fff;border-radius:6px;padding:10px 12px;display:flex;flex-direction:column;align-items:flex-start;gap:2px;cursor:pointer;text-align:left}
+.optcard.on{border:2px solid var(--p);background:#f5f9ff;padding:9px 11px}
+.optcard b{font-size:14px;font-weight:500}.optcard.on b{color:var(--pd)}
+.optcard span{font-size:12px;color:var(--t3)}
+.pos{border:1px solid var(--bi);background:#fff;border-radius:6px;padding:8px;display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;font-size:12px;font-weight:500;color:var(--t2)}
+.pos.on{border:2px solid var(--p);background:#f5f9ff;color:var(--pd);padding:7px}
+.pos i{width:56px;height:38px;border:1px solid var(--bi);background:#fff;border-radius:2px;position:relative;overflow:hidden;display:block}
+.tok{height:26px;padding:0 8px;border:1px solid var(--bi);border-radius:13px;background:#fff;font-size:12px;color:var(--t2);font-family:'Roboto Mono',monospace;cursor:pointer}
+table.recent{width:100%;border-collapse:collapse;min-width:640px}
+table.recent th{text-align:left;font-size:12px;font-weight:500;color:var(--t3);padding:8px 16px}
+table.recent td{padding:10px 16px;border-top:1px solid #eee}
+/* modal, toast */
+.scrim{position:fixed;inset:0;background:rgba(0,0,0,.42);display:none;align-items:center;justify-content:center;z-index:60;padding:16px}
+.scrim.open{display:flex}
+.dialog{background:#fff;border-radius:8px;box-shadow:0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14);width:min(560px,100%);max-height:90vh;display:flex;flex-direction:column}
+.dialog header{padding:16px 20px;font-size:16px;font-weight:500;border-bottom:1px solid var(--bd)}
+.dialog .body{padding:16px 20px;overflow:auto;display:flex;flex-direction:column;gap:12px}
+.dialog footer{padding:12px 20px;border-top:1px solid var(--bd);display:flex;justify-content:flex-end;gap:8px}
+.dialog.wide{width:min(860px,100%)}
+.qx{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:20px;align-items:start}
+.qprev{background:#eef1f4;border-radius:6px;padding:14px;position:sticky;top:0}
+.qopts{display:flex;flex-direction:column;gap:12px}
+.wmbox{border:1px solid var(--bd);border-radius:8px;padding:12px;display:flex;flex-direction:column;gap:12px;background:#fafcff}
+@media (max-width:720px){.qx{grid-template-columns:1fr}.qprev{position:static}}
+.progress{height:6px;background:#bbdefb;border-radius:3px;overflow:hidden}.progress i{display:block;height:6px;background:var(--p);width:0;transition:width 1.1s ease}
+.toast{position:fixed;left:50%;bottom:120px;transform:translate(-50%,20px);background:#323232;color:#fff;padding:12px 16px;border-radius:4px;font-size:13px;opacity:0;transition:all .2s;z-index:70;pointer-events:none;max-width:90vw}
+body.noguide .toast{bottom:24px}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.toast.act{pointer-events:auto;display:flex;align-items:center;gap:16px}
+.toast .tbtn{background:none;border:0;color:#90caf9;font-weight:700;letter-spacing:.4px;cursor:pointer;padding:4px 6px;text-transform:uppercase;font-size:12px}
+.ctx{position:fixed;z-index:80;background:#fff;border-radius:6px;box-shadow:0 5px 5px -3px rgba(0,0,0,.2),0 8px 10px 1px rgba(0,0,0,.14);padding:6px 0;min-width:190px;display:none}
+.ctx.open{display:block}
+.ctx button{display:flex;width:100%;align-items:center;gap:10px;height:34px;padding:0 14px;border:0;background:none;text-align:left;cursor:pointer;font-size:13px;color:var(--tx)}
+.ctx button:hover,.ctx button:focus{background:#f5f5f5;outline:none}
+.ctx button.danger{color:var(--err)}
+.ctx kbd{margin-left:auto;font-family:inherit;font-size:11px;color:var(--t3)}
+.ctx hr{border:0;border-top:1px solid #eee;margin:4px 0}
+svg .fab{cursor:pointer}
+svg .fab rect,svg .fab circle{fill:#fff;stroke:#c4c4c4}
+svg .fab:hover rect,svg .fab:hover circle{fill:#f5f5f5;stroke:#9e9e9e}
+svg .fab.del:hover rect,svg .fab.del:hover circle{fill:#ffebee;stroke:#d32f2f}
+/* journey guide */
+.guide{position:fixed;left:0;right:0;bottom:0;background:#1f2a30;color:#eceff1;z-index:50;padding:10px 20px 12px;display:flex;flex-direction:column;gap:8px;box-shadow:0 -2px 8px rgba(0,0,0,.2)}
+.guide .top{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.guide .lab{font-size:11px;font-weight:700;letter-spacing:.8px;color:#90caf9}
+.jsteps{display:flex;gap:6px;flex-wrap:wrap;list-style:none;margin:0;padding:0}
+.jsteps button{display:flex;align-items:center;gap:8px;height:30px;padding:0 12px 0 6px;border-radius:15px;border:1px solid #455a64;background:transparent;color:#cfd8dc;cursor:pointer;font-size:12px}
+.jsteps button .n{width:20px;height:20px;border-radius:10px;background:#37474f;color:#eceff1;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700}
+.jsteps button.done .n{background:#2e7d32}
+.jsteps button.on{background:#e3f2fd;color:#0d47a1;border-color:#e3f2fd;font-weight:500}.jsteps button.on .n{background:#1976d2}
+.guide .tip{font-size:13px;color:#eceff1;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.guide .tip p{margin:0;flex:1;min-width:260px;line-height:1.45}
+.guide .gbtn{height:30px;padding:0 14px;border-radius:4px;border:0;background:#90caf9;color:#0d47a1;font-weight:500;cursor:pointer}
+.guide .gx{height:30px;padding:0 10px;border-radius:4px;border:1px solid #455a64;background:transparent;color:#cfd8dc;cursor:pointer;font-size:12px}
+.guide-show{position:fixed;right:16px;bottom:16px;z-index:50;height:36px;padding:0 14px;border-radius:18px;border:0;background:#1f2a30;color:#eceff1;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,.3);display:none}
+body.noguide .guide{display:none}body.noguide .guide-show{display:block}
+@media (max-width:720px){.page{padding:16px}.toolbar,.palette{padding:8px 12px}.nav a{padding:0 8px;min-height:44px}.appbar{position:static}.jsteps li:not(:has(.on)){display:none}.guide .lab{display:none}.guide .tip p{min-width:0}body{padding-bottom:170px}html{scroll-padding-bottom:180px}}
+</style>
+</head>
+<body>
+<header class="appbar">
+  <button class="brand" data-act="go" data-to="home" aria-label="Product Studio home">
+    <svg width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><rect x="1" y="1" width="22" height="22" rx="6" fill="#1976d2"/><path d="M6 8h7M6 12h11M6 16h5" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>
+    Product Studio
+  </button>
+  <nav class="nav" aria-label="Main" id="nav"></nav>
+  <div class="spacer"></div>
+  <span id="savestate"></span>
+</header>
+<main id="view"></main>
+
+<div class="guide" id="guide" role="region" aria-label="Prototype guide"></div>
+<button class="guide-show" data-act="guide" data-v="1">Show journey guide</button>
+<div class="scrim" id="scrim"><div class="dialog" role="dialog" aria-modal="true" aria-labelledby="dlgTitle" id="dialog"></div></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<div class="ctx" id="ctx" role="menu" aria-label="Shape actions"></div>
+<div class="picker" id="picker" role="menu" aria-label="Add a connected shape"></div>
+
+<script>
+/* ---------- helpers ---------- */
+const MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const BASE=new Date(2026,10,1);
+const date=d=>{const x=new Date(2026,10,1+Math.round(d));return x.getDate()+' '+MON[x.getMonth()]};
+const isoOf=d=>{const x=new Date(2026,10,1+d);return x.getFullYear()+'-'+String(x.getMonth()+1).padStart(2,'0')+'-'+String(x.getDate()).padStart(2,'0')};
+const dayOf=iso=>Math.round((new Date(iso+'T00:00:00')-BASE)/864e5);
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const $=s=>document.querySelector(s);
+const TODAY=5; // 6 Nov 2026
+
+/* ---------- reference data ---------- */
+const PIS=[{name:'PI 4 · 2026',start:-27},{name:'PI 1 · 2027',start:57},{name:'PI 2 · 2027',start:141}];
+const SPRINTS=[];
+PIS.forEach(p=>{p.end=p.start+84;p.sub=date(p.start)+' – '+date(p.end-1);
+  for(let j=0;j<6;j++){const s=p.start+j*14;SPRINTS.push({pi:p,n:j+1,s,e:s+14,ip:j===5,first:j===0,cur:TODAY>=s&&TODAY<s+14})}});
+const CUR=SPRINTS.find(x=>x.cur);
+const STATUS={ns:{label:'Not started',c:'#757575'},ip:{label:'In progress',c:'#1976d2'},ar:{label:'At risk',c:'#bf360c'},dn:{label:'Done',c:'#2e7d32'}};
+const TEAMS=[{name:'Checkout',c:'#1976d2'},{name:'Risk & Fraud',c:'#bf360c'},{name:'Platform',c:'#455a64'},{name:'Merchant Experience',c:'#6a1b9a'}];
+const MS={beta:{name:'Beta',d:75},ga:{name:'GA',d:170},freeze:{name:'Code freeze',s:134,e:151}};
+const FIELDS=['Key','Title','Type','Epic','Swimlane / Team','Status','Sprint','Release','Points','Start','End','Tags',"Don't import"];
+const ALIASES={Key:['issue key','key'],Title:['summary','title'],Type:['issue type','issuetype','type'],Epic:['parent','epic link','parent id','epic'],'Swimlane / Team':['team'],Status:['status'],Sprint:['sprint'],Release:['fix version','fixversion'],Points:['story point'],Start:['start date','start'],End:['due date','due','target end','end date']};
+const SAMPLE_COLS=[['Issue key','PAY-142','Key'],['Summary','Saved cards & one-click checkout','Title'],['Issue Type','Epic','Type'],['Parent','PAY-100','Epic'],['Team','Checkout','Swimlane / Team'],['Status','In Progress','Status'],['Sprint','PAY Sprint 24','Sprint'],['Fix versions','2027.1','Release'],['Story Points','8','Points'],['Start date','2026-11-16','Start'],['Due date','2027-01-29','End'],['Components','Wallet',null]];
+const JIRA_STATUS=[['To Do','ns'],['In Progress','ip'],['In Review','ip'],['Blocked','ar'],['Done','dn']];
+
+function freshEpics(){return [
+ {key:'PAY-142',title:'Saved cards & one-click checkout',team:'Checkout',s:15,e:90,st:'ip',pct:61,issues:18},
+ {key:'PAY-155',title:'UPI AutoPay mandates',team:'Checkout',s:30,e:132,st:'ip',pct:20,issues:14},
+ {key:'PAY-161',title:'Checkout A/B framework',team:'Checkout',s:92,e:125,st:'ns',pct:0,issues:9},
+ {key:'RSK-031',title:'Real-time fraud scoring v2',team:'Risk & Fraud',s:8,e:111,st:'ar',pct:45,issues:22},
+ {key:'RSK-036',title:'3DS2 frictionless flow',team:'Risk & Fraud',s:64,e:118,st:'ns',pct:0,issues:11},
+ {key:'PLT-190',title:'PCI DSS 4.0 controls',team:'Platform',s:0,e:50,st:'ip',pct:80,issues:16},
+ {key:'PLT-208',title:'Ledger service migration',team:'Platform',s:64,e:174,st:'ip',pct:10,issues:25},
+ {key:'MX-070',title:'Settlement reports export',team:'Merchant Experience',s:1,e:48,st:'ar',pct:30,issues:8},
+ {key:'MX-077',title:'Merchant payouts dashboard',team:'Merchant Experience',s:92,e:160,st:'ns',pct:0,issues:13},
+ {key:'MX-081',title:'Dispute self-service',team:'Merchant Experience',s:120,e:181,st:'ns',pct:0,issues:12}]}
+const TRAY=[['PAY-170','Wallet top-up limits'],['RSK-040','Velocity rules UI'],['PLT-215','Idempotency keys'],['MX-090','GST invoice templates'],['PAY-174','EMI on cards']];
+const STORIES=[['PAY-143','Tokenise card on first payment','dn'],['PAY-147','Saved-card picker on checkout','dn'],['PAY-149','CVV-less repeat payment','ip'],['PAY-152','Remove / rename saved card','ns']];
+
+/* swimlane data */
+const LANE_STYLES=[{bg:'#f5f9fe',hd:'#e3f2fd',tx:'#0d47a1'},{bg:'#fffaf3',hd:'#fff3e0',tx:'#8a3a00'},{bg:'#f6fbf6',hd:'#e8f5e9',tx:'#1b5e20'},{bg:'#faf6fb',hd:'#f3e5f5',tx:'#4a148c'},{bg:'#f3f9f9',hd:'#e0f2f1',tx:'#004d40'},{bg:'#faf8f6',hd:'#efebe9',tx:'#3e2723'}];
+const SZ={start:[40,40],end:[40,40],task:[136,64],decision:[136,88],note:[184,64],data:[120,72],doc:[136,64],sub:[136,64]};
+const LANE_H=132,LANE_MIN=132,LABEL_W=104,LANE_PAD=34;
+function freshDiagram(){return {
+ name:'Customer refund flow',file:'refund-flow.swimlane.json',version:3,
+ lanes:[{id:'cust',name:'Customer'},{id:'sup',name:'Support'},{id:'fin',name:'Finance'},{id:'plat',name:'Payments Platform'}],
+ shapes:[
+  {id:'S',type:'start',lane:'cust',x:128},
+  {id:'A',type:'task',lane:'cust',x:216,label:'Request refund',sub:'App or web',owner:'Customer'},
+  {id:'E',type:'task',lane:'cust',x:400,label:'Sees decline',sub:'Email + in-app'},
+  {id:'X1',type:'end',lane:'cust',x:584},
+  {id:'I',type:'task',lane:'cust',x:768,label:'Refund received',sub:'In 5–7 days'},
+  {id:'X2',type:'end',lane:'cust',x:952},
+  {id:'B',type:'task',lane:'sup',x:216,label:'Review request',sub:'Agent · L1',owner:'Support L1'},
+  {id:'D',type:'decision',lane:'sup',x:400,label:'In policy?'},
+  {id:'F',type:'task',lane:'fin',x:400,label:'Approve refund',sub:'SLA 2 days',owner:'Finance ops',jira:'PAY-188'},
+  {id:'N',type:'note',lane:'fin',x:584,label:'Over ₹10,000 needs a second approver'},
+  {id:'G',type:'task',lane:'plat',x:400,label:'Issue refund',sub:'Payment gateway API'},
+  {id:'H',type:'task',lane:'plat',x:584,label:'Post to ledger',sub:'Ledger service'}],
+ edges:[
+  {a:'S',b:'A',fs:'r',ts:'l'},{a:'A',b:'B',fs:'b',ts:'t'},{a:'B',b:'D',fs:'r',ts:'l'},
+  {a:'D',b:'E',fs:'t',ts:'b',label:'No'},{a:'E',b:'X1',fs:'r',ts:'l'},{a:'D',b:'F',fs:'b',ts:'t',label:'Yes'},
+  {a:'F',b:'G',fs:'b',ts:'t'},{a:'G',b:'H',fs:'r',ts:'l'},{a:'H',b:'I',fs:'r',ts:'b'},{a:'I',b:'X2',fs:'r',ts:'l'},
+  {a:'F',b:'N',fs:'r',ts:'l',dashed:true}]}}
+
+/* ---------- state ---------- */
+let PANELS={detail:true,insp:true};try{const v=JSON.parse(localStorage.getItem('ps-panels')||'null');if(v&&typeof v==='object')PANELS=Object.assign(PANELS,v)}catch(_){}
+const S={
+  route:'home',visited:new Set(['home']),guide:true,
+  file:null,cols:null,map:null,rows:148,mapped:false,
+  rmName:'Payments Platform H1 2027',rmFile:'payments-roadmap-h1-2027.json',roadmapReady:false,saved:false,
+  epics:freshEpics(),zoom:'months',ms:true,sel:'PAY-142',rmZoom:{months:1,sprints:1,pis:1},dgZoom:1,
+  dg:freshDiagram(),selShape:'F',tool:'select',connectFrom:null,insp:'shape',dgSaved:true,selEdge:null,extra:[],undo:[],
+  src:'swimlane',fmt:'pdf',pptx:{size:'16:9',split:'one',title:true,table:true,notes:true},pslide:0,page:'A4',orient:'land',scale:'2',stamp:true,
+  wm:{on:false,type:'text',text:'CONFIDENTIAL — {project}',pos:'diag',op:14,color:'#b71c1c',img:null,preset:'Confidential — internal'},
+  exports:[
+    {file:'refund-flow-swimlane_2026-11-05.pdf',from:'Swimlane · Customer refund flow',wm:'CONFIDENTIAL — Payments Platform',when:'5 Nov 2026, 16:40'},
+    {file:'payments-h1-2027-roadmap_2026-11-05.png',from:'Roadmap · Month view',wm:'Company logo, corner',when:'5 Nov 2026, 11:02'}]
+};
+function resetMap(){S.cols=SAMPLE_COLS.map(([col,sample,field])=>({col,sample,field}));S.statusMap=Object.fromEntries(JIRA_STATUS);}
+resetMap();
+
+/* ---------- routing ---------- */
+const ROUTES=['home','import','map','roadmap','swimlanes','export'];
+const NAV=[['import','Import'],['roadmap','Roadmap'],['swimlanes','Swimlanes'],['export','Exports']];
+function go(r){if(!ROUTES.includes(r))r='home';if(location.hash!=='#'+r)location.hash=r;else show(r)}
+function show(r){S.route=ROUTES.includes(r)?r:'home';S.visited.add(S.route);S.tool='select';S.connectFrom=null;render();window.scrollTo(0,0);const h=$('#view h1');if(h){h.setAttribute('tabindex','-1');h.focus({preventScroll:true})}}
+window.addEventListener('hashchange',()=>show(location.hash.slice(1)));
+
+/* ---------- journey guide ---------- */
+const JOURNEY=[
+ {r:'import',also:['home'],label:'Import Jira export',tip:'Start from Home or Import. Drop the CSV you exported from Jira (Filters → Export → CSV), or click <b>Use the sample export</b>.'},
+ {r:'map',label:'Map fields & save JSON',tip:'Columns are matched automatically. Fix the one flagged in orange, check the status mapping, then click <b>Create roadmap &amp; save JSON</b>.'},
+ {r:'roadmap',label:'Plan the roadmap',tip:'Switch <b>Sprints / Months / PIs</b>, click any bar to edit its dates or status, and toggle <b>Milestone lines</b>. <b>Save JSON</b> shows the file that gets saved.'},
+ {r:'swimlanes',label:'Draw a swimlane workflow',tip:'Hover a shape and <b>drag a blue arrow</b> onto another shape to connect them, like draw.io. Hover an arrow to <b>pick the next shape</b> (task, decision, document…) or click it to add one like the current shape. Drag shapes to move them, and click a line to label or delete it. Then click <b>Export PDF</b> or <b>Export PNG</b> — that\u2019s where you can add a watermark.'},
+ {r:'export',label:'Export with watermark',tip:'This is the full export page. Tick <b>Add watermark</b>, change its text, position, opacity or colour and watch the preview. Try PDF, PNG or — for the roadmap — <b>PowerPoint</b>, then click <b>Export</b>.'}];
+function guideHTML(){
+  const idx=Math.max(0,JOURNEY.findIndex(j=>j.r===S.route||(j.also||[]).includes(S.route)));
+  const cur=JOURNEY[idx],next=JOURNEY[idx+1];
+  return `<div class="top"><span class="lab">USER JOURNEY · PROTOTYPE</span>
+   <ol class="jsteps">${JOURNEY.map((j,i)=>`<li><button data-act="go" data-to="${j.r}" class="${i===idx?'on':''} ${i!==idx&&S.visited.has(j.r)?'done':''}" ${i===idx?'aria-current="step"':''}><span class="n">${i!==idx&&S.visited.has(j.r)?'✓':i+1}</span>${j.label}</button></li>`).join('')}</ol>
+   <span class="spacer"></span><button class="gx" data-act="restart">Restart journey</button><button class="gx" data-act="guide" data-v="0">Hide</button></div>
+   <div class="tip"><p><b>Step ${idx+1}.</b> ${cur.tip}</p>${next?`<button class="gbtn" data-act="go" data-to="${next.r}">Next: ${next.label} →</button>`:`<button class="gbtn" data-act="restart">Start again</button>`}</div>`}
+
+/* ---------- render ---------- */
+function render(){
+  $('#nav').innerHTML=NAV.map(([r,l])=>`<a href="#${r}" class="${S.route===r||(r==='import'&&S.route==='map')?'on':''}" ${S.route===r?'aria-current="page"':''}>${l}</a>`).join('');
+  const onDg=S.route==='swimlanes';
+  $('#savestate').innerHTML=onDg
+    ?(S.dgSaved?`<span class="saved">${ICON.cloud}Saved to ${esc(S.dg.file)}</span>`:`<span class="saved unsaved">Unsaved changes</span>`)
+    :(S.roadmapReady?(S.saved?`<span class="saved">${ICON.cloud}Saved to ${esc(S.rmFile)}</span>`:`<span class="saved unsaved">Unsaved changes</span>`):'');
+  const v={home:vHome,import:vImport,map:vMap,roadmap:vRoadmap,swimlanes:vSwim,export:vExport}[S.route];
+  $('#view').innerHTML=v();
+  $('#guide').innerHTML=guideHTML();
+  document.body.classList.toggle('noguide',!S.guide);
+  if(S.route==='export')renderPreview();
+}
+
+/* ---------- icons ---------- */
+const ICON={
+ cloud:'<svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 18h10a4 4 0 0 0 .5-8A6 6 0 0 0 6 9a4.5 4.5 0 0 0 1 9z" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M9.5 13.5l2 2 3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>',
+ down:'<svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h16M12 4v11M7 10l5 5 5-5" fill="none" stroke="currentColor" stroke-width="2"/></svg>',
+ up:'<svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h16M12 15V4M7 9l5-5 5 5" fill="none" stroke="currentColor" stroke-width="2"/></svg>',
+ sync:'<svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.3-5.7M20 4v5h-5" fill="none" stroke="currentColor" stroke-width="2"/></svg>',
+ jira:'<svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l10 10-10 10L2 12z" fill="none" stroke="#1565c0" stroke-width="2"/><path d="M12 8l4 4-4 4-4-4z" fill="#1565c0"/></svg>',
+ file:'<svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2h8l5 5v15H6z" fill="none" stroke="#616161" stroke-width="1.5"/><path d="M14 2v5h5" fill="none" stroke="#616161" stroke-width="1.5"/></svg>',
+ upload:'<svg width="40" height="40" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 18h10a4 4 0 0 0 .5-8A6 6 0 0 0 6 9a4.5 4.5 0 0 0 1 9z" fill="#fff" stroke="#1976d2" stroke-width="1.5"/><path d="M12 16v-6M9 12.5l3-3 3 3" fill="none" stroke="#1976d2" stroke-width="1.5"/></svg>',
+ warn:'<svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true" style="flex:none;margin-top:1px"><path d="M12 3l10 18H2z" fill="none" stroke="#bf360c" stroke-width="2"/><path d="M12 10v5M12 17.5v.5" stroke="#bf360c" stroke-width="2"/></svg>',
+ chevR:'<svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7M4 5v14" fill="none" stroke="#424242" stroke-width="2"/></svg>',
+ chevL:'<svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7M20 5v14" fill="none" stroke="#424242" stroke-width="2"/></svg>',
+ close:'<svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="#616161" stroke-width="2"/></svg>',
+ arrow:'<svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2"/></svg>',
+ lanes:'<svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2" fill="none" stroke="#1976d2" stroke-width="2"/><path d="M2 9.5h20M2 14.5h20M7 4v16" stroke="#1976d2" stroke-width="1.5"/></svg>',
+ road:'<svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h9M6 12h12M10 18h11" stroke="#1976d2" stroke-width="3" stroke-linecap="round"/></svg>'
+};
+
+/* ---------- views: home ---------- */
+function vHome(){return `<div class="page">
+ <div><h1 class="h1">Welcome back</h1><p class="lede">Start a roadmap from a Jira export, reopen a saved one, or draw a workflow.</p></div>
+ <div class="tiles">
+  <button class="tile" data-act="go" data-to="import">${ICON.upload}<b>Import from Jira</b><span>Upload a CSV, JSON or XML export. Map its fields once and reuse the mapping next time.</span></button>
+  <button class="tile" data-act="openRecent">${ICON.road}<b>Open a saved roadmap</b><span>Reopen a roadmap .json file — dates, notes and milestones come back exactly as you left them.</span></button>
+  <button class="tile" data-act="go" data-to="swimlanes">${ICON.lanes}<b>Swimlane diagrams</b><span>Draw business workflows across teams and export them as PDF or PNG.</span></button>
+ </div>
+ <div class="row">
+  <section class="card pad grow" style="flex-basis:420px"><h2 style="font-size:14px;margin-bottom:6px">Recent roadmaps</h2>
+   ${[['payments-roadmap-h2-2026.json','Updated 2 Nov 2026'],['mobile-app-2027.json','Updated 28 Oct 2026'],['risk-platform-q4.json','Updated 14 Oct 2026']].map(([f,d])=>`<div class="list-row">${ICON.file}<div class="grow"><div>${f}</div><div class="muted" style="font-size:12px">${d}</div></div><button class="btn txt" data-act="openRecent" data-file="${f}">Open</button></div>`).join('')}
+  </section>
+  <section class="card pad grow" style="flex-basis:420px"><h2 style="font-size:14px;margin-bottom:6px">Swimlane diagrams</h2>
+   ${[['Customer refund flow','refund-flow.swimlane.json'],['Merchant onboarding & KYC','merchant-kyc.swimlane.json'],['Chargeback handling','chargebacks.swimlane.json']].map(([n,f])=>`<div class="list-row">${ICON.file}<div class="grow"><div>${esc(n)}</div><div class="muted mono" style="font-size:11px">${f}</div></div><button class="btn txt" data-act="go" data-to="swimlanes">Open</button></div>`).join('')}
+  </section>
+ </div></div>`}
+
+/* ---------- views: import ---------- */
+function stepper(n){const st=['Upload','Map fields','Preview & save'];
+  return `<ol class="stepper" aria-label="Import steps">${st.map((s,i)=>`${i?'<li class="ln" aria-hidden="true"></li>':''}<li class="${i+1<n?'done':i+1===n?'on':''}" ${i+1===n?'aria-current="step"':''}><span class="n">${i+1<n?'✓':i+1}</span>${s}</li>`).join('')}</ol>`}
+function vImport(){return `<div class="page">
+ <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap"><div><h1 class="h1">Import from Jira</h1><p class="lede">Turn a Jira export into a roadmap, saved as a JSON file you can reopen and share.</p></div>${stepper(1)}</div>
+ <div class="row">
+  <section class="card pad grow">
+   <label class="drop" id="drop" for="fileIn">${ICON.upload}<b>Drop your Jira export here</b><span class="muted">or click to choose a file · CSV, JSON or XML</span></label>
+   <input type="file" id="fileIn" class="sr" accept=".csv,.json,.xml,.txt" data-on="file">
+   <div class="or">or</div>
+   <div style="display:flex;justify-content:center"><button class="btn out lg" data-act="sample">Use the sample export (148 issues)</button></div>
+   <details style="margin-top:20px;font-size:13px"><summary style="cursor:pointer;color:var(--p);font-weight:500">How do I export from Jira?</summary>
+    <ol style="line-height:1.7;color:var(--t2)"><li>In Jira, open <b>Filters</b> and run the filter or JQL for your epics and stories.</li><li>Choose <b>Export → Export CSV (all fields)</b>.</li><li>Drop the file here. Nothing is uploaded to a server in this prototype.</li></ol></details>
+  </section>
+  <aside class="side" style="display:flex;flex-direction:column;gap:16px">
+   <section class="card pad"><h2 style="font-size:14px;margin-bottom:6px">Or open a saved roadmap</h2>
+    ${['payments-roadmap-h2-2026.json','mobile-app-2027.json','risk-platform-q4.json'].map(f=>`<div class="list-row">${ICON.file}<div class="grow">${f}</div><button class="btn txt" data-act="openRecent" data-file="${f}">Open</button></div>`).join('')}
+    <label class="btn" style="width:100%;margin-top:8px;border-style:dashed" for="jsonIn">Load .json from computer…</label>
+    <input type="file" id="jsonIn" class="sr" accept=".json" data-on="openjson">
+   </section>
+   <section class="card pad"><label class="field" style="font-size:14px;color:var(--tx);font-weight:500">Mapping template
+    <select class="select" data-on="tpl"><option>Jira Cloud — Payments (saved)</option><option>Jira Cloud — default</option><option>Jira Server / Data Center</option><option>None — map manually</option></select></label>
+    <p class="muted" style="font-size:12px;margin:8px 0 0">Saved templates re-apply your field mapping next time.</p></section>
+  </aside>
+ </div></div>`}
+
+/* ---------- views: map ---------- */
+function mapStats(){const total=S.cols.length,ok=S.cols.filter(c=>c.field).length;return {total,ok}}
+function vMap(){
+  if(!S.file){S.file={name:'jira-export-payments-2026-11-06.csv',size:'2.1 MB',kind:'Jira Cloud CSV (all fields)'};}
+  const {total,ok}=mapStats();
+  const opt=sel=>FIELDS.map(f=>`<option ${f===sel?'selected':''}>${esc(f)}</option>`).join('');
+  return `<div class="page">
+ <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap"><div><h1 class="h1">Map Jira fields</h1><p class="lede"><span class="mono">${esc(S.file.name)}</span> · ${S.rows} issues · ${esc(S.file.kind)}</p></div>${stepper(2)}</div>
+ <div class="row">
+  <section class="card grow" style="flex-basis:560px">
+   <div class="pad" style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--bd);gap:12px;flex-wrap:wrap">
+    <h2 style="font-size:14px">Map Jira columns to roadmap fields</h2>
+    <span class="badge ${ok===total?'ok':'warn'}" id="mapBadge">Auto-mapped ${ok} of ${total}</span></div>
+   <div style="overflow-x:auto"><table class="map"><thead><tr><th>Jira column</th><th>Sample value</th><th style="width:220px">Roadmap field</th></tr></thead><tbody>
+    ${S.cols.map((c,i)=>`<tr><td style="font-weight:500">${esc(c.col)}</td><td class="mono muted" style="font-size:12px">${esc(c.sample)}</td>
+     <td><select class="select ${c.field?'':'warn'}" aria-label="Roadmap field for ${esc(c.col)}" data-on="mapfield" data-i="${i}">${c.field?'':'<option selected>Choose a field…</option>'}${opt(c.field)}</select></td></tr>`).join('')}
+    ${S.extraCols?`<tr><td colspan="3" class="muted" style="font-size:12px">+ ${S.extraCols} other columns aren't needed and will be ignored</td></tr>`:''}
+   </tbody></table></div>
+   <div class="pad" style="border-top:1px solid var(--bd);display:flex;flex-direction:column;gap:10px">
+    <h3 style="font-size:13px">Status mapping</h3>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:8px">
+     ${JIRA_STATUS.map(([j])=>`<label style="display:flex;align-items:center;gap:8px;border:1px solid var(--bd);border-radius:6px;padding:6px 10px"><span style="flex:1">${j}</span>${ICON.arrow}<span class="dot" style="background:${STATUS[S.statusMap[j]].c}"></span><select class="select" style="width:auto;height:30px" aria-label="Roadmap status for ${j}" data-on="statusmap" data-j="${j}">${Object.entries(STATUS).map(([k,v])=>`<option value="${k}" ${S.statusMap[j]===k?'selected':''}>${v.label}</option>`).join('')}</select></label>`).join('')}
+    </div></div>
+   <div class="pad" style="border-top:1px solid var(--bd);display:flex;flex-direction:column;gap:10px">
+    <h3 style="font-size:13px">Roll-up rules</h3>
+    <label class="check"><input type="checkbox" checked>Roll stories up into their epic — the bar spans earliest start to latest end</label>
+    <label class="check"><input type="checkbox" checked>Use sprint dates when an issue has no start or due date</label>
+    <label class="check"><input type="checkbox" checked>Put issues without dates in the Unscheduled tray</label>
+    <label class="check"><input type="checkbox">Turn Fix versions into milestones</label>
+   </div>
+  </section>
+  <aside class="side" style="display:flex;flex-direction:column;gap:16px">
+   <section class="card pad" style="display:flex;flex-direction:column;gap:12px">
+    <h2 style="font-size:14px">Preview</h2>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px"><div class="stat"><span class="l">Epics</span><span class="v">12</span></div><div class="stat"><span class="l">Issues</span><span class="v">${S.rows}</span></div><div class="stat"><span class="l">Teams</span><span class="v">4</span></div></div>
+    <ul class="warnbox" id="warnbox">${warnings()}</ul>
+    <div>${S.epics.slice(0,5).map(e=>`<div class="list-row" style="padding:7px 0;font-size:12px"><span class="key" style="width:62px;flex:none">${e.key}</span><span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(e.title)}</span><span class="muted">${date(e.s)} → ${date(e.e-1)}</span></div>`).join('')}<div class="muted" style="font-size:12px;padding-top:8px">+ 7 more epics</div></div>
+   </section>
+   <section><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><h2 style="font-size:13px">What gets saved</h2><span class="muted" style="font-size:11px">roadmap JSON · schema v1</span></div>
+    <pre class="code" id="jsonPrev">${esc(roadmapJSON(true))}</pre></section>
+  </aside>
+ </div>
+ <section class="card pad actionbar">
+  <label class="field" style="flex:1 1 240px">Roadmap name<input class="input" value="${esc(S.rmName)}" data-on="rmname"></label>
+  <label class="field" style="flex:1 1 260px">Save as<input class="input mono" value="${esc(S.rmFile)}" data-on="rmfile"></label>
+  <label class="check" style="height:34px"><input type="checkbox" checked>Update mapping template</label>
+  <span class="spacer"></span>
+  <button class="btn lg" data-act="go" data-to="import">Back</button>
+  <button class="btn pri lg" data-act="create">Create roadmap &amp; save JSON ${ICON.arrow}</button>
+ </section></div>`}
+function warnings(){const un=S.cols.filter(c=>!c.field);
+  return [`9 issues have no dates → Unscheduled tray`,`3 issues have no team → “Unassigned” lane`].concat(un.map(c=>`“${esc(c.col)}” isn't mapped yet`)).map(w=>`<li style="display:flex;gap:8px">${ICON.warn}${w}</li>`).join('')}
+function roadmapJSON(short){
+  const o={schemaVersion:1,name:S.rmName,source:{type:'jira-csv',file:S.file?S.file.name:'jira-export-payments-2026-11-06.csv',mappingTemplate:'Jira Cloud — Payments',importedAt:'2026-11-06T17:10:00+05:30'},
+    timeline:{start:'2026-11-01',sprintLengthDays:14,pis:PIS.map(p=>({name:p.name,start:isoOf(p.start),sprints:6,ipSprint:true}))},
+    lanes:TEAMS.map(t=>t.name),
+    items:S.epics.map(e=>({key:e.key,title:e.title,lane:e.team,status:STATUS[e.st].label,start:isoOf(e.s),end:isoOf(e.e-1),progress:e.pct,issues:e.issues})),
+    milestones:[{name:'Beta',date:'2027-01-15'},{name:'GA',date:'2027-04-20'},{name:'Code freeze',start:'2027-03-15',end:'2027-03-31',kind:'freeze'}],
+    linkedDiagrams:[S.dg.file]};
+  if(short){return JSON.stringify(o,null,2).replace(/"items": \[[\s\S]*?\n  \]/,'"items": [ … '+S.epics.length+' epics ]').replace(/"pis": \[[\s\S]*?\n    \]/,'"pis": [ … 3 PIs ]')}
+  return JSON.stringify(o,null,2)}
+
+/* ---------- timeline model (shared by roadmap + export preview) ---------- */
+const SPRINT_W=104;
+/* sprint date label that fits the column: full range, compact range, or start date only */
+function sprintDates(x,colW){const a=new Date(2026,10,1+x.s),b=new Date(2026,10,1+x.e-1);
+  if(colW>=96)return date(x.s)+' – '+date(x.e-1);
+  if(colW>=70)return a.getMonth()===b.getMonth()?a.getDate()+'–'+b.getDate()+' '+MON[b.getMonth()]:date(x.s)+'–'+date(x.e-1);
+  return colW>=44?date(x.s):''}
+function TL(zoom,range,colW){
+  const R=range||{months:[0,181],sprints:[1,183],pis:[-27,225]}[zoom];const span=R[1]-R[0];
+  const f=d=>(Math.min(Math.max(d,R[0]),R[1])-R[0])/span;const inView=(a,b)=>b>R[0]&&a<R[1];
+  const head=[],lines=[],bands=[];
+  if(zoom==='months'){
+    [['Nov',0,30],['Dec',30,61],['Jan',61,92],['Feb',92,120],['Mar',120,151],['Apr',151,181]].filter(([n,a,b])=>inView(a,b)).forEach(([n,a,b],i)=>{
+      const mid=(a+b)/2,pi=PIS.find(p=>mid>=p.start&&mid<p.end);
+      head.push({a,b,top:0,h:55,label:n+(a===0?' 2026':a===61?' 2027':''),sub:pi.name,cls:''});
+      if(i)lines.push({d:a,w:1,c:'#e0e0e0'})});
+  }else if(zoom==='sprints'){
+    PIS.filter(p=>inView(p.start,p.end)).forEach(p=>head.push({a:p.start,b:p.end,top:0,h:22,label:p.name,cls:'piband center'}));
+    SPRINTS.filter(x=>inView(x.s,x.e)).forEach(x=>{
+      head.push({a:x.s,b:x.e,top:22,h:33,label:'S'+x.n+(x.ip?' · IP':''),sub:colW?sprintDates(x,colW):date(x.s)+' – '+date(x.e-1),full:x.pi.name+' · S'+x.n+(x.ip?' (IP)':'')+' · '+date(x.s)+' – '+date(x.e-1),cls:'sprint center'+(x.first?' first':'')+(x.cur?' cur':x.ip?' ip':'')});
+      if(x.s>R[0])lines.push({d:x.s,w:x.first?2:1,c:x.first?'#b0bec5':'#eeeeee'});
+      if(x.ip)bands.push({a:x.s,b:x.e})});
+  }else{
+    PIS.forEach(p=>{head.push({a:p.start,b:p.end,top:0,h:34,label:p.name,sub:p.sub,cls:'pibig center'});if(p.start>R[0])lines.push({d:p.start,w:2,c:'#b0bec5'})});
+    SPRINTS.forEach(x=>{head.push({a:x.s,b:x.e,top:34,h:21,label:x.ip?'IP':'S'+x.n,cls:'tick center'+(x.first?' first':'')+(x.cur?' cur':x.ip?' ip':'')});
+      if(!x.first)lines.push({d:x.s,w:1,c:'#f2f2f2'});if(x.ip)bands.push({a:x.s,b:x.e})});
+  }
+  return {R,f,head,lines,bands,minW:zoom==='sprints'?220+13*SPRINT_W:900};
+}
+
+/* ---------- zoom (roadmap timeline + swimlane canvas) ---------- */
+const ZLIM={rm:[.5,3],dg:[.25,2.5]};
+const ZSTEPS=[.25,.33,.5,.67,.75,.9,1,1.1,1.25,1.5,1.75,2,2.5,3];
+const zget=k=>k==='rm'?S.rmZoom[S.zoom]:S.dgZoom;
+function zoomCtl(k){const z=zget(k),[lo,hi]=ZLIM[k];
+  return `<div class="zoomctl" role="group" aria-label="Zoom"><button data-act="zoomStep" data-k="${k}" data-d="-1" aria-label="Zoom out" title="Zoom out (Ctrl −)" ${z<=lo+1e-6?'disabled':''}><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14" stroke="currentColor" stroke-width="2"/></svg></button><button class="zl" id="zl-${k}" data-act="zoomReset" data-k="${k}" title="Reset to 100% (Ctrl 0)" aria-label="Zoom ${Math.round(z*100)}%, reset to 100%">${Math.round(z*100)}%</button><button data-act="zoomStep" data-k="${k}" data-d="1" aria-label="Zoom in" title="Zoom in (Ctrl +)" ${z>=hi-1e-6?'disabled':''}><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M12 5v14" stroke="currentColor" stroke-width="2"/></svg></button><button class="zf" data-act="zoomFit" data-k="${k}" title="Fit to window">Fit</button></div>`}
+function refreshZoomCtl(k){const c=document.querySelector(`#zl-${k}`);if(c)c.closest('.zoomctl').outerHTML=zoomCtl(k)}
+function setZoom(k,z,anchor){const [lo,hi]=ZLIM[k];z=Math.min(hi,Math.max(lo,Math.round(z*1000)/1000));const old=zget(k);if(Math.abs(z-old)<.001)return;
+  if(k==='dg'){const sc=document.querySelector('.canvas');if(!sc){S.dgZoom=z;return}const r=sc.getBoundingClientRect();
+    const ax=anchor?anchor.x-r.left:r.width/2,ay=anchor?anchor.y-r.top:r.height/2;const cx=sc.scrollLeft+ax,cy=sc.scrollTop+ay;
+    S.dgZoom=z;redrawCanvas();const q=z/old;sc.scrollLeft=cx*q-ax;sc.scrollTop=cy*q-ay}
+  else{const sc=document.querySelector('.tlscroll');if(!sc){S.rmZoom[S.zoom]=z;return}const tl0=sc.querySelector('.tl');const oldW=tl0?tl0.offsetWidth:sc.clientWidth;
+    const r=sc.getBoundingClientRect();const ax=anchor?anchor.x-r.left:r.width/2;const pos=Math.max(0,(sc.scrollLeft+ax-220)/Math.max(1,oldW-220));
+    S.rmZoom[S.zoom]=z;sc.innerHTML=timelineHTML();const nw=sc.querySelector('.tl').offsetWidth;sc.scrollLeft=220+pos*(nw-220)-ax}
+  refreshZoomCtl(k)}
+function zoomStep(k,d,anchor){const z=zget(k);const next=d>0?ZSTEPS.find(v=>v>z+.001):[...ZSTEPS].reverse().find(v=>v<z-.001);if(next!=null)setZoom(k,next,anchor)}
+function zoomFit(k){if(k==='dg'){const sc=document.querySelector('.canvas');if(!sc)return;const {W}=dgSize();setZoom('dg',Math.floor((sc.clientWidth-32-48-4)/W*1000)/1000);sc.scrollLeft=0}
+  else{const sc=document.querySelector('.tlscroll');if(!sc)return;const t=TL(S.zoom);const cw=sc.clientWidth;setZoom('rm',Math.floor((cw-220)/(Math.max(cw,t.minW)-220)*1000)/1000);sc.scrollLeft=0}}
+document.addEventListener('wheel',e=>{if(!(e.ctrlKey||e.metaKey))return;const k=e.target.closest&&(e.target.closest('.canvas')?'dg':e.target.closest('.tlscroll')?'rm':null);if(!k)return;
+  e.preventDefault();setZoom(k,zget(k)*Math.exp(-Math.max(-60,Math.min(60,e.deltaY))*.004),{x:e.clientX,y:e.clientY})},{passive:false});
+
+/* ---------- views: roadmap ---------- */
+function vRoadmap(){
+  if(!S.roadmapReady){S.roadmapReady=true;}
+  const atRisk=S.epics.filter(e=>e.st==='ar');
+  const done=Math.round(S.epics.reduce((a,e)=>a+e.pct*e.issues,0)/S.epics.reduce((a,e)=>a+e.issues,0));
+  return `
+ <div class="toolbar">
+  <span class="chip">${ICON.jira}From Jira · ${S.file?'imported 6 Nov 2026, 17:10':'opened from '+esc(S.rmFile)}</span>
+  <button class="btn out" data-act="resync">${ICON.sync}Re-sync from new export</button>
+  <span class="vsep" aria-hidden="true"></span>
+  <div class="seg" role="group" aria-label="Timescale">${[['sprints','Sprints'],['months','Months'],['pis','PIs']].map(([z,l])=>`<button class="${S.zoom===z?'on':''}" aria-pressed="${S.zoom===z}" data-act="zoom" data-z="${z}">${l}</button>`).join('')}</div>
+  <label class="check" style="color:var(--t3)">Group by <select class="select" style="width:auto;height:32px"><option>Team</option><option>Epic</option><option>Release</option></select></label>
+  <label class="check"><input type="checkbox" ${S.ms?'checked':''} data-on="ms">Milestone lines</label>
+  ${zoomCtl('rm')}
+  <span class="spacer"></span>
+  <button class="btn" data-act="savejson">${ICON.down}Save JSON</button>
+  <label class="btn" for="jsonIn2">${ICON.up}Open JSON</label><input type="file" id="jsonIn2" class="sr" accept=".json" data-on="openjson">
+  <button class="btn pri" data-act="exportFrom" data-src="roadmap">Export…</button>
+ </div>
+ <div class="insights">
+  <div class="stat" style="gap:6px"><span class="l">Issues done</span><span class="v">${done}%</span><div class="bar4"><i style="width:${done}%"></i></div></div>
+  <div class="stat"><span class="l">At risk</span><span class="v" style="color:var(--risk)">${atRisk.length} epic${atRisk.length===1?'':'s'}</span><span class="muted" style="font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${atRisk.map(e=>esc(e.title)).join(', ')||'None'}</span></div>
+  <div class="stat"><span class="l">Next milestone</span><span style="font-size:16px;font-weight:500;display:flex;align-items:center;gap:8px"><span class="diamond"></span>Beta launch</span><span class="muted" style="font-size:12px">15 Jan 2027 · in 70 days</span></div>
+  <div class="stat" style="gap:4px"><span class="l">Current sprint</span><span style="font-size:16px;font-weight:500">${CUR.pi.name} · S${CUR.n}</span><span class="muted" style="font-size:12px">${date(CUR.s)} – ${date(CUR.e-1)} · ${CUR.e-TODAY-1} days left</span><div class="bar4"><i style="width:${Math.round((TODAY-CUR.s+1)/14*100)}%"></i></div></div>
+  <div class="stat"><span class="l">Unscheduled</span><span class="v">9 issues</span><span class="muted" style="font-size:12px">No start or due date in Jira</span></div>
+ </div>
+ <div class="work">
+  <section class="tlwrap" aria-label="Roadmap timeline">
+   <div class="tlscroll">${timelineHTML()}</div>
+   <div class="tray"><span style="font-size:12px;font-weight:500;color:var(--t2);margin-right:4px">Unscheduled (9)</span>
+    ${TRAY.map(([k,t])=>`<button class="trayitem" data-act="schedule" data-k="${k}"><span class="key">${k}</span>${esc(t)}</button>`).join('')}
+    <span class="muted" style="font-size:12px">+ 4 more · click one to schedule it in the next sprint</span></div>
+   <div class="legend">${Object.values(STATUS).map(s=>`<span><span class="sq" style="width:12px;height:12px;background:${s.c}"></span>${s.label}</span>`).join('')}
+    <span><span style="width:12px;height:3px;background:#fff;outline:1px solid #9e9e9e"></span>Progress (from Jira issues)</span>
+    ${S.zoom!=='months'?`<span><span style="width:14px;height:12px;border:1px solid #b0bec5;background:repeating-linear-gradient(135deg,rgba(120,144,156,.35) 0 3px,transparent 3px 6px)"></span>IP sprint (Innovation &amp; Planning)</span>`:''}
+    <span><span style="width:0;height:12px;border-left:2px dashed var(--ms)"></span>Milestone</span></div>
+  </section>
+  ${detailHTML()}
+ </div>`}
+function timelineHTML(){
+  const zz=S.rmZoom[S.zoom]||1;const scw=(document.querySelector('.tlscroll')||{}).clientWidth||1100;
+  const t=TL(S.zoom,null,S.zoom==='sprints'?Math.max(scw-220,13*SPRINT_W)*zz/13:0);
+  const px=n=>n?(n<0?' - '+(-n):' + '+n)+'px':'';
+  const L=(d,n=0)=>`calc(220px + (100% - 220px) * ${t.f(d).toFixed(5)}${px(n)})`;
+  const W=(a,b,n=0)=>`calc((100% - 220px) * ${(t.f(b)-t.f(a)).toFixed(5)}${px(n)})`;
+  const tlW=S.zoom==='sprints'?13*SPRINT_W:860;
+  const fzWide=(t.f(MS.freeze.e)-t.f(MS.freeze.s))*tlW>76;
+  const z=S.rmZoom[S.zoom]||1;let h=`<div class="tl" style="width:calc(220px + (100% - 220px) * ${z});min-width:${Math.round(220+(t.minW-220)*z)}px">`;
+  h+=t.bands.map(b=>`<div class="ov" aria-hidden="true" style="top:90px;left:${L(b.a)};width:${W(b.a,b.b)};background:repeating-linear-gradient(135deg,rgba(120,144,156,.14) 0 5px,transparent 5px 10px)"></div>`).join('');
+  h+=t.lines.map(l=>`<div class="ov" aria-hidden="true" style="top:90px;left:${L(l.d)};width:${l.w}px;background:${l.c}"></div>`).join('');
+  h+=`<div class="tl-head"><div class="tl-corner"><span class="eyebrow">Team / Epic</span><span>${{months:'by month',sprints:'2-week sprints',pis:'Program Increments'}[S.zoom]}</span></div>`;
+  h+=t.head.map(c=>`<div class="hc ${c.cls}" ${c.full?`title="${esc(c.full)}"`:''} style="top:${c.top}px;height:${c.h}px;left:${L(c.a)};width:${W(c.a,c.b)}"><b>${esc(c.label)}</b>${c.sub?`<small>${esc(c.sub)}</small>`:''}</div>`).join('');
+  h+=`</div><div class="tl-ms"><div class="lbl">Milestones</div>
+   <div class="freeze" title="Code freeze · 15–31 Mar" style="left:${L(MS.freeze.s)};width:${W(MS.freeze.s,MS.freeze.e)}"><span>${fzWide?'Code freeze':'Freeze'}</span></div>
+   <button class="msbtn" style="left:${L(MS.beta.d,-9)}" data-act="toast" data-msg="Beta launch · 15 Jan 2027 · 4 epics must finish before it"><span class="diamond" style="margin-left:3px"></span>Beta · 15 Jan</button>
+   <button class="msbtn" style="right:calc((100% - 220px) * ${(1-t.f(MS.ga.d)).toFixed(5)} - 9px)" data-act="toast" data-msg="General availability · 20 Apr 2027">GA · 20 Apr<span class="diamond" style="margin-right:3px"></span></button></div>`;
+  TEAMS.forEach(team=>{const items=S.epics.filter(e=>e.team===team.name);
+    h+=`<div class="lanehd"><span class="sq" style="background:${team.c}"></span>${esc(team.name)}<span class="muted" style="font-weight:400">· ${items.length} epics</span></div>`;
+    items.forEach(e=>{const sel=e.key===S.sel,st=STATUS[e.st];
+      h+=`<div class="erow ${sel?'sel':''}"><button class="elabel" data-act="epic" data-k="${e.key}"><span class="key">${e.key}</span><span>${esc(e.title)}</span></button>
+       <button class="ebar ${sel?'sel':''}" data-act="epic" data-k="${e.key}" aria-label="${esc(e.key+' '+e.title+', '+st.label+', '+e.pct+'% complete, '+date(e.s)+' to '+date(e.e-1))}" style="left:${L(e.s,2)};width:${W(e.s,e.e,-4)};background:${st.c}"><span class="t">${esc(e.title)}</span><span class="pg"><i style="width:${e.pct}%"></i></span></button></div>`})});
+  if(S.ms){
+    h+=`<div class="ov" aria-hidden="true" style="top:90px;left:${L(MS.freeze.s)};width:${W(MS.freeze.s,MS.freeze.e)};background:repeating-linear-gradient(135deg,rgba(84,110,122,.13) 0 6px,transparent 6px 12px);border-left:1px dashed #546e7a;border-right:1px dashed #546e7a"></div>`;
+    [MS.beta.d,MS.ga.d].forEach(d=>h+=`<div class="ov" aria-hidden="true" style="top:90px;left:${L(d,-1)};width:0;border-left:2px dashed var(--ms)"></div>`);
+  }
+  h+=`<div class="ov" aria-hidden="true" style="top:56px;left:${L(TODAY+.5,-1)};width:2px;background:#d32f2f"></div><div class="today-lbl" style="left:${L(TODAY+.5,5)}">TODAY · 6 Nov</div>`;
+  return h+'</div>'}
+function detailHTML(){
+  const e=S.epics.find(x=>x.key===S.sel);
+  if(!PANELS.detail)return `<aside class="rail" aria-label="Epic details (collapsed)"><button class="iconbtn" data-act="panel" data-p="detail" aria-expanded="false" aria-label="Expand epic details" title="Expand epic details">${ICON.chevL}</button><button class="vlabel" data-act="panel" data-p="detail" tabindex="-1">${e?esc(e.key+' · '+e.title):'Epic details'}</button></aside>`;
+  if(!e)return `<aside class="detail" aria-label="Epic details"><div class="sec panelhead"><span class="muted">Click a bar to see and edit an epic.</span>${collapseBtn('detail','epic details')}</div></aside>`;
+  const done=Math.round(e.issues*e.pct/100),prog=Math.min(e.issues-done,Math.round(e.issues*.3));
+  return `<aside class="detail" aria-label="Epic details">
+   <div class="sec" style="display:flex;flex-direction:column;gap:6px">
+    <div style="display:flex;justify-content:space-between;align-items:center"><span class="key" style="font-size:12px">${e.key} · Epic</span>${collapseBtn('detail','epic details')}</div>
+    <label class="sr" for="etitle">Epic title</label><input id="etitle" class="input" style="font-size:16px;font-weight:500;border-color:transparent;padding:0 6px;margin:0 -6px" value="${esc(e.title)}" data-on="etitle">
+    <a href="#roadmap" data-act="toast" data-msg="Opens ${e.key} in Jira (link to your Jira site)" style="font-size:12px;text-decoration:none">Open in Jira ↗</a></div>
+   <div class="sec g2">
+    <label class="field">Status<select class="select" data-on="est">${Object.entries(STATUS).map(([k,v])=>`<option value="${k}" ${e.st===k?'selected':''}>${v.label}</option>`).join('')}</select></label>
+    <label class="field">Team<select class="select" data-on="eteam">${TEAMS.map(t=>`<option ${e.team===t.name?'selected':''}>${esc(t.name)}</option>`).join('')}</select></label>
+    <label class="field">Start<input type="date" class="input" value="${isoOf(e.s)}" data-on="es"></label>
+    <label class="field">End<input type="date" class="input" value="${isoOf(e.e-1)}" data-on="ee"></label>
+    <div class="muted" style="grid-column:1/-1;font-size:12px">${spanText(e)}</div>
+   </div>
+   <div class="sec" style="display:flex;flex-direction:column;gap:8px">
+    <div style="display:flex;justify-content:space-between;font-size:12px"><span class="muted">Progress from ${e.issues} Jira issues</span><b style="font-weight:500">${e.pct}%</b></div>
+    <div class="bar4" style="height:6px"><i style="width:${e.pct}%;height:6px"></i></div>
+    <div style="display:flex;gap:12px;font-size:12px;color:var(--t2)"><span>${done} done</span><span>${prog} in progress</span><span>${e.issues-done-prog} to do</span></div>
+    ${e.key==='PAY-142'?`<div style="margin-top:6px"><span class="eyebrow">Stories</span>${STORIES.map(([k,t,s])=>`<div class="story"><span class="dot" style="width:8px;height:8px;background:${STATUS[s].c}"></span><span class="key" style="flex:none">${k}</span><span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(t)}</span></div>`).join('')}<div class="muted" style="font-size:12px;padding-top:6px">+ 14 more</div></div>`:''}
+   </div>
+   <div class="sec" style="display:flex;flex-direction:column;gap:4px;border-bottom:0"><label class="field">PM notes (saved in the JSON, never sent to Jira)<textarea class="input" rows="3" data-on="enote">${esc(e.note||(e.key==='PAY-142'?'Depends on tokenisation vault (PLT-190). Confirm scope with Legal before Beta.':''))}</textarea></label></div>
+   <div style="margin-top:auto;padding:12px 16px;border-top:1px solid var(--bd);display:flex;justify-content:space-between;align-items:center"><button class="btn txt" data-act="unschedule">Unschedule</button><span class="muted" style="font-size:11px">Synced from Jira 6 Nov, 17:10</span></div>
+  </aside>`}
+function spanText(e){const a=SPRINTS.find(x=>e.s>=x.s&&e.s<x.e),b=SPRINTS.find(x=>e.e-1>=x.s&&e.e-1<x.e);
+  if(!a||!b)return '';return `Runs ${a.pi.name} S${a.n} → ${b.pi===a.pi?'':b.pi.name+' '}S${b.n}`+(e.s<MS.beta.d&&e.e>MS.beta.d?' · crosses Beta':'')}
+
+/* ---------- swimlane geometry ---------- */
+/* lanes grow to fit their shapes: a shape keeps its own vertical offset (ry) inside its lane */
+function ry(s){const h=SZ[s.type][1];return s.ry!=null?s.ry:(LANE_MIN-h)/2}
+function laneLayout(skipId){let top=0;return S.dg.lanes.map(l=>{
+  const fit=Math.max(LANE_MIN,...S.dg.shapes.filter(x=>x.lane===l.id&&x.id!==skipId).map(x=>{const h=SZ[x.type][1];return ry(x)+h+(x.ry==null?(LANE_MIN-h)/2:LANE_PAD)}));
+  const h=Math.max(fit,l.h||0);const r={top,h,fit};top+=h;return r})}
+function geo(s){const [w,h]=SZ[s.type];const li=Math.max(0,S.dg.lanes.findIndex(l=>l.id===s.lane));const y=laneLayout()[li].top+ry(s);return {x:s.x,y,w,h,cx:s.x+w/2,cy:y+h/2}}
+function anchor(g,side){return side==='l'?[g.x,g.cy]:side==='r'?[g.x+g.w,g.cy]:side==='t'?[g.cx,g.y]:[g.cx,g.y+g.h]}
+function route(p1,fs,p2,ts){
+  const H=s=>s==='l'||s==='r';
+  if(p1[0]===p2[0]||p1[1]===p2[1])return [p1,p2];
+  if(H(fs)&&!H(ts))return [p1,[p2[0],p1[1]],p2];
+  if(!H(fs)&&H(ts))return [p1,[p1[0],p2[1]],p2];
+  if(H(fs)){const mx=Math.round((p1[0]+p2[0])/2);return [p1,[mx,p1[1]],[mx,p2[1]],p2]}
+  const my=Math.round((p1[1]+p2[1])/2);return [p1,[p1[0],my],[p2[0],my],p2]}
+const DIR={r:[1,0],l:[-1,0],t:[0,-1],b:[0,1]};
+function segHits(a,b,rects){const x1=Math.min(a[0],b[0]),x2=Math.max(a[0],b[0]),y1=Math.min(a[1],b[1]),y2=Math.max(a[1],b[1]);return rects.some(r=>x1<r.x+r.w&&x2>r.x&&y1<r.y+r.h&&y2>r.y)}
+function plen(p){let l=0;for(let i=0;i<p.length-1;i++)l+=Math.abs(p[i+1][0]-p[i][0])+Math.abs(p[i+1][1]-p[i][1]);return l}
+function simplify(p){const o=[];p.forEach(q=>{if(o.length&&o[o.length-1][0]===q[0]&&o[o.length-1][1]===q[1])return;o.push(q)});
+  for(let i=o.length-2;i>0;i--){const a=o[i-1],b=o[i],c=o[i+1];const col=(a[0]===b[0]&&b[0]===c[0])||(a[1]===b[1]&&b[1]===c[1]);
+    const between=Math.min(a[0],c[0])<=b[0]&&b[0]<=Math.max(a[0],c[0])&&Math.min(a[1],c[1])<=b[1]&&b[1]<=Math.max(a[1],c[1]);if(col&&between)o.splice(i,1)}return o}
+/* orthogonal routing that detours through lane gutters when a straight path would cross another shape */
+function smartRoute(aId,fs,bId,ts){
+  const A=S.dg.shapes.find(x=>x.id===aId),B=S.dg.shapes.find(x=>x.id===bId);const ga=geo(A),gb=geo(B);const p1=anchor(ga,fs),p2=anchor(gb,ts);
+  const box=g=>({x:g.x-4,y:g.y-4,w:g.w+8,h:g.h+8});
+  const others=S.dg.shapes.filter(x=>x.id!==aId&&x.id!==bId).map(x=>box(geo(x)));const all=others.concat([box(ga),box(gb)]);
+  const hits=pts=>{for(let i=0;i<pts.length-1;i++){const end=i===0||i===pts.length-2;if(segHits(pts[i],pts[i+1],end?others:all))return true}return false};
+  const base=simplify(route(p1,fs,p2,ts));if(!hits(base))return base;
+  const s1=[p1[0]+DIR[fs][0]*16,p1[1]+DIR[fs][1]*16],s2=[p2[0]+DIR[ts][0]*16,p2[1]+DIR[ts][1]*16];
+  let best=null;
+  laneLayout().forEach(r=>[r.top+14,r.top+r.h-14].forEach(gy=>{const c=simplify([p1,s1,[s1[0],gy],[s2[0],gy],s2,p2]);if(!hits(c)){const L=plen(c);if(!best||L<best.L)best={c,L}}}));
+  return best?best.c:base}
+/* shorten a path at both ends so clicks near a shape still reach the shape's handles */
+function trimPath(pts){const L=plen(pts);const t=Math.max(0,Math.min(28,(L-12)/2));if(L<14)return null;
+  const cut=(p,d)=>{let rest=d,out=[p[0]];let i=0;while(i<p.length-1){const a=p[i],b=p[i+1],l=Math.abs(b[0]-a[0])+Math.abs(b[1]-a[1]);
+      if(rest<l){const f=rest/l;out=[[a[0]+(b[0]-a[0])*f,a[1]+(b[1]-a[1])*f],...p.slice(i+1)];return out}rest-=l;i++}return [p[p.length-1]]};
+  let q=cut(pts,t);q=cut(q.slice().reverse(),t).reverse();return q.length>1?q:null}
+function autoSides(a,b){const dx=b.cx-a.cx,dy=b.cy-a.cy;return Math.abs(dx)>=Math.abs(dy)?(dx>0?['r','l']:['l','r']):(dy>0?['b','t']:['t','b'])}
+function wrap(t,n){const w=String(t||'').split(/\s+/),out=[];let cur='';w.forEach(x=>{if((cur+' '+x).trim().length>n&&cur){out.push(cur);cur=x}else cur=(cur+' '+x).trim()});if(cur)out.push(cur);return out}
+function dgFitW(){return Math.max(1016,...S.dg.shapes.map(s=>s.x+SZ[s.type][0]+48))}
+function dgSize(){const L=laneLayout();return {W:Math.max(dgFitW(),S.dg.w||0),H:L.reduce((a,l)=>a+l.h,0)}}
+function swimSVG(interactive){
+  const {W,H}=dgSize();const dg=S.dg;
+  let o=`<svg ${interactive?`width="${Math.round(W*S.dgZoom)}" height="${Math.round(H*S.dgZoom)}"`:'preserveAspectRatio="xMidYMid meet"'} viewBox="0 0 ${W} ${H}" role="img" aria-label="Swimlane diagram: ${esc(dg.name)}" style="display:block;font-family:Roboto,system-ui,sans-serif">
+  <defs><marker id="ah${interactive?'i':'p'}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#546e7a"/></marker>${interactive?'<marker id="ahs" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#1976d2"/></marker><marker id="ahd" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#1976d2"/></marker>':''}</defs>`;
+  o+=`<rect class="bgrect" x="0" y="0" width="${W}" height="${H}" fill="#fff" ${interactive?'data-act="canvas"':''}/>`;
+  const LL=laneLayout();
+  dg.lanes.forEach((l,i)=>{const st=LANE_STYLES[i%LANE_STYLES.length],y=LL[i].top,LH=LL[i].h;
+    o+=`<rect x="0" y="${y}" width="${W}" height="${LH}" fill="${st.bg}" ${interactive?'data-act="canvas"':''} class="bgrect"/>`;
+    if(i)o+=`<line x1="0" x2="${W}" y1="${y}" y2="${y}" stroke="#cfd8dc"/>`;
+    o+=`<rect x="0" y="${y}" width="${LABEL_W}" height="${LH}" fill="${st.hd}"/>`;
+    const ln=wrap(l.name,11);ln.forEach((t,k)=>o+=`<text x="12" y="${y+LH/2-(ln.length-1)*9+k*18+5}" font-size="13" font-weight="700" fill="${st.tx}">${esc(t)}</text>`)});
+  o+=`<line x1="${LABEL_W}" x2="${LABEL_W}" y1="0" y2="${H}" stroke="#cfd8dc"/>`;
+  if(interactive){LL.forEach((r,i)=>o+=`<rect class="lres" x="0" y="${r.top+r.h-5}" width="${W}" height="10" fill="transparent" data-lane-resize="${i}"><title>Drag to resize the ${esc(dg.lanes[i].name)} lane</title></rect>`);
+    o+=`<rect class="wres" x="${W-8}" y="0" width="8" height="${H}" fill="transparent" data-width-resize="1"><title>Drag to widen the diagram</title></rect>`}
+  const SM=Object.fromEntries(dg.shapes.map(s=>[s.id,s]));let hitLayer='';
+  dg.edges.forEach((e,i)=>{const a=SM[e.a],b=SM[e.b];if(!a||!b)return;const ga=geo(a),gb=geo(b);
+    const pts=smartRoute(e.a,e.fs,e.b,e.ts);const P=pts.map(p=>p.join(',')).join(' ');
+    const sel=interactive&&S.selEdge===i;const col=sel?'#1976d2':e.dashed?'#78909c':'#546e7a';
+    o+=`<g class="edge">`;
+    o+=`<polyline class="evis" points="${P}" fill="none" stroke="${col}" stroke-width="${sel?3:2}" ${e.dashed?'stroke-dasharray="4 4"':`marker-end="url(#${sel?'ahs':'ah'+(interactive?'i':'p')})"`} stroke-linejoin="round"/>`;
+    if(interactive){const tp=trimPath(pts);if(tp)hitLayer+=`<polyline class="ehit" points="${tp.map(p=>p.join(',')).join(' ')}" fill="none" stroke="transparent" stroke-width="14" data-act="edge" data-i="${i}"><title>${esc(lbl(e.a)+' → '+lbl(e.b))}</title></polyline>`}
+    if(sel)[pts[0],pts[pts.length-1]].forEach(p=>o+=`<circle cx="${p[0]}" cy="${p[1]}" r="4" fill="#fff" stroke="#1976d2" stroke-width="2"/>`);
+    if(e.label){const [p,q]=pts;const vert=p[0]===q[0];const dir=vert?Math.sign(q[1]-p[1]):Math.sign(q[0]-p[0]);
+      const lx=vert?p[0]+10:p[0]+dir*14,ly=vert?p[1]+dir*22+4:p[1]-8;
+      o+=`<text x="${lx}" y="${ly}" font-size="13" font-weight="500" fill="${e.label==='No'?'#b71c1c':e.label==='Yes'?'#1b5e20':'#424242'}">${esc(e.label)}</text>`}
+    o+='</g>'});
+  dg.shapes.forEach(s=>{const g=geo(s),sel=interactive&&(s.id===S.selShape||S.extra.includes(s.id)),from=interactive&&s.id===S.connectFrom;
+    o+=`<g class="shape${sel?' sel':''}" ${interactive?`data-id="${s.id}" tabindex="0" role="button" aria-label="${esc((s.label||s.type)+' in '+(dg.lanes.find(l=>l.id===s.lane)||{}).name)}"`:''}>`;
+    if(interactive)o+=`<rect class="hpad" x="${g.x-26}" y="${g.y-26}" width="${g.w+52}" height="${g.h+52}" fill="transparent"/>`;
+    const fill=s.fill||'#ffffff';
+    if(s.type==='start'||s.type==='end'){const end=s.type==='end';
+      o+=`<circle class="body" cx="${g.cx}" cy="${g.cy}" r="${end?18:19}" fill="${end?'#ffebee':'#e8f5e9'}" stroke="${end?'#c62828':'#2e7d32'}" stroke-width="${end?4:2}"/><text x="${g.cx}" y="${g.cy+3.5}" font-size="10" font-weight="500" text-anchor="middle" fill="${end?'#b71c1c':'#1b5e20'}">${end?'End':'Start'}</text>`}
+    else if(s.type==='decision'){o+=`<polygon class="body" points="${g.cx},${g.y} ${g.x+g.w},${g.cy} ${g.cx},${g.y+g.h} ${g.x},${g.cy}" fill="${s.fill||'#ffcc80'}"/>`;
+      const ln=wrap(s.label,12);ln.forEach((t,k)=>o+=`<text x="${g.cx}" y="${g.cy-(ln.length-1)*8+k*16+4.5}" font-size="13" font-weight="500" text-anchor="middle" fill="#3e2723">${esc(t)}</text>`)}
+    else{
+      if(s.type==='note')o+=`<path class="body" d="M${g.x} ${g.y}h${g.w}v${g.h-14}l-14 14h${-(g.w-14)}z" fill="#fffde7" stroke="#e6ee9c"/>`;
+      else if(s.type==='data')o+=`<path class="body" d="M${g.x} ${g.y+10}a${g.w/2} 10 0 0 1 ${g.w} 0v${g.h-20}a${g.w/2} 10 0 0 1 ${-g.w} 0z" fill="${fill}" stroke="#90a4ae"/><path d="M${g.x} ${g.y+10}a${g.w/2} 10 0 0 0 ${g.w} 0" fill="none" stroke="#90a4ae"/>`;
+      else if(s.type==='doc')o+=`<path class="body" d="M${g.x} ${g.y}h${g.w}v${g.h-10}c${-g.w/4} -12 ${-g.w/2} 12 ${-g.w*0.75} 4s${-g.w/4} 6 ${-g.w/4} 6z" fill="${fill}" stroke="#90a4ae"/>`;
+      else o+=`<rect class="body" x="${g.x}" y="${g.y}" width="${g.w}" height="${g.h}" rx="8" fill="${fill}" stroke="#90a4ae"/>`;
+      if(s.type==='sub')o+=`<rect x="${g.cx-7}" y="${g.y+g.h-16}" width="14" height="12" fill="#fff" stroke="#90a4ae"/><path d="M${g.cx-4} ${g.y+g.h-10}h8M${g.cx} ${g.y+g.h-14}v8" stroke="#546e7a"/>`;
+      const isNote=s.type==='note';const ln=wrap(s.label,isNote?24:17).slice(0,2);const hasSub=!!s.sub&&!isNote;
+      const tot=ln.length+(hasSub?1:0);const y0=g.cy-(tot-1)*8+4.5-(s.type==='sub'?5:0);
+      ln.forEach((t,k)=>o+=`<text x="${g.cx}" y="${y0+k*16}" font-size="${isNote?12:13}" font-weight="${isNote?400:500}" text-anchor="middle" fill="#212121">${esc(t)}</text>`);
+      if(hasSub)o+=`<text x="${g.cx}" y="${y0+ln.length*16}" font-size="11" text-anchor="middle" fill="#546e7a">${esc(s.sub)}</text>`}
+    if(sel||from)o+=`<rect x="${g.x-5}" y="${g.y-5}" width="${g.w+10}" height="${g.h+10}" rx="10" fill="none" stroke="${from?'#2e7d32':'#1976d2'}" stroke-width="2" ${from?'stroke-dasharray="5 4"':''}/>`;
+    if(interactive&&S.tool==='select'){o+='<g class="handles">';
+      [['r',g.x+g.w+16,g.cy,0],['l',g.x-16,g.cy,180],['t',g.cx,g.y-16,-90],['b',g.cx,g.y+g.h+16,90]].forEach(([sd,hx,hy,rot])=>
+        o+=`<g class="hdl" data-handle="${sd}" data-id="${s.id}" transform="translate(${hx} ${hy}) rotate(${rot})"><title>Drag to connect · click to add a connected step</title><circle r="9"/><path d="M-3 -4L4 0L-3 4z" fill="#fff"/></g>`);
+      o+='</g>'}
+    o+='</g>'});
+  if(interactive)o+=`<g class="hits">${hitLayer}</g>`;
+  if(interactive&&S.tool==='select'){
+    const TRASH='<path d="M-5 -4h10M-3.5 -4l.6 9h5.8l.6-9M-1.6 -4v-1.6h3.2v1.6" fill="none" stroke="#c62828" stroke-width="1.4" stroke-linejoin="round"/>';
+    const DUP='<rect x="-4.5" y="-2.5" width="7" height="7.5" rx="1" fill="none" stroke="#424242" stroke-width="1.4"/><path d="M-2 -2.5v-2.5h7v7.5h-2.5" fill="none" stroke="#424242" stroke-width="1.4"/>';
+    const ids=selIds();
+    if(ids.length&&!DRAG){const g=geo(byId(S.selShape&&byId(S.selShape)?S.selShape:ids[0]));let by=g.y-58;if(by<4)by=g.y+g.h+30;const bx=g.cx-(ids.length>1?18:36);
+      o+=`<g class="fabbar" transform="translate(${bx} ${by})">`;
+      if(ids.length===1)o+=`<g class="fab" data-act="dupshape" transform="translate(16 14)"><title>Duplicate (Ctrl+D)</title><rect x="-15" y="-13" width="30" height="26" rx="6"/>${DUP}</g>`;
+      o+=`<g class="fab del" data-act="delsel" transform="translate(${ids.length===1?52:18} 14)"><title>Delete${ids.length>1?' '+ids.length+' shapes':''} (Delete key)</title><rect x="-15" y="-13" width="30" height="26" rx="6"/>${TRASH}</g></g>`}
+    if(S.selEdge!=null&&dg.edges[S.selEdge]&&!DRAG){const e=dg.edges[S.selEdge];const pts=smartRoute(e.a,e.fs,e.b,e.ts);let bi=0,bl=-1;
+      for(let i=0;i<pts.length-1;i++){const l=Math.abs(pts[i+1][0]-pts[i][0])+Math.abs(pts[i+1][1]-pts[i][1]);if(l>bl){bl=l;bi=i}}
+      const mx=(pts[bi][0]+pts[bi+1][0])/2,my=(pts[bi][1]+pts[bi+1][1])/2;const vert=pts[bi][0]===pts[bi+1][0];
+      o+=`<g class="fab del" data-act="deledge" transform="translate(${vert?mx-20:mx} ${vert?my:my+20})"><title>Delete connector (Delete key)</title><circle r="13"/>${TRASH}</g>`}
+  }
+  if(interactive)o+='<g id="dragLayer" pointer-events="none"></g>';
+  return o+'</svg>'}
+
+/* ---------- views: swimlanes ---------- */
+const TOOLS=[['select','Select'],['connector','Connector'],null,['start','Start'],['end','End'],['task','Task'],['decision','Decision'],['sub','Sub-process'],['doc','Document'],['data','Data store'],['note','Note']];
+const TOOL_ICON={select:'<path d="M5 3l14 8-6 2-3 6z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>',connector:'<path d="M4 18L18 6M12 6h6v6" fill="none" stroke="currentColor" stroke-width="2"/>',start:'<circle cx="12" cy="12" r="8" fill="#e8f5e9" stroke="#2e7d32" stroke-width="2"/>',end:'<circle cx="12" cy="12" r="8" fill="#ffebee" stroke="#c62828" stroke-width="3.5"/>',task:'<rect x="3" y="6" width="18" height="12" rx="3" fill="#fff" stroke="#546e7a" stroke-width="2"/>',decision:'<path d="M12 3l9 9-9 9-9-9z" fill="#fff3e0" stroke="#e65100" stroke-width="2"/>',sub:'<rect x="3" y="6" width="18" height="12" rx="3" fill="#fff" stroke="#546e7a" stroke-width="2"/><path d="M10 15h4M12 13v4" stroke="#546e7a" stroke-width="1.5"/>',doc:'<path d="M4 5h16v12c-3-2-5 2-8 0s-5-1-8 1z" fill="#fff" stroke="#546e7a" stroke-width="2"/>',data:'<ellipse cx="12" cy="6" rx="7" ry="3" fill="#fff" stroke="#546e7a" stroke-width="2"/><path d="M5 6v12c0 1.7 3 3 7 3s7-1.3 7-3V6" fill="none" stroke="#546e7a" stroke-width="2"/>',note:'<path d="M4 4h16v11l-5 5H4z" fill="#fffde7" stroke="#9e9d24" stroke-width="2"/>'};
+function vSwim(){const dg=S.dg;
+  const hint=S.tool==='connector'?(S.connectFrom?'Now click the shape to connect to.':'Click the shape the arrow starts from.'):S.tool!=='select'?`Click inside a lane to place a ${TOOLS.find(t=>t&&t[0]===S.tool)[1]}.`:'';
+  return `
+ <div class="toolbar">
+  <label class="check" style="color:var(--t3)">Diagram <select class="select" style="width:auto;height:32px;font-weight:500" data-on="dgpick"><option>${esc(dg.name)}</option><option value="kyc">Merchant onboarding &amp; KYC</option><option value="cb">Chargeback handling</option></select></label>
+  <button class="btn" data-act="newdg">+ New diagram</button>
+  <button class="btn" data-act="savedg">${ICON.down}Save JSON</button>
+  <span class="spacer"></span>
+  <button class="btn out" data-act="swimExport" data-fmt="png">Export PNG</button>
+  <button class="btn pri" data-act="swimExport" data-fmt="pdf">Export PDF</button>
+ </div>
+ <div class="palette" role="toolbar" aria-label="Shapes and tools">
+  ${TOOLS.map(t=>t?`<button class="tool ${S.tool===t[0]?'on':''}" aria-pressed="${S.tool===t[0]}" data-act="tool" data-t="${t[0]}"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">${TOOL_ICON[t[0]]}</svg>${t[1]}</button>`:'<span class="vsep" style="margin:0 6px" aria-hidden="true"></span>').join('')}
+  <span class="vsep" style="margin:0 6px" aria-hidden="true"></span>
+  <button class="tool" style="color:var(--p);font-weight:500" data-act="addlane">+ Add lane</button>
+  <span class="spacer"></span>${hint?`<span class="hint" role="status">${hint}</span>`:''}
+  ${zoomCtl('dg')}<span class="vsep" style="margin:0 6px" aria-hidden="true"></span>
+  <button class="tool" data-act="undo" ${S.undo.length?'':'disabled style="opacity:.45;cursor:default"'} title="Undo (Ctrl+Z)"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 14L4 9l5-5M4 9h10a6 6 0 0 1 0 12h-3" fill="none" stroke="currentColor" stroke-width="2"/></svg>Undo</button>
+  <button class="tool" data-act="delsel" ${selIds().length||S.selEdge!=null?'':'disabled style="opacity:.45;cursor:default"'} title="Delete selection (Delete key)" style="color:${selIds().length||S.selEdge!=null?'var(--err)':'inherit'}"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M6 7l1 13h10l1-13M9 7V4h6v3" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>Delete</button>
+ </div>
+ <div class="work" style="min-height:calc(100vh - 210px)">
+  <section class="canvas" aria-label="Diagram canvas">
+   <div class="frame ${S.tool!=='select'&&S.tool!=='connector'?'placing':''}" id="frame">
+    <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:16px">
+     <div><h1 style="font-size:20px;font-weight:700">${esc(dg.name)}</h1><div class="muted" style="font-size:12px;margin-top:4px">v${dg.version} · Owner: Payments PM · ${dg.lanes.length} teams</div></div>
+     <div style="display:flex;gap:14px;font-size:11px;color:var(--t2)"><span style="display:flex;align-items:center;gap:5px"><span class="dot" style="width:12px;height:12px;border:2px solid #2e7d32;background:#e8f5e9"></span>Start</span><span style="display:flex;align-items:center;gap:5px"><span style="width:16px;height:11px;border:1px solid #90a4ae;border-radius:3px"></span>Step</span><span style="display:flex;align-items:center;gap:5px"><span style="width:13px;height:13px;background:#ffcc80;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%)"></span>Decision</span><span style="display:flex;align-items:center;gap:5px"><span class="dot" style="width:12px;height:12px;border:3px solid #c62828;background:#ffebee"></span>End</span></div>
+    </div>
+    <div id="svgHost">${swimSVG(true)}</div>
+    <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--t3);border-top:1px solid var(--bd);padding-top:8px"><span>${esc(dg.file)} · Last edited 6 Nov 2026</span><span>Page 1 of 1</span></div>
+   </div>
+   <p class="muted" style="font-size:12px;margin:0">The white frame is what goes into the PDF / PNG. You can add a watermark when you export.</p>
+  </section>
+  ${inspHTML()}
+ </div>
+ <div class="statusbar"><span>${dg.lanes.length} lanes · ${dg.shapes.length} shapes · ${dg.edges.length} connectors</span><span>Hover a shape and drag a blue arrow to connect · hover an arrow to pick the next shape, or click it to add one like it · drag shapes anywhere — lanes grow to fit · drag a lane's bottom edge to resize · Ctrl+wheel or pinch to zoom · Shift-click to select several · Delete or right-click to delete · Ctrl+Z undo</span></div>`}
+function collapseBtn(p,name){return `<button class="iconbtn" data-act="panel" data-p="${p}" aria-expanded="true" aria-label="Collapse ${name}" title="Collapse ${name}">${ICON.chevR}</button>`}
+function inspHTML(){const dg=S.dg;const s=dg.shapes.find(x=>x.id===S.selShape);
+  if(!PANELS.insp)return `<aside class="rail" aria-label="Inspector (collapsed)"><button class="iconbtn" data-act="panel" data-p="insp" aria-expanded="false" aria-label="Expand inspector" title="Expand inspector">${ICON.chevL}</button>
+   ${[['shape','Shape',TOOL_ICON.task],['lanes','Lanes','<rect x="2" y="4" width="20" height="16" rx="2" fill="none" stroke="#424242" stroke-width="2"/><path d="M2 9.5h20M2 14.5h20" stroke="#424242" stroke-width="2"/>'],['diagram','Diagram','<path d="M6 2h8l5 5v15H6z" fill="none" stroke="#424242" stroke-width="2"/>']].map(([t,l,ic])=>`<button class="iconbtn" data-act="openInsp" data-t="${t}" aria-label="Open ${l} tab" title="${l}"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">${ic}</svg></button>`).join('')}
+   <button class="vlabel" data-act="panel" data-p="insp" tabindex="-1">${s?esc('Selected: '+lbl(s.id)):'Inspector'}</button></aside>`;
+  const tab=(id,l)=>`<button role="tab" aria-selected="${S.insp===id}" class="${S.insp===id?'on':''}" data-act="insp" data-t="${id}">${l}</button>`;
+  let body='';
+  const ed=S.selEdge!=null?dg.edges[S.selEdge]:null;
+  if(S.insp==='shape'&&ed){
+    body=`<div style="display:flex;align-items:center;gap:8px"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">${TOOL_ICON.connector}</svg><b style="font-weight:500;font-size:14px">Connector</b></div>
+     <div style="font-size:13px;color:var(--t2)">${esc(lbl(ed.a))} <span class="muted">→</span> ${esc(lbl(ed.b))}</div>
+     <label class="field">Label (e.g. Yes, No, Retry)<input class="input" value="${esc(ed.label||'')}" data-on="elabel"></label>
+     <div class="field">Line<div class="seg full" role="group" aria-label="Line style"><button class="${ed.dashed?'':'on'}" aria-pressed="${!ed.dashed}" data-act="estyle" data-v="flow">Flow →</button><button class="${ed.dashed?'on':''}" aria-pressed="${!!ed.dashed}" data-act="estyle" data-v="assoc">Association ⋯</button></div></div>
+     <div class="g2"><label class="field">Leaves from<select class="select" data-on="efs">${[['r','Right'],['l','Left'],['t','Top'],['b','Bottom']].map(([v,l])=>`<option value="${v}" ${ed.fs===v?'selected':''}>${l}</option>`).join('')}</select></label>
+      <label class="field">Arrives at<select class="select" data-on="ets">${[['l','Left'],['r','Right'],['t','Top'],['b','Bottom']].map(([v,l])=>`<option value="${v}" ${ed.ts===v?'selected':''}>${l}</option>`).join('')}</select></label></div>
+     <div style="display:flex;gap:8px"><button class="btn sm" data-act="erev">⇄ Reverse</button><span class="spacer"></span><button class="btn sm danger" data-act="deledge">Delete</button></div>
+     <p class="muted" style="font-size:12px;margin:0">Tip: hover any shape and drag a blue arrow onto another shape to connect them.</p>`;
+  }else if(S.insp==='shape'&&S.extra.length&&s){
+    const ids=selIds();body=`<b style="font-weight:500;font-size:14px">${ids.length} shapes selected</b>
+     <ul style="margin:0;padding-left:18px;color:var(--t2);line-height:1.7">${ids.map(i=>`<li>${esc(lbl(i))}</li>`).join('')}</ul>
+     <p class="muted" style="font-size:12px;margin:0">Shift-click a shape to add or remove it from the selection.</p>
+     <button class="btn danger" style="align-self:flex-start" data-act="delsel">Delete ${ids.length} shapes</button>`;
+  }else if(S.insp==='shape'){
+    if(!s)body=`<p class="muted" style="margin:0">Nothing selected. Click a shape on the canvas, or pick a shape in the toolbar and click a lane to add one.</p>`;
+    else{const fixedLabel=s.type==='start'||s.type==='end';
+      const ins=dg.edges.filter(e=>e.b===s.id).map(e=>`In ← ${esc(lbl(e.a))}${e.label?` <b style="font-weight:500">${e.label}</b>`:''}`);
+      const outs=dg.edges.filter(e=>e.a===s.id).map(e=>`${e.dashed?'Note ⋯':'Out →'} ${esc(lbl(e.b))}`);
+      body=`<div style="display:flex;align-items:center;gap:8px"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">${TOOL_ICON[s.type]}</svg><b style="font-weight:500;font-size:14px">${TOOLS.find(t=>t&&t[0]===s.type)[1]}</b></div>
+      ${fixedLabel?'':`<label class="field">Label<input class="input" value="${esc(s.label)}" data-on="slabel"></label>`}
+      ${fixedLabel||s.type==='note'||s.type==='decision'?'':`<label class="field">Sub-label<input class="input" value="${esc(s.sub)}" data-on="ssub"></label>`}
+      <div class="g2"><label class="field">Lane<select class="select" data-on="slane">${dg.lanes.map(l=>`<option value="${l.id}" ${l.id===s.lane?'selected':''}>${esc(l.name)}</option>`).join('')}</select></label>
+       <label class="field">Owner / role<input class="input" value="${esc(s.owner||'')}" data-on="sowner"></label></div>
+      ${['task','sub','doc','data'].includes(s.type)?`<div class="field">Fill<div class="swatches" role="group" aria-label="Fill colour">${[['#ffffff','White'],['#bbdefb','Blue'],['#c8e6c9','Green'],['#ffe0b2','Amber'],['#e1bee7','Purple']].map(([c,n])=>`<button class="sw ${(s.fill||'#ffffff')===c?'on':''}" style="background:${c}" aria-label="${n}" aria-pressed="${(s.fill||'#ffffff')===c}" data-act="sfill" data-c="${c}"></button>`).join('')}</div></div>
+      <label class="field">Linked Jira issue (optional)<input class="input mono" value="${esc(s.jira||'')}" placeholder="e.g. PAY-188" data-on="sjira"></label>`:''}
+      <div style="display:flex;flex-direction:column;gap:6px;font-size:12px;border-top:1px solid #eee;padding-top:12px"><span class="eyebrow">Connections</span>${ins.concat(outs).map(x=>`<span style="color:var(--t2)">${x}</span>`).join('')||'<span class="muted">None yet — drag a blue arrow to another shape</span>'}</div>
+      <div style="display:flex;flex-direction:column;gap:8px;border-top:1px solid #eee;padding-top:12px">
+       <div style="display:flex;justify-content:space-between;align-items:center"><span class="eyebrow">Add connected step</span>
+        <div class="seg" role="group" aria-label="Direction">${[['r','→','Right'],['b','↓','Below'],['l','←','Left'],['t','↑','Above']].map(([v,a,n])=>`<button class="${(S.addDir||'r')===v?'on':''}" aria-pressed="${(S.addDir||'r')===v}" aria-label="${n}" data-act="addDir" data-v="${v}" style="padding:0 9px">${a}</button>`).join('')}</div></div>
+       <div class="addrow" role="group" aria-label="Shape to add">${PICK_TYPES.map(t=>`<button data-act="inspAdd" data-type="${t}" title="Add a connected ${TYPE_NAME[t]}" aria-label="Add a connected ${TYPE_NAME[t]}"><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">${TOOL_ICON[t]}</svg></button>`).join('')}</div>
+       <span class="muted" style="font-size:12px">Tip: hover a blue arrow on the canvas to pick a shape right there.</span></div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center"><span class="muted" style="font-size:12px">Move</span><button class="btn sm" data-act="nudge" data-d="-16" aria-label="Move left">←</button><button class="btn sm" data-act="nudge" data-d="16" aria-label="Move right">→</button><button class="btn sm" data-act="nudgey" data-d="-16" aria-label="Move up">↑</button><button class="btn sm" data-act="nudgey" data-d="16" aria-label="Move down">↓</button><span class="spacer"></span><button class="btn sm danger" data-act="delshape">Delete</button></div>`}
+  }else if(S.insp==='lanes'){
+    body=`<div class="field">Orientation<div class="seg full"><button class="on" aria-pressed="true">Horizontal</button><button data-act="toast" data-msg="Vertical lanes are part of the full build">Vertical</button></div></div>
+     <span class="eyebrow">Lanes (teams)</span>
+     ${dg.lanes.map((l,i)=>{const st=LANE_STYLES[i%LANE_STYLES.length];const n=dg.shapes.filter(s=>s.lane===l.id).length;return `<div class="lanerow"><span class="sq" style="width:14px;height:14px;background:${st.hd};border:1px solid #b0bec5"></span><input value="${esc(l.name)}" aria-label="Lane name" data-on="lanename" data-i="${i}"><span class="muted" style="font-size:12px">${n}</span><button class="iconbtn" aria-label="Move ${esc(l.name)} up" data-act="laneup" data-i="${i}" ${i?'':'disabled'}>↑</button></div>`}).join('')}
+     <button class="btn" style="border-style:dashed;color:var(--p);font-weight:500" data-act="addlane">+ Add lane</button>
+     <p class="muted" style="font-size:12px;margin:0;line-height:1.5">Lanes grow taller as you stack shapes in them, and the diagram widens as shapes move right. Drag a lane's bottom edge, or the diagram's right edge, to make extra room.</p>
+     <button class="btn sm" style="align-self:flex-start" data-act="resetSizes">Shrink lanes to fit</button>
+     <label class="check"><input type="checkbox" checked>Pull team names from the roadmap</label>`;
+  }else{
+    body=`<label class="field">Name<input class="input" value="${esc(dg.name)}" data-on="dgname"></label>
+     <label class="field">Owner<input class="input" value="Payments PM"></label>
+     <label class="field">Linked roadmap<select class="select"><option>${esc(S.rmName)}</option><option>None</option></select></label>
+     <div style="display:flex;justify-content:space-between;font-size:12px"><span class="muted">Version ${dg.version} · 6 Nov 2026</span><button class="btn txt sm" data-act="toast" data-msg="Version history: v3 today, v2 30 Oct, v1 21 Oct">Version history</button></div>
+     <span class="eyebrow" style="border-top:1px solid #eee;padding-top:12px">Saved diagrams</span>
+     ${[[dg.name,dg.file,1],['Merchant onboarding & KYC','merchant-kyc.swimlane.json'],['Chargeback handling','chargebacks.swimlane.json'],['Daily payout settlement','payouts.swimlane.json']].map(([n,f,cur])=>`<div class="list-row" style="padding:6px 0"><div class="grow"><div>${esc(n)}</div><div class="muted mono" style="font-size:11px">${f}</div></div>${cur?'<span class="muted" style="font-size:12px">Open</span>':`<button class="btn txt sm" data-act="toast" data-msg="This prototype includes one diagram">Open</button>`}</div>`).join('')}`;
+  }
+  return `<aside class="insp" aria-label="Inspector"><div class="tabs" role="tablist" style="align-items:center">${tab('shape','Shape')}${tab('lanes','Lanes')}${tab('diagram','Diagram')}<span style="padding:0 6px">${collapseBtn('insp','inspector')}</span></div><div class="pad" style="display:flex;flex-direction:column;gap:12px">${body}</div></aside>`}
+function lbl(id){const s=S.dg.shapes.find(x=>x.id===id);return s?(s.label||(s.type==='end'?'End':s.type==='start'?'Start':s.type)):'?'}
+function redrawCanvas(){const h=$('#svgHost');if(h)h.innerHTML=swimSVG(true)}
+
+/* ---------- export ---------- */
+function fillTokens(t){return String(t).replace(/\{project\}/g,'Payments Platform').replace(/\{user\}/g,'Ajitav Dutta').replace(/\{date\}/g,'06 Nov 2026')}
+function wmLayer(scale){const w=S.wm;if(!w.on)return '';const col=w.color,op=w.op/100;
+  const txt=esc(fillTokens(w.text||' '));
+  const logo=w.img?`<img src="${w.img}" alt="" style="max-width:40%;max-height:40%;object-fit:contain">`:`<span style="display:flex;align-items:center;gap:.6em;color:${col};font-weight:700;font-size:${3.2*scale}cqw"><svg viewBox="0 0 24 24" style="width:1.4em;height:1.4em"><path d="M12 2l9 5v10l-9 5-9-5V7z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 7l4.5 2.5v5L12 17l-4.5-2.5v-5z" fill="currentColor"/></svg>YOUR LOGO</span>`;
+  const fs=Math.min(6,96/Math.max(8,fillTokens(w.text).length))*scale/2.2;
+  if(w.pos==='corner')return `<div class="wm" aria-hidden="true" style="align-items:flex-end;justify-content:flex-end;padding:0 4% 6% 0"><span style="opacity:${Math.min(1,op*3)};color:${col};font-weight:700;font-size:${1.5*scale/2.2}cqw;letter-spacing:.1em">${w.type==='image'?logo.replace('max-width:40%;max-height:40%','max-width:12%;max-height:12%'):txt}</span></div>`;
+  if(w.pos==='tiled')return `<div class="wm tiled" aria-hidden="true">${Array.from({length:12}).map(()=>w.type==='image'?`<span style="opacity:${op};transform:rotate(-28deg);font-size:.5em">${logo.replace('max-width:40%;max-height:40%','max-width:60%;max-height:60%')}</span>`:`<span class="t" style="opacity:${op};color:${col};font-size:${1.6*scale/2.2}cqw">${txt}</span>`).join('')}</div>`;
+  return `<div class="wm" aria-hidden="true"><span class="t" style="opacity:${op};color:${col};font-size:${fs}cqw;display:flex;justify-content:center">${w.type==='image'?logo:txt}</span></div>`}
+function roadmapMiniSVG(){return roadmapExportSVG(S.zoom)}
+/* detailed roadmap chart used for PDF / PNG export */
+function roadmapExportSVG(zoom,range,opts){opts=opts||{};const legend=opts.legend!==false;
+  const t=TL(zoom,range);const inR=d=>d>=t.R[0]&&d<=t.R[1];const LW=250;let TW=1150;
+  const HD=58,MR=24;let GR=26,ER=34;const top0=0,bodyTop=HD+MR;
+  const fit=(str,px,fs)=>{const n=Math.max(0,Math.floor(px/(fs*0.56)));return str.length>n?(n>1?str.slice(0,n-1)+'…':''):str};
+  const rows=[];TEAMS.forEach(tm=>{const items=S.epics.filter(e=>e.team===tm.name&&(!range||(e.e>t.R[0]&&e.s<t.R[1])));if(range&&!items.length)return;rows.push({team:tm,count:items.length});items.forEach(e=>rows.push({e}))});
+  const LEG=legendLayout(zoom);
+  /* fit the chart to the space it will be shown in: epic rows take the spare height, then the timeline widens or narrows to match */
+  let legH=legend?26+LEG.height(LW+TW+2):2;
+  if(opts.aspect&&isFinite(opts.aspect)&&opts.aspect>0){const A=opts.aspect,nE=rows.filter(r=>!r.team).length,nG=rows.length-nE;
+    for(let pass=0;pass<2;pass++){const W0=LW+TW+2,fixed=HD+MR+legH,avail=W0/A-fixed;
+      const kAll=avail/(nE*34+nG*26);GR=26*Math.min(Math.max(kAll,.8),1.25);
+      ER=34*Math.min(Math.max((avail-nG*GR)/(nE*34),.72),2.6);
+      const Hused=fixed+nG*GR+nE*ER;TW=Math.max(600,Math.round(Hused*A)-LW-2);if(legend)legH=26+LEG.height(LW+TW+2)}}
+  const W=LW+TW+2,X=d=>LW+t.f(d)*TW;LEG.width=W;
+  let y=bodyTop;rows.forEach(r=>{r.y=y;r.h=r.team?GR:ER;y+=r.h});const bodyBot=y;
+  const ms=[{k:'M1',name:'Beta launch',d:MS.beta.d,date:'15 Jan 2027'},{k:'M2',name:'General availability (GA)',d:MS.ga.d,date:'20 Apr 2027'}];
+  const legY=bodyBot+26;const H=bodyBot+legH;
+  let o=`<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="${opts.aspect?'xMidYMid':'xMidYMin'} meet" style="font-family:Roboto,system-ui,sans-serif">
+   <defs><pattern id="ipH" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="8" height="8" fill="#f7f9fa"/><rect width="3" height="8" fill="#cfd8dc"/></pattern>
+   <pattern id="fzH" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="8" height="8" fill="none"/><rect width="2.5" height="8" fill="rgba(84,110,122,.28)"/></pattern></defs>`;
+  /* --- header --- */
+  o+=`<rect x="0" y="0" width="${W}" height="${HD}" fill="#fff"/>`;
+  o+=`<rect x="0" y="0" width="${LW}" height="${HD}" fill="#f5f7f8"/><text x="12" y="25" font-size="12" font-weight="700" fill="#37474f" letter-spacing=".5">TEAM / EPIC</text><text x="12" y="43" font-size="11" fill="#616161">${{months:'Months',sprints:'2-week sprints',pis:'Program Increments'}[zoom]}</text>`;
+  t.head.forEach(c=>{const x1=X(c.a),x2=X(c.b),w=x2-x1;if(w<=0)return;const cx=(x1+x2)/2;
+    const cur=/\bcur\b/.test(c.cls),ip=/\bip\b/.test(c.cls);const fill=cur?'#e3f2fd':ip?'url(#ipH)':/piband/.test(c.cls)?'#eceff1':'#fff';
+    o+=`<rect x="${x1}" y="${c.top}" width="${w}" height="${zoom==='months'?HD:c.h+(c.top?HD-55:0)}" fill="${fill}" stroke="#b0bec5" stroke-width="1"/>`;
+    const fg=cur?'#0d47a1':'#212121';
+    if(zoom==='months'){o+=`<text x="${x1+10}" y="25" font-size="14" font-weight="500" fill="${fg}">${esc(c.label)}</text><text x="${x1+10}" y="43" font-size="11" fill="#616161">${esc(c.sub||'')}</text>`}
+    else if(/piband/.test(c.cls)){o+=`<text x="${cx}" y="${c.top+15}" font-size="11.5" font-weight="700" text-anchor="middle" fill="#37474f">${esc(fit(c.label,w-8,11.5))}</text>`}
+    else if(/sprint/.test(c.cls)){const hh=HD-22;o+=`<text x="${cx}" y="${22+hh/2-3}" font-size="12.5" font-weight="700" text-anchor="middle" fill="${fg}">${esc(c.label)}</text><text x="${cx}" y="${22+hh/2+12}" font-size="9.6" text-anchor="middle" fill="${cur?'#0d47a1':'#455a64'}">${esc(fit(c.sub||'',w-4,9.6))}</text>`}
+    else if(/pibig/.test(c.cls)){o+=`<text x="${cx}" y="16" font-size="13" font-weight="700" text-anchor="middle" fill="#212121">${esc(c.label)}</text><text x="${cx}" y="30" font-size="10.5" text-anchor="middle" fill="#616161">${esc(c.sub||'')}</text>`}
+    else{o+=`<text x="${cx}" y="${c.top+(HD-34)/2+4}" font-size="10" font-weight="${cur?700:500}" text-anchor="middle" fill="${cur?'#0d47a1':'#455a64'}">${esc(c.label)}</text>`}});
+  /* --- milestone marker row --- */
+  o+=`<rect x="0" y="${HD}" width="${W}" height="${MR}" fill="#fcfcfc"/><text x="12" y="${HD+16}" font-size="11" fill="#616161">Milestones</text>`;
+  /* --- body: zebra rows --- */
+  rows.forEach((r,i)=>{if(r.team)o+=`<rect x="0" y="${r.y}" width="${W}" height="${r.h}" fill="#eef1f3"/>`;else if(i%2)o+=`<rect x="${LW}" y="${r.y}" width="${TW}" height="${r.h}" fill="#fafbfc"/>`});
+  /* IP sprint bands + code freeze band */
+  t.bands.forEach(b=>o+=`<rect x="${X(b.a)}" y="${bodyTop}" width="${X(b.b)-X(b.a)}" height="${bodyBot-bodyTop}" fill="url(#ipH)" opacity=".7"/>`);
+  const fzIn=MS.freeze.e>t.R[0]&&MS.freeze.s<t.R[1];
+  if(fzIn)o+=`<rect x="${X(MS.freeze.s)}" y="${HD}" width="${X(MS.freeze.e)-X(MS.freeze.s)}" height="${bodyBot-HD}" fill="url(#fzH)" stroke="#546e7a" stroke-dasharray="3 3"/>`;
+  /* column boundaries: every column, stronger at PI edges */
+  const colEdges=new Map();
+  t.head.forEach(c=>{const strong=/piband|pibig|first/.test(c.cls)||(zoom==='months'&&false);[c.a,c.b].forEach(d=>{if(d<=t.R[0]||d>=t.R[1])return;const k=Math.round(X(d)*10);colEdges.set(k,Math.max(colEdges.get(k)||0,strong?2:1))})});
+  colEdges.forEach((w,k)=>o+=`<line x1="${k/10}" x2="${k/10}" y1="${HD}" y2="${bodyBot}" stroke="${w>1?'#90a4ae':'#cfd8dc'}" stroke-width="${w>1?1.6:1}"/>`);
+  /* row separators */
+  rows.forEach(r=>o+=`<line x1="0" x2="${W}" y1="${r.y+r.h}" y2="${r.y+r.h}" stroke="${r.team?'#cfd8dc':'#e6e9eb'}"/>`);
+  o+=`<line x1="0" x2="${W}" y1="${bodyTop}" y2="${bodyTop}" stroke="#b0bec5"/>`;
+  /* milestone and today lines sit under the bars so bar text stays readable */
+  const msIn=ms.filter(m=>inR(m.d));const tIn=false; /* exports never show the Today line */
+  msIn.forEach(m=>{const x=X(m.d);o+=`<line x1="${x}" x2="${x}" y1="${HD+MR-4}" y2="${bodyBot}" stroke="#6a1b9a" stroke-width="1.8" stroke-dasharray="5 4"/>`});
+  const tx=X(TODAY+.5);if(tIn)o+=`<line x1="${tx}" x2="${tx}" y1="${HD}" y2="${bodyBot}" stroke="#d32f2f" stroke-width="2"/>`;
+  /* labels and bars */
+  rows.forEach(r=>{if(r.team){const my=r.y+r.h/2;o+=`<rect x="10" y="${my-5}" width="10" height="10" rx="2" fill="${r.team.c}"/><text x="28" y="${my+4.5}" font-size="12.5" font-weight="700" fill="#212121">${esc(r.team.name)}</text><text x="${LW-10}" y="${my+4.5}" font-size="11" text-anchor="end" fill="#616161">${r.count} epic${r.count===1?'':'s'}</text>`;return}
+    const e=r.e,st=STATUS[e.st];
+    ;const ey=r.y+r.h/2;o+=`<text x="12" y="${ey-3}" font-size="10.5" fill="#1565c0" font-family="Roboto Mono,monospace">${esc(e.key)}</text><text x="12" y="${ey+10}" font-size="11.5" fill="#212121">${esc(fit(e.title,LW-24,11.5))}</text>`;
+    const x1=X(e.s)+2,x2=X(e.e)-2,w=Math.max(4,x2-x1);const bh=Math.min(r.h-12,30),by=r.y+(r.h-bh)/2;
+    o+=`<rect x="${x1}" y="${by}" width="${w}" height="${bh}" rx="5" fill="${st.c}"/><rect x="${x1+4}" y="${by+bh-5}" width="${Math.max(0,(w-8)*e.pct/100)}" height="2.5" rx="1" fill="#fff" opacity=".85"/>`;
+    const pct=e.pct+'%';const room=w-16-(w>70?pct.length*6.5+6:0);const lab=fit(e.title,room,11);
+    if(lab)o+=`<text x="${x1+7}" y="${by+bh/2+2}" font-size="11" font-weight="500" fill="#fff">${esc(lab)}</text>`;
+    if(w>70)o+=`<text x="${x2-7}" y="${by+bh/2+2}" font-size="10.5" text-anchor="end" fill="#fff" opacity=".95">${pct}</text>`;
+    if(e.s<t.R[0])o+=`<path d="M${X(t.R[0])+3} ${by+bh/2}l6 -5v10z" fill="#fff"/>`;
+    if(e.e>t.R[1])o+=`<path d="M${X(t.R[1])-3} ${by+bh/2}l-6 -5v10z" fill="#fff"/>`;});
+  /* milestone lines + markers */
+  msIn.forEach(m=>{const x=X(m.d);o+=`<path d="M${x} ${HD+4}l7 7.5l-7 7.5l-7 -7.5z" fill="#6a1b9a"/><text x="${x+11}" y="${HD+16}" font-size="11" font-weight="700" fill="#4a148c">${m.k}</text>`});
+  const fx=(X(MS.freeze.s)+X(MS.freeze.e))/2;if(fzIn)o+=`<text x="${fx}" y="${HD+16}" font-size="10" font-weight="700" text-anchor="middle" fill="#37474f">CF</text>`;
+  if(tIn)o+=`<rect x="${tx-11}" y="${HD+5}" width="22" height="14" rx="3" fill="#d32f2f"/><text x="${tx}" y="${HD+15.5}" font-size="9" font-weight="700" text-anchor="middle" fill="#fff">T</text>`;
+  /* outer frame + label column edge */
+  o+=`<line x1="${LW}" x2="${LW}" y1="0" y2="${bodyBot}" stroke="#90a4ae" stroke-width="1.4"/><rect x=".5" y=".5" width="${W-1}" height="${bodyBot-.5}" fill="none" stroke="#90a4ae"/>`;
+  /* legend (PDF / PNG only; slides show it top-right instead) */
+  if(legend)o+=LEG.draw(legY);
+  return o+'</svg>'}
+/* legend under the chart for PDF / PNG; wraps onto extra lines when the chart is narrow */
+function legendLayout(zoom){
+  const sections=[['MILESTONES',[
+     ['<path d="M0 -6l6 6l-6 6l-6 -6z" fill="#6a1b9a"/>','<tspan font-weight="700" fill="#4a148c">M1</tspan>  Beta launch · 15 Jan 2027'],
+     ['<path d="M0 -6l6 6l-6 6l-6 -6z" fill="#6a1b9a"/>','<tspan font-weight="700" fill="#4a148c">M2</tspan>  General availability (GA) · 20 Apr 2027'],
+     ['<rect x="-6" y="-6" width="12" height="12" fill="url(#fzH)" stroke="#546e7a" stroke-dasharray="2 2"/>','<tspan font-weight="700" fill="#37474f">CF</tspan>  Code freeze · 15–31 Mar 2027']]],
+    ['STATUS',Object.values(STATUS).map(v=>[`<rect x="-6" y="-5" width="12" height="10" rx="2" fill="${v.c}"/>`,esc(v.label)]).concat([['<rect x="-6" y="-1" width="12" height="2.5" fill="#9e9e9e"/>','Progress from Jira issues']])]];
+  if(zoom!=='months')sections.push(['SPRINTS',[['<rect x="-6" y="-6" width="12" height="12" fill="url(#ipH)" stroke="#b0bec5"/>','IP sprint (Innovation &amp; Planning)'],
+     ['<rect x="-6" y="-6" width="12" height="12" fill="#e3f2fd" stroke="#90caf9"/>',`Current sprint · ${CUR.pi.name} S${CUR.n} (${date(CUR.s)} – ${date(CUR.e-1)})`],
+     ['<rect x="-1" y="-7" width="2" height="14" fill="#90a4ae"/>','PI boundary']]]);
+  const iw=txt=>26+txt.replace(/<[^>]+>/g,'').replace(/&amp;/g,'&').length*6.1+22;
+  const plan=W=>{const out=[];let ly=0;sections.forEach(([label,items],si)=>{if(si)ly+=24;let lx=110;out.push({label,ly});
+      items.forEach(([sym,txt])=>{const w=iw(txt);if(lx>110&&lx+w>W-4){ly+=20;lx=110}out.push({sym,txt,lx,ly});lx+=w})});return {out,h:ly+18}};
+  const L={width:0,height:W=>plan(W).h,draw:y0=>{let o='';plan(L.width).out.forEach(it=>{if(it.label)o+=`<text x="0" y="${y0+it.ly}" font-size="11" font-weight="700" fill="#37474f" letter-spacing=".6">${it.label}</text>`;
+      else o+=`<g transform="translate(${it.lx} ${y0+it.ly-4})">${it.sym}</g><text x="${it.lx+16}" y="${y0+it.ly}" font-size="11.5" fill="#212121">${it.txt}</text>`});return o}};
+  return L}
+/* compact legend for the top-right of a slide */
+function legendHTML(range){const R=range||TL(S.zoom).R;const inR=d=>d>=R[0]&&d<=R[1];
+  const it=(sym,txt)=>`<span class="it">${sym}${txt}</span>`;const dm='<i class="sym dm"></i>';
+  const ms=[];if(inR(MS.beta.d))ms.push(it(dm,'<b class="k mk">M1</b> Beta launch · 15 Jan'));if(inR(MS.ga.d))ms.push(it(dm,'<b class="k mk">M2</b> GA · 20 Apr'));
+  if(MS.freeze.e>R[0]&&MS.freeze.s<R[1])ms.push(it('<i class="sym fz"></i>','<b class="k">CF</b> Code freeze · 15–31 Mar'));
+  const st=Object.values(STATUS).map(v=>it(`<i class="sym" style="background:${v.c}"></i>`,v.label));
+  const sp=S.zoom==='months'?[]:[it('<i class="sym ip"></i>','IP sprint'),it('<i class="sym cu"></i>','Current sprint')];
+  return `<div class="slegend" aria-label="Legend">${ms.length?`<div class="row">${ms.join('')}</div>`:''}<div class="row">${st.concat(sp).join('')}</div></div>`}
+function exportName(){const base=S.src==='swimlane'?S.dg.file.replace('.swimlane.json','')+'-swimlane':'payments-h1-2027-roadmap-'+S.zoom;return base+'_2026-11-06.'+S.fmt}
+function vExport(){const w=S.wm;const seg=(name,opts,cur)=>`<div class="seg full" role="group" aria-label="${name}">${opts.map(([v,l])=>`<button class="${cur===v?'on':''}" aria-pressed="${cur===v}" data-act="set" data-k="${name}" data-v="${v}">${l}</button>`).join('')}</div>`;
+  return `<div class="page">
+  <div><h1 class="h1">Export</h1><p class="lede">Save the roadmap as PDF, PNG or PowerPoint, or a swimlane diagram as PDF or PNG. Watermarks are drawn into the file.</p></div>
+  <div class="row">
+   <section class="pv grow" aria-label="Preview"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap"><b style="font-weight:500;color:var(--t2)">Preview</b><span class="mono" style="font-size:12px;color:var(--t2)" id="pvName">${esc(exportName())}</span></div>
+    <div id="pvHost"></div><p class="muted" style="margin:0;text-align:center;font-size:12px" id="pvNote"></p></section>
+   <section class="card side" style="max-width:420px;flex-basis:360px" aria-label="Export settings">
+    <div class="pad" style="display:flex;flex-direction:column;gap:14px;border-bottom:1px solid var(--bd)">
+     <div class="field">What to export${seg('src',[['roadmap','Roadmap'],['swimlane','Swimlane diagram']],S.src)}</div>
+     ${S.src==='roadmap'?`<div class="field">Roadmap view${seg('zoom',[['sprints','Sprints'],['months','Months'],['pis','PIs']],S.zoom)}</div>`:''}
+     <div class="field">Format<div style="display:grid;grid-template-columns:repeat(${S.src==='roadmap'?3:2},minmax(0,1fr));gap:8px">${[['pdf','PDF','Print and share'],['png','PNG','Chat, wiki, docs']].concat(S.src==='roadmap'?[['pptx','PowerPoint','Editable slides']]:[]).map(([v,l,d])=>`<button class="optcard ${S.fmt===v?'on':''}" aria-pressed="${S.fmt===v}" data-act="set" data-k="fmt" data-v="${v}"><b>${l}</b><span>${d}</span></button>`).join('')}</div></div>
+     ${S.fmt==='pptx'?`<div class="g2"><label class="field">Slide size<select class="select" data-on="pslidesize">${[['16:9','Widescreen 16:9'],['4:3','Standard 4:3']].map(([v,l])=>`<option value="${v}" ${S.pptx.size===v?'selected':''}>${l}</option>`).join('')}</select></label>
+       <div class="field">Roadmap slides${seg('psplit',[['one','Single'],['pi','Per PI']],S.pptx.split)}</div></div>
+       <div style="display:flex;flex-direction:column;gap:8px"><label class="check"><input type="checkbox" ${S.pptx.title?'checked':''} data-on="ptitle">Title slide</label>
+       <label class="check"><input type="checkbox" ${S.pptx.table?'checked':''} data-on="ptable">Epic summary table slide</label>
+       <label class="check"><input type="checkbox" ${S.pptx.notes?'checked':''} data-on="pnotes">Speaker notes with epic status and risks</label></div>
+       <p class="muted" style="margin:0;font-size:12px;line-height:1.5">Bars, labels, milestones and the legend are native PowerPoint shapes and text, so you can edit them after export.</p>`
+     :S.fmt==='pdf'?`<div class="g2"><label class="field">Page size<select class="select" data-on="page">${['A4','Letter','A3'].map(p=>`<option ${S.page===p?'selected':''}>${p}</option>`).join('')}</select></label><div class="field">Orientation${seg('orient',[['land','Landscape'],['port','Portrait']],S.orient)}</div></div>`
+      :`<div class="g2"><label class="field">Resolution<select class="select" data-on="scale">${[['1','1× (1600 px wide)'],['2','2× (3200 px wide)'],['3','3× (4800 px wide)']].map(([v,l])=>`<option value="${v}" ${S.scale===v?'selected':''}>${l}</option>`).join('')}</select></label><label class="field">Background<select class="select"><option>White</option><option>Transparent</option></select></label></div>`}
+    </div>
+    <div class="pad" style="display:flex;flex-direction:column;gap:14px;border-bottom:1px solid var(--bd)">
+     <div style="display:flex;justify-content:space-between;align-items:center"><b style="font-weight:500;font-size:14px">Watermark</b><label class="check">Add watermark<input type="checkbox" ${w.on?'checked':''} data-on="wmon"></label></div>
+     ${w.on?`
+     <label class="field">Preset<select class="select" data-on="preset">${['Confidential — internal','Draft — not for distribution','Company logo, corner'].map(p=>`<option ${w.preset===p?'selected':''}>${p}</option>`).join('')}</select></label>
+     ${seg('wmtype',[['text','Text'],['image','Image / logo']],w.type)}
+     ${w.type==='text'?`<label class="field">Text<input class="input" id="wmText" value="${esc(w.text)}" data-on="wmtext"></label>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;font-size:12px;color:var(--t3)">Insert: ${['{project}','{user}','{date}'].map(t=>`<button class="tok" data-act="tok" data-t="${t}">${t}</button>`).join('')}</div>`
+     :`<div style="display:flex;align-items:center;gap:10px;border:1px dashed #9e9e9e;border-radius:6px;padding:10px"><div style="flex:1;font-size:13px">${w.img?'Your logo':'No logo yet'}<div class="muted" style="font-size:12px">PNG or SVG, transparent background works best</div></div><label class="btn out sm" for="logoIn">${w.img?'Replace':'Upload'}</label><input type="file" id="logoIn" class="sr" accept="image/png,image/svg+xml,image/jpeg,image/webp" data-on="logo"></div>`}
+     <div class="field">Position<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">${[['diag','Diagonal'],['tiled','Tiled'],['corner','Corner']].map(([v,l])=>`<button class="pos ${w.pos===v?'on':''}" aria-pressed="${w.pos===v}" data-act="set" data-k="wmpos" data-v="${v}"><i>${v==='diag'?'<span style="position:absolute;left:8px;right:8px;top:18px;height:3px;background:currentColor;transform:rotate(-28deg)"></span>':v==='tiled'?'<span style="position:absolute;inset:0;background-image:repeating-linear-gradient(-28deg,transparent 0 7px,currentColor 7px 9px);opacity:.6"></span>':'<span style="position:absolute;right:4px;bottom:4px;width:18px;height:3px;background:currentColor"></span>'}</i>${l}</button>`).join('')}</div></div>
+     <div class="field"><div style="display:flex;justify-content:space-between"><label for="wmop">Opacity</label><b style="color:var(--tx);font-weight:500" id="opLbl">${w.op}%</b></div><input id="wmop" type="range" min="5" max="50" value="${w.op}" data-on="wmop" style="accent-color:var(--p)"></div>
+     <div class="field">Color<div class="swatches" role="group" aria-label="Watermark colour">${[['#b71c1c','Red'],['#424242','Grey'],['#1565c0','Blue'],['#000000','Black']].map(([c,n])=>`<button class="sw ${w.color===c?'on':''}" style="background:${c};width:32px;height:32px;border-radius:16px" aria-label="${n}" aria-pressed="${w.color===c}" data-act="set" data-k="wmcolor" data-v="${c}"></button>`).join('')}</div></div>`:''}
+     <label class="check"><input type="checkbox" ${S.stamp?'checked':''} data-on="stamp">Add “Exported by … on …” footer</label>
+    </div>
+    <div class="pad" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+     <button class="btn txt" data-act="toast" data-msg="Saved as preset “Custom watermark”">Save as preset</button><span class="spacer"></span>
+     <button class="btn lg" data-act="go" data-to="${S.src==='swimlane'?'swimlanes':'roadmap'}">Cancel</button>
+     <button class="btn pri lg" data-act="doexport">${ICON.down}Export ${S.fmt.toUpperCase()}</button></div>
+   </section>
+  </div>
+  <section class="card"><h2 style="font-size:14px;padding:14px 16px;border-bottom:1px solid var(--bd)">Recent exports</h2><div style="overflow-x:auto"><table class="recent"><thead><tr><th>File</th><th>From</th><th>Watermark</th><th>Exported</th></tr></thead><tbody>
+   ${S.exports.map(r=>`<tr><td class="mono" style="font-size:12px">${esc(r.file)}</td><td style="color:var(--t2)">${esc(r.from)}</td><td style="color:var(--t2)">${esc(r.wm)}</td><td class="muted">${esc(r.when)}</td></tr>`).join('')}
+  </tbody></table></div></section></div>`}
+function viewName(){return {months:'Month',sprints:'Sprint',pis:'PI'}[S.zoom]}
+function pptxSlides(){const R=TL(S.zoom).R;const out=[];
+  if(S.pptx.title)out.push({kind:'title',name:'Title'});
+  if(S.pptx.split==='pi')PIS.filter(p=>p.end>R[0]&&p.start<R[1]).forEach(p=>out.push({kind:'chart',name:p.name,title:p.name+' · '+p.sub,range:[Math.max(p.start,R[0]),Math.min(p.end,R[1])]}));
+  else out.push({kind:'chart',name:'Roadmap',title:'Roadmap · '+viewName()+' view'});
+  if(S.pptx.table)out.push({kind:'table',name:'Epic summary',title:'Epic summary'});
+  return out}
+function slideHTML(sl,i,n){const ratio=S.pptx.size==='4:3'?'4 / 3':'16 / 9';
+  const key=S.pptx.size+'|'+sl.name+'|'+S.zoom;const aspect=(S.slideAspect||{})[key]||(S.pptx.size==='4:3'?1.5:2.15);
+  let body='';
+  if(sl.kind==='title')body=`<div style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:1.6cqw;padding-left:4cqw;border-left:.6cqw solid #1976d2">
+     <div style="font-size:1.3cqw;font-weight:700;letter-spacing:.2em;color:#1976d2">PRODUCT ROADMAP</div>
+     <div style="font-size:4.4cqw;font-weight:700;line-height:1.1">${esc(S.rmName)}</div>
+     <div style="font-size:1.8cqw;color:#424242">${viewName()} view · ${{months:'Nov 2026 – Apr 2027',sprints:'2 Nov 2026 – 2 May 2027',pis:'PI 4 · 2026 – PI 2 · 2027'}[S.zoom]}</div>
+     <div style="display:flex;gap:3cqw;margin-top:1.5cqw;font-size:1.4cqw;color:#424242"><span><b style="font-size:2.6cqw;display:block;color:#212121">${S.epics.length}</b>epics</span><span><b style="font-size:2.6cqw;display:block;color:#bf360c">${S.epics.filter(e=>e.st==='ar').length}</b>at risk</span><span><b style="font-size:2.6cqw;display:block;color:#212121">${PIS.length}</b>PIs</span><span><b style="font-size:2.6cqw;display:block;color:#4a148c">2</b>milestones</span></div>
+     <div style="font-size:1.25cqw;color:#616161;margin-top:1cqw">Source: ${esc(S.rmFile)} · Jira snapshot 6 Nov 2026${S.stamp?' · Exported by Ajitav Dutta on 06 Nov 2026':''}</div></div>`;
+  else if(sl.kind==='chart')body=`<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:2cqw"><div style="flex:none"><div style="font-size:2.2cqw;font-weight:700;white-space:nowrap">${esc(sl.title)}</div><div style="font-size:1.15cqw;color:#616161">${esc(S.rmName)}</div></div>${legendHTML(sl.range)}</div>
+     <div class="content" data-key="${esc(key)}">${roadmapExportSVG(S.zoom,sl.range,{legend:false,aspect})}</div>`;
+  else{const rows=S.epics.slice().sort((a,b)=>a.s-b.s);
+    body=`<div><div style="font-size:2.2cqw;font-weight:700">Epic summary</div><div style="font-size:1.15cqw;color:#616161">${rows.length} epics · sorted by start date</div></div>
+     <table style="width:100%;border-collapse:collapse;font-size:1.12cqw"><thead><tr style="background:#eceff1;text-align:left">${['Key','Epic','Team','Status','Start','End','Progress'].map(h=>`<th style="padding:.5cqw .7cqw;font-weight:700;color:#37474f">${h}</th>`).join('')}</tr></thead><tbody>
+     ${rows.map((e,k)=>`<tr style="border-bottom:1px solid #e6e9eb;${k%2?'background:#fafbfc':''}"><td style="padding:.42cqw .7cqw;color:#1565c0;font-family:'Roboto Mono',monospace">${e.key}</td><td style="padding:.42cqw .7cqw">${esc(e.title)}</td><td style="padding:.42cqw .7cqw;color:#424242">${esc(e.team)}</td><td style="padding:.42cqw .7cqw"><span style="display:inline-flex;align-items:center;gap:.4cqw"><span style="width:.8cqw;height:.8cqw;border-radius:50%;background:${STATUS[e.st].c}"></span>${STATUS[e.st].label}</span></td><td style="padding:.42cqw .7cqw;color:#424242">${date(e.s)}</td><td style="padding:.42cqw .7cqw;color:#424242">${date(e.e-1)}</td><td style="padding:.42cqw .7cqw"><span style="display:inline-block;width:5cqw;height:.55cqw;background:#bbdefb;border-radius:.3cqw;vertical-align:middle"><span style="display:block;height:100%;width:${e.pct}%;background:#1976d2;border-radius:.3cqw"></span></span> ${e.pct}%</td></tr>`).join('')}</tbody></table>`}
+  return `<div class="sheet" style="aspect-ratio:${ratio};width:100%;padding:3.2%;gap:1.6cqw">${body}${wmLayer(2.2)}</div>`}
+function renderPptx(host,again){const sl=pptxSlides();S.pslide=Math.min(S.pslide,sl.length-1);
+  host.innerHTML=`<div style="display:flex;flex-direction:column;gap:12px">${slideHTML(sl[S.pslide],S.pslide,sl.length)}
+   <div class="thumbs" role="group" aria-label="Slides">${sl.map((x,i)=>`<button class="thumb ${i===S.pslide?'on':''}" aria-pressed="${i===S.pslide}" data-act="pslide" data-i="${i}"><span class="tn">${slideHTML(x,i,sl.length)}</span><span class="tl">${i+1}. ${esc(x.name)}</span></button>`).join('')}</div></div>`;
+  $('#pvName').textContent=exportName();
+  $('#pvNote').textContent=`PowerPoint · ${S.pptx.size==='4:3'?'Standard 4:3':'Widescreen 16:9'} · ${sl.length} slide${sl.length>1?'s':''}${S.pptx.notes?' · speaker notes included':''} · editable shapes`;
+  const c=host.querySelector('.sheet .content[data-key]');if(c&&!again){const r=c.getBoundingClientRect();if(r.width>0&&r.height>0){const a=r.width/r.height;S.slideAspect=S.slideAspect||{};const k=c.dataset.key;
+    if(Math.abs((S.slideAspect[k]||0)-a)>0.01){S.slideAspect[k]=a;
+      /* other slides of the same deck share the size, so seed them with this measurement */
+      sl.forEach(x=>{const kk=S.pptx.size+'|'+x.name+'|'+S.zoom;if(!S.slideAspect[kk])S.slideAspect[kk]=a});renderPptx(host,true)}}}}
+function renderPreview(){const host=$('#pvHost');if(!host)return;
+  if(S.fmt==='pptx'&&S.src==='roadmap'){renderPptx(host);return}
+  const land=S.fmt==='png'||S.orient==='land';const ratio=S.fmt==='png'?'16 / 10':land?(S.page==='Letter'?'279 / 216':'297 / 210'):(S.page==='Letter'?'216 / 279':'210 / 297');
+  const title=S.src==='swimlane'?S.dg.name:S.rmName;const sub=S.src==='swimlane'?`Swimlane workflow · ${S.dg.lanes.length} teams · v${S.dg.version}`:`Roadmap · ${{months:'Month',sprints:'Sprint',pis:'PI'}[S.zoom]} view · ${{months:'Nov 2026 – Apr 2027',sprints:'2 Nov 2026 – 2 May 2027 · 13 sprints',pis:'PI 4 · 2026 – PI 2 · 2027'}[S.zoom]} · ${S.epics.length} epics`;
+  host.innerHTML=`<div class="sheet" style="aspect-ratio:${ratio};width:${land?'100%':'58%'}"><div><div class="ttl">${esc(title)}</div><div class="sub">${esc(sub)}</div></div>
+   <div class="content" data-pv="1">${S.src==='swimlane'?swimSVG(false):roadmapExportSVG(S.zoom,null,{aspect:(S.pvAspect||{})[S.fmt+S.page+S.orient+S.zoom+S.stamp]})}</div>
+   ${S.stamp?`<div class="stamp"><span>Exported by Ajitav Dutta · 06 Nov 2026, 18:00 IST · ${esc(S.src==='swimlane'?S.dg.file:S.rmFile)}</span><span>Page 1 of 1</span></div>`:''}
+   ${wmLayer(2.2)}</div>`;
+  $('#pvName').textContent=exportName();
+  $('#pvNote').textContent=S.fmt==='png'?`PNG · ${1600*+S.scale} × ${1000*+S.scale} px`:`${S.page} ${land?'landscape':'portrait'} · ${land?'1 page':'wide content is split across pages'}`;
+  if(S.src==='roadmap'){const c=host.querySelector('.content[data-pv]');const r=c&&c.getBoundingClientRect();const k=S.fmt+S.page+S.orient+S.zoom+S.stamp;
+    if(r&&r.width>0&&r.height>0){const a=r.width/r.height;S.pvAspect=S.pvAspect||{};if(Math.abs((S.pvAspect[k]||0)-a)>0.01){S.pvAspect[k]=a;c.innerHTML=roadmapExportSVG(S.zoom,null,{aspect:a})}}}}
+
+/* ---------- quick export (from the swimlane screen) ---------- */
+function quickBody(){const w=S.wm;const seg=(k,opts,cur)=>`<div class="seg full" role="group">${opts.map(([v,l])=>`<button class="${cur===v?'on':''}" aria-pressed="${cur===v}" data-act="qset" data-k="${k}" data-v="${v}">${l}</button>`).join('')}</div>`;
+  return `<div class="qx"><div class="qprev"><div id="qPv"></div><p class="muted mono" style="margin:8px 0 0;font-size:11px;text-align:center" id="qName">${esc(exportName())}</p></div>
+   <div class="qopts">
+    <div class="field">Format<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">${[['pdf','PDF','Print and share'],['png','PNG image','Slides, chat, wiki']].map(([v,l,d])=>`<button class="optcard ${S.fmt===v?'on':''}" aria-pressed="${S.fmt===v}" data-act="qset" data-k="fmt" data-v="${v}"><b>${l}</b><span>${d}</span></button>`).join('')}</div></div>
+    ${S.fmt==='pdf'?`<div class="g2"><label class="field">Page size<select class="select" data-on="qpage">${['A4','Letter','A3'].map(p=>`<option ${S.page===p?'selected':''}>${p}</option>`).join('')}</select></label><div class="field">Orientation${seg('orient',[['land','Landscape'],['port','Portrait']],S.orient)}</div></div>`
+     :`<label class="field">Resolution<select class="select" data-on="qscale">${[['1','1× (1600 px wide)'],['2','2× (3200 px wide)'],['3','3× (4800 px wide)']].map(([v,l])=>`<option value="${v}" ${S.scale===v?'selected':''}>${l}</option>`).join('')}</select></label>`}
+    <label class="check" style="font-weight:500"><input type="checkbox" ${w.on?'checked':''} data-on="qwmon">Add watermark</label>
+    ${w.on?`<div class="wmbox">
+      ${w.type==='image'?`<p style="margin:0;font-size:13px">Using your logo as the watermark. <button class="btn txt sm" data-act="qset" data-k="wmtype" data-v="text">Use text instead</button></p>`
+       :`<label class="field">Watermark text<input class="input" id="qwmText" value="${esc(w.text)}" data-on="qwmtext"></label><span class="muted" style="font-size:12px;margin-top:-6px">{project}, {user} and {date} fill in automatically.</span>`}
+      <div class="field">Position${seg('wmpos',[['diag','Diagonal'],['tiled','Tiled'],['corner','Corner']],w.pos)}</div>
+      <div class="field"><div style="display:flex;justify-content:space-between"><label for="qwmop">Opacity</label><b style="color:var(--tx);font-weight:500" id="qOp">${w.op}%</b></div><input id="qwmop" type="range" min="5" max="50" value="${w.op}" data-on="qwmop" style="accent-color:var(--p)"></div>
+      <div class="field">Colour<div class="swatches" role="group" aria-label="Watermark colour">${[['#b71c1c','Red'],['#424242','Grey'],['#1565c0','Blue'],['#000000','Black']].map(([c,n])=>`<button class="sw ${w.color===c?'on':''}" style="background:${c}" aria-label="${n}" aria-pressed="${w.color===c}" data-act="qset" data-k="wmcolor" data-v="${c}"></button>`).join('')}</div></div>
+     </div>`:`<p class="muted" style="margin:-4px 0 0;font-size:12px">No watermark — the file looks exactly like the diagram.</p>`}
+    <label class="check"><input type="checkbox" ${S.stamp?'checked':''} data-on="qstamp">Add “Exported by … on …” footer</label>
+   </div></div>`}
+function quickFoot(){return `<button class="btn txt" data-act="go" data-to="export" style="margin-right:auto">More export options</button><button class="btn" data-act="close">Cancel</button><button class="btn pri" data-act="doexport">${ICON.down}Export ${S.fmt==='png'?'PNG':'PDF'}</button>`}
+function renderQuickPreview(){const host=$('#qPv');if(!host)return;
+  const land=S.fmt==='png'||S.orient==='land';const ratio=S.fmt==='png'?'16 / 10':land?(S.page==='Letter'?'279 / 216':'297 / 210'):(S.page==='Letter'?'216 / 279':'210 / 297');
+  host.innerHTML=`<div class="sheet" style="aspect-ratio:${ratio};width:${land?'100%':'62%'}"><div><div class="ttl">${esc(S.dg.name)}</div><div class="sub">Swimlane workflow · ${S.dg.lanes.length} teams · v${S.dg.version}</div></div>
+   <div class="content">${swimSVG(false)}</div>${S.stamp?`<div class="stamp"><span>Exported by Ajitav Dutta · 06 Nov 2026 · ${esc(S.dg.file)}</span><span>Page 1 of 1</span></div>`:''}${wmLayer(2.2)}</div>`;
+  const n=$('#qName');if(n)n.textContent=exportName()}
+function refreshQuick(){const b=$('#dialog .body');if(!b)return;b.innerHTML=quickBody();$('#dialog footer').innerHTML=quickFoot();renderQuickPreview()}
+
+/* ---------- modal & toast ---------- */
+let lastFocus=null;
+function modal(title,body,foot,cls){lastFocus=document.activeElement;$('#dialog').className='dialog '+(cls||'');$('#dialog').innerHTML=`<header id="dlgTitle">${title}</header><div class="body">${body}</div><footer>${foot}</footer>`;$('#scrim').classList.add('open');setTimeout(()=>{const b=$('#dialog footer .pri')||$('#dialog footer button');b&&b.focus()},30)}
+function closeModal(){$('#scrim').classList.remove('open');if(lastFocus&&lastFocus.focus)lastFocus.focus()}
+let tt=null;function toast(m,act,label){const t=$('#toast');
+  if(act){t.innerHTML=`<span>${esc(m)}</span><button class="tbtn" data-act="${act}">${label||'Undo'}</button>`;t.classList.add('act')}else{t.textContent=m;t.classList.remove('act')}
+  t.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show','act'),act?6000:2800)}
+/* undo for the diagram */
+function snap(){S.undo.push(JSON.stringify(S.dg));if(S.undo.length>60)S.undo.shift()}
+function selIds(){return [S.selShape,...S.extra].filter((v,i,a)=>v&&a.indexOf(v)===i&&byId(v))}
+$('#scrim').addEventListener('click',e=>{if(e.target.id==='scrim')closeModal()});
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'&&$('#scrim').classList.contains('open'))closeModal();
+  const typing=/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName);const mod=e.metaKey||e.ctrlKey;
+  if(mod&&!typing&&(S.route==='roadmap'||S.route==='swimlanes')&&!$('#scrim').classList.contains('open')){const k=S.route==='roadmap'?'rm':'dg';
+    if(e.key==='='||e.key==='+'){e.preventDefault();zoomStep(k,1);return}if(e.key==='-'||e.key==='_'){e.preventDefault();zoomStep(k,-1);return}if(e.key==='0'){e.preventDefault();setZoom(k,1);return}}
+  if(e.key==='Escape'){closeCtx();hidePicker()}
+  if(S.route==='swimlanes'&&!typing&&!$('#scrim').classList.contains('open')){
+    if(e.key==='Delete'||e.key==='Backspace'){if(S.selEdge!=null){e.preventDefault();ACT.deledge()}else if(selIds().length){e.preventDefault();ACT.delsel()}}
+    else if(mod&&e.key.toLowerCase()==='z'&&!e.shiftKey){e.preventDefault();ACT.undo()}
+    else if(mod&&e.key.toLowerCase()==='d'&&S.selShape){e.preventDefault();ACT.dupshape()}
+    else if(mod&&e.key.toLowerCase()==='a'){e.preventDefault();ACT.selectAll()}}
+  if(S.route==='swimlanes'&&e.key==='Escape'&&DRAG){cancelDrag()}
+  if(S.route==='swimlanes'&&(e.key==='Enter'||e.key===' ')&&document.activeElement.closest&&document.activeElement.closest('g.shape')){e.preventDefault();ACT.shape(document.activeElement.closest('g.shape'))}
+});
+
+/* ---------- actions ---------- */
+function loadCSV(text,name,size){
+  const rows=[];let row=[],cell='',q=false;
+  for(let i=0;i<text.length&&rows.length<2;i++){const c=text[i];
+    if(q){if(c==='"'){if(text[i+1]==='"'){cell+='"';i++}else q=false}else cell+=c}
+    else if(c==='"')q=true;else if(c===','){row.push(cell);cell=''}else if(c==='\n'||c==='\r'){if(c==='\r'&&text[i+1]==='\n')i++;row.push(cell);rows.push(row);row=[];cell=''}else cell+=c}
+  if(rows.length<2&&(cell||row.length)){row.push(cell);rows.push(row)}
+  const hdr=rows[0]||[],ex=rows[1]||[];if(hdr.length<2)return false;
+  const lines=(text.match(/\n/g)||[]).length;const used=new Set(),cols=[];
+  hdr.forEach((h,i)=>{const lh=h.toLowerCase().trim();let field=null;
+    for(const [f,al] of Object.entries(ALIASES)){if(used.has(f))continue;if(al.some(a=>lh===a||lh.includes(a))){field=f;break}}
+    if(field){used.add(field);cols.push({col:h,sample:(ex[i]||'').slice(0,40),field})}});
+  const unmatched=hdr.map((h,i)=>({col:h,sample:(ex[i]||'').slice(0,40),field:null})).filter(c=>!cols.some(x=>x.col===c.col)).slice(0,2);
+  S.cols=cols.concat(unmatched);S.extraCols=Math.max(0,hdr.length-S.cols.length);
+  S.rows=Math.max(1,lines-1);S.file={name,size,kind:'Jira CSV ('+hdr.length+' columns)'};return true}
+function readFile(file,cb,asURL){const r=new FileReader();r.onload=()=>cb(r.result);r.onerror=()=>toast('Could not read that file');asURL?r.readAsDataURL(file):r.readAsText(file)}
+const fmtSize=n=>n>1048576?(n/1048576).toFixed(1)+' MB':Math.max(1,Math.round(n/1024))+' KB';
+function handleImport(file){
+  if(!file)return;const name=file.name;
+  if(/\.csv$|\.txt$/i.test(name))readFile(file,t=>{if(!loadCSV(t,name,fmtSize(file.size))){resetMap();S.file={name,size:fmtSize(file.size),kind:'CSV (columns not recognised — using sample mapping)'}}S.mapped=false;go('map')});
+  else{resetMap();S.extraCols=0;S.rows=148;S.file={name,size:fmtSize(file.size),kind:/\.json$/i.test(name)?'Jira JSON export':'Jira XML export'};go('map')}}
+const ACT={
+  go:el=>go(el.dataset.to),
+  toast:(el,e)=>{e&&e.preventDefault();toast(el.dataset.msg)},
+  guide:el=>{S.guide=el.dataset.v==='1';render()},
+  restart:()=>{Object.assign(S,{visited:new Set(['home']),file:null,roadmapReady:false,saved:false,epics:freshEpics(),dg:freshDiagram(),selShape:'F',selEdge:null,extra:[],undo:[],sel:'PAY-142',zoom:'months',dgSaved:true});resetMap();S.extraCols=0;S.rows=148;go('home');toast('Journey restarted')},
+  sample:()=>{resetMap();S.extraCols=0;S.rows=148;S.file={name:'jira-export-payments-2026-11-06.csv',size:'2.1 MB',kind:'Jira Cloud CSV (all fields)'};go('map')},
+  openRecent:el=>{S.rmFile=el.dataset.file||'payments-roadmap-h1-2027.json';S.file=null;S.roadmapReady=true;S.saved=true;go('roadmap');toast('Opened '+S.rmFile)},
+  create:()=>{const un=S.cols.filter(c=>!c.field).length;
+    modal('Create roadmap',`<p style="margin:0">This creates <b>${esc(S.rmName)}</b> from ${S.rows} Jira issues and saves it as:</p>
+     <div class="list-row" style="border:1px solid var(--bd);border-radius:6px;padding:10px 12px">${ICON.file}<div class="grow"><div class="mono">${esc(S.rmFile)}</div><div class="muted" style="font-size:12px">${S.epics.length} epics · 4 lanes · 3 milestones · about 24 KB</div></div></div>
+     ${un?`<ul class="warnbox"><li style="display:flex;gap:8px">${ICON.warn}${un} column${un>1?'s are':' is'} still unmapped and will be ignored.</li></ul>`:''}
+     <p class="muted" style="margin:0;font-size:12px">In the full app this downloads the JSON. Reopen it later with “Open JSON” to carry on where you left off.</p>`,
+     `<button class="btn" data-act="close">Cancel</button><button class="btn pri" data-act="confirmCreate">Create &amp; save</button>`)},
+  confirmCreate:()=>{closeModal();S.roadmapReady=true;S.saved=true;S.visited.add('map');go('roadmap');toast('Saved '+S.rmFile)},
+  close:()=>closeModal(),
+  panel:el=>{const p=el.dataset.p;PANELS[p]=!PANELS[p];try{localStorage.setItem('ps-panels',JSON.stringify(PANELS))}catch(_){}render();
+    const b=document.querySelector(`[data-act="panel"][data-p="${p}"].iconbtn`);if(b)b.focus()},
+  openInsp:el=>{S.insp=el.dataset.t;PANELS.insp=true;try{localStorage.setItem('ps-panels',JSON.stringify(PANELS))}catch(_){}render()},
+  zoom:el=>{S.zoom=el.dataset.z;render()},
+  zoomStep:el=>zoomStep(el.dataset.k,+el.dataset.d),
+  zoomReset:el=>setZoom(el.dataset.k,1),
+  zoomFit:el=>zoomFit(el.dataset.k),
+  epic:el=>{S.sel=el.dataset.k;render()},
+  schedule:el=>{const [k,t]=TRAY.find(x=>x[0]===el.dataset.k);if(S.epics.some(e=>e.key===k)){toast(k+' is already scheduled');return}
+    const nx=SPRINTS.find(x=>x.s>TODAY);S.epics.push({key:k,title:t,team:k.startsWith('PAY')?'Checkout':k.startsWith('RSK')?'Risk & Fraud':k.startsWith('PLT')?'Platform':'Merchant Experience',s:nx.s,e:nx.e+14,st:'ns',pct:0,issues:5});S.sel=k;S.saved=false;render();toast(k+' scheduled in '+nx.pi.name+' S'+nx.n+'–S'+(nx.n+1))},
+  unschedule:()=>{const e=S.epics.find(x=>x.key===S.sel);if(!e)return;S.epics=S.epics.filter(x=>x!==e);S.sel=null;S.saved=false;render();toast(e.key+' moved to Unscheduled')},
+  savejson:()=>{modal('Save roadmap JSON',`<p style="margin:0">Saves <span class="mono">${esc(S.rmFile)}</span>. Everything below comes back when you open the file again.</p><pre class="code">${esc(roadmapJSON(false))}</pre>`,
+     `<button class="btn" data-act="copyjson">Copy JSON</button><button class="btn pri" data-act="confirmSave">Save</button>`)},
+  copyjson:()=>{navigator.clipboard&&navigator.clipboard.writeText(roadmapJSON(false)).then(()=>toast('JSON copied'),()=>toast('Copy was blocked'))},
+  confirmSave:()=>{closeModal();S.saved=true;render();toast('Saved '+S.rmFile)},
+  resync:()=>modal('Re-sync from a new Jira export',`<p style="margin:0">Comparing <span class="mono">jira-export-payments-2026-11-06.csv</span> with your roadmap:</p>
+    <ul style="margin:0;padding-left:18px;line-height:1.8"><li><b>RSK-031</b> status: In progress → <b style="color:var(--risk)">At risk</b> (already applied)</li><li><b>PAY-155</b> due date moved 12 Mar → <b>26 Mar</b></li><li><b>MX-077</b> progress 0% → <b>15%</b></li><li>2 new stories added to PAY-142</li></ul>
+    <p class="muted" style="margin:0;font-size:12px">Your PM notes, milestones and manual edits are kept.</p>`,`<button class="btn" data-act="close">Cancel</button><button class="btn pri" data-act="applySync">Apply 3 changes</button>`),
+  applySync:()=>{const a=S.epics.find(e=>e.key==='PAY-155');if(a)a.e=146;const b=S.epics.find(e=>e.key==='MX-077');if(b){b.pct=15;b.st='ip'}S.saved=false;closeModal();render();toast('Roadmap updated from Jira')},
+  swimExport:el=>{S.src='swimlane';S.fmt=el.dataset.fmt||'pdf';modal('Export '+esc(S.dg.name),quickBody(),quickFoot(),'wide');renderQuickPreview()},
+  qset:el=>{const k=el.dataset.k,v=el.dataset.v;if(k==='fmt')S.fmt=v;else if(k==='orient')S.orient=v;else if(k==='wmpos')S.wm.pos=v;else if(k==='wmcolor')S.wm.color=v;else if(k==='wmtype')S.wm.type=v;refreshQuick()},
+  exportFrom:el=>{S.src=el.dataset.src;if(el.dataset.fmt)S.fmt=el.dataset.fmt;go('export')},
+  /* swimlanes */
+  tool:el=>{S.tool=el.dataset.t;S.connectFrom=null;render()},
+  insp:el=>{S.insp=el.dataset.t;render()},
+  shape:(el,e)=>{const id=el.dataset.id;
+    if(S.tool==='connector'){
+      if(!S.connectFrom){S.connectFrom=id;render();return}
+      if(S.connectFrom===id){S.connectFrom=null;render();return}
+      const a=S.dg.shapes.find(s=>s.id===S.connectFrom),b=S.dg.shapes.find(s=>s.id===id);const [fs,ts]=autoSides(geo(a),geo(b));
+      snap();S.dg.edges.push({a:a.id,b:b.id,fs,ts});S.connectFrom=null;S.selShape=b.id;S.dgSaved=false;S.tool='select';render();toast('Connected '+lbl(a.id)+' → '+lbl(b.id));return}
+    if(e&&e.shiftKey&&S.selShape&&S.tool==='select'){if(id===S.selShape){S.selShape=S.extra.shift()||null}else if(S.extra.includes(id))S.extra=S.extra.filter(x=>x!==id);else S.extra.push(id);S.selEdge=null;render();return}
+    S.selShape=id;S.extra=[];S.selEdge=null;S.insp='shape';S.tool='select';render()},
+  canvas:(el,e)=>{
+    if(S.tool==='select'||S.tool==='connector'){if(S.tool==='select'&&(S.selShape||S.selEdge!=null)){S.selShape=null;S.selEdge=null;render()}return}
+    const [x,y]=svgPoint(e);
+    if(x<LABEL_W+8){toast('Click inside a lane, right of the lane name');return}
+    snap();newShapeAt(S.tool,x,y);S.tool='select';render();focusLabel()},
+  edge:el=>{S.selEdge=+el.dataset.i;S.selShape=null;S.insp='shape';render()},
+  estyle:el=>{const e=S.dg.edges[S.selEdge];if(!e)return;e.dashed=el.dataset.v==='assoc';S.dgSaved=false;render()},
+  erev:()=>{const e=S.dg.edges[S.selEdge];if(!e)return;snap();[e.a,e.b]=[e.b,e.a];[e.fs,e.ts]=[e.ts,e.fs];S.dgSaved=false;render();toast('Connector reversed')},
+  deledge:()=>{const e=S.dg.edges[S.selEdge];if(!e)return;snap();const n=lbl(e.a)+' → '+lbl(e.b);S.dg.edges.splice(S.selEdge,1);S.selEdge=null;S.dgSaved=false;closeCtx();render();toast('Deleted connector '+n,'undo')},
+  delshape:()=>ACT.delsel(),
+  delsel:()=>{const ids=selIds();if(!ids.length){if(S.selEdge!=null)ACT.deledge();return}snap();
+    const lost=S.dg.edges.filter(e=>ids.includes(e.a)||ids.includes(e.b)).length;const name=ids.length===1?'“'+lbl(ids[0])+'”':ids.length+' shapes';
+    S.dg.shapes=S.dg.shapes.filter(s=>!ids.includes(s.id));S.dg.edges=S.dg.edges.filter(e=>!ids.includes(e.a)&&!ids.includes(e.b));
+    S.selShape=null;S.extra=[];S.selEdge=null;S.dgSaved=false;closeCtx();render();toast('Deleted '+name+(lost?' and '+lost+' connector'+(lost>1?'s':''):''),'undo')},
+  dupshape:()=>{const s0=byId(S.selShape);if(!s0)return;snap();const id='n'+Date.now().toString(36);const c=JSON.parse(JSON.stringify(s0));c.id=id;c.x=s0.x+SZ[s0.type][0]+48;
+    const li=S.dg.lanes.findIndex(l=>l.id===c.lane);let guard=0;while(overlaps(li,c.x,SZ[c.type][0],ry(c),SZ[c.type][1])&&guard++<20)c.x+=SZ[c.type][0]+48;
+    S.dg.shapes.push(c);S.selShape=id;S.extra=[];S.dgSaved=false;closeCtx();render();toast('Duplicated '+lbl(id),'undo')},
+  undo:()=>{if(!S.undo.length){toast('Nothing to undo');return}S.dg=JSON.parse(S.undo.pop());S.selShape=null;S.extra=[];S.selEdge=null;S.connectFrom=null;S.dgSaved=false;closeCtx();$('#toast').classList.remove('show','act');render();toast('Undone')},
+  pickAdd:el=>{hidePicker();quickAdd(el.dataset.id,el.dataset.side,el.dataset.type)},
+  addDir:el=>{S.addDir=el.dataset.v;render()},
+  inspAdd:el=>{if(!S.selShape)return;quickAdd(S.selShape,S.addDir||'r',el.dataset.type)},
+  ctxEdit:()=>{closeCtx();S.insp='shape';PANELS.insp=true;render();const i=document.querySelector('[data-on="slabel"],[data-on="elabel"]');if(i){i.focus();i.select()}},
+  ctxRev:()=>{closeCtx();ACT.erev()},
+  selectAll:()=>{closeCtx();const ids=S.dg.shapes.map(s=>s.id);S.selShape=ids[0]||null;S.extra=ids.slice(1);S.selEdge=null;render()},
+  nudgey:el=>{const s=S.dg.shapes.find(x=>x.id===S.selShape);if(!s)return;s.ry=Math.max(16,ry(s)+ +el.dataset.d);S.dgSaved=false;redrawCanvas()},
+  resetSizes:()=>{S.dg.lanes.forEach(l=>delete l.h);delete S.dg.w;S.dgSaved=false;render();toast('Lanes shrunk to fit their shapes')},
+  nudge:el=>{const s=S.dg.shapes.find(x=>x.id===S.selShape);if(!s)return;s.x=Math.max(LABEL_W+8,s.x+ +el.dataset.d);S.dgSaved=false;redrawCanvas()},
+  sfill:el=>{const s=S.dg.shapes.find(x=>x.id===S.selShape);if(!s)return;s.fill=el.dataset.c;S.dgSaved=false;render()},
+  addlane:()=>{snap();const n=S.dg.lanes.length;S.dg.lanes.push({id:'l'+Date.now().toString(36),name:'New team'});S.insp='lanes';S.dgSaved=false;render();const ins=document.querySelectorAll('[data-on="lanename"]');const last=ins[ins.length-1];if(last){last.focus();last.select()}toast('Lane '+(n+1)+' added')},
+  laneup:el=>{const i=+el.dataset.i;if(!i)return;const L=S.dg.lanes;[L[i-1],L[i]]=[L[i],L[i-1]];S.dgSaved=false;render()},
+  newdg:()=>modal('New swimlane diagram',`<label class="field">Name<input class="input" id="ndName" value="Untitled workflow"></label>
+    <label class="field">Lanes<select class="select" id="ndLanes"><option value="roadmap">Use the roadmap teams (Checkout, Risk &amp; Fraud, Platform, Merchant Experience)</option><option value="blank">Start with 3 blank lanes</option></select></label>`,
+    `<button class="btn" data-act="close">Cancel</button><button class="btn pri" data-act="createDg">Create</button>`),
+  createDg:()=>{const name=$('#ndName').value||'Untitled workflow';const useRm=$('#ndLanes').value==='roadmap';
+    S.dg={name,file:name.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')+'.swimlane.json',version:1,
+      lanes:(useRm?TEAMS.map(t=>t.name):['Lane 1','Lane 2','Lane 3']).map((n,i)=>({id:'L'+i,name:n})),shapes:[{id:'s0',type:'start',lane:'L0',x:128}],edges:[]};
+    S.selShape=null;S.dgSaved=false;closeModal();render();toast('Pick Task in the toolbar and click a lane to add steps')},
+  savedg:()=>{const o={schemaVersion:1,name:S.dg.name,version:S.dg.version,orientation:'horizontal',lanes:S.dg.lanes.map(l=>l.name),
+      laneSizes:laneLayout().map((r,i)=>({lane:S.dg.lanes[i].name,height:r.h})),width:dgSize().W,
+      shapes:S.dg.shapes.map(s=>({id:s.id,type:s.type,lane:(S.dg.lanes.find(l=>l.id===s.lane)||{}).name,x:s.x,y:ry(s),label:s.label,sub:s.sub,owner:s.owner,jira:s.jira})),
+      connectors:S.dg.edges.map(e=>({from:e.a,to:e.b,label:e.label,style:e.dashed?'association':'flow'})),linkedRoadmap:S.rmFile};
+    modal('Save diagram JSON',`<p style="margin:0">Saves <span class="mono">${esc(S.dg.file)}</span> so you can reopen and edit it.</p><pre class="code">${esc(JSON.stringify(o,null,2))}</pre>`,
+     `<button class="btn" data-act="close">Cancel</button><button class="btn pri" data-act="confirmDg">Save</button>`)},
+  confirmDg:()=>{closeModal();S.dgSaved=true;render();toast('Saved '+S.dg.file)},
+  /* export */
+  set:el=>{const k=el.dataset.k,v=el.dataset.v;
+    if(k==='src'){S.src=v;if(v==='swimlane'&&S.fmt==='pptx')S.fmt='pdf'}else if(k==='psplit'){S.pptx.split=v;S.pslide=0}else if(k==='zoom'){S.zoom=v;S.pslide=0}else if(k==='fmt')S.fmt=v;else if(k==='orient')S.orient=v;
+    else if(k==='wmtype')S.wm.type=v;else if(k==='wmpos')S.wm.pos=v;else if(k==='wmcolor')S.wm.color=v;render()},
+  pslide:el=>{S.pslide=+el.dataset.i;renderPreview()},
+  tok:el=>{S.wm.text=(S.wm.text+' '+el.dataset.t).trim();render()},
+  doexport:()=>{const name=exportName();
+    modal('Exporting…',`<div class="list-row" style="border:1px solid var(--bd);border-radius:6px;padding:10px 12px">${ICON.file}<div class="grow"><div class="mono">${esc(name)}</div><div class="muted" style="font-size:12px" id="expMsg">${S.fmt==='pptx'?'Building slides':'Rendering '+(S.src==='swimlane'?'diagram':'roadmap')} and drawing the watermark…</div></div></div><div class="progress"><i id="expBar"></i></div>`,
+      `<button class="btn" data-act="close" id="expClose">Cancel</button>`);
+    requestAnimationFrame(()=>{const b=$('#expBar');if(b)b.style.width='100%'});
+    setTimeout(()=>{if(!$('#scrim').classList.contains('open'))return;
+      const wmTxt=S.wm.on?(S.wm.type==='image'?'Logo, '+S.wm.pos:fillTokens(S.wm.text)):'None';
+      const nSl=S.fmt==='pptx'?pptxSlides().length:0;
+      S.exports.unshift({file:name,from:S.src==='swimlane'?'Swimlane · '+S.dg.name:'Roadmap · '+viewName()+' view'+(nSl?' · '+nSl+' slides':''),wm:wmTxt,when:'6 Nov 2026, 18:00'});
+      $('#dlgTitle').textContent='Export ready';
+      $('#expMsg').innerHTML=S.fmt==='pptx'?`PowerPoint · ${nSl} slides (${pptxSlides().map(x=>esc(x.name)).join(', ')}) · watermark: ${esc(wmTxt)}${S.pptx.notes?' · speaker notes':''}`:`${S.fmt.toUpperCase()} · watermark: ${esc(wmTxt)}${S.stamp?' · footer stamp on':''}`;
+      $('#dialog .body').insertAdjacentHTML('beforeend','<p class="muted" style="margin:0;font-size:12px">Prototype: no file is created. In the full app the file downloads here.</p>');
+      $('#dialog footer').innerHTML=`<button class="btn" data-act="closeExp">Done</button><button class="btn pri" data-act="go" data-to="${S.src==='swimlane'?'swimlanes':'roadmap'}">Back to ${S.src==='swimlane'?'diagram':'roadmap'}</button>`;
+      $('#dialog footer .pri').focus()},1300)},
+  closeExp:()=>{closeModal();render()}
+};
+document.addEventListener('click',e=>{const el=e.target.closest('[data-act]');if(!el)return;
+  if(suppressClick&&el.closest('#svgHost')){suppressClick=false;return}const a=ACT[el.dataset.act];if(!a)return;
+  if(el.tagName==='A')e.preventDefault();
+  if(el.closest('#dialog')&&el.dataset.act==='go')closeModal();
+  a(el,e)});
+
+/* ---------- draw.io-style direct manipulation on the swimlane canvas ---------- */
+let DRAG=null,suppressClick=false;
+const OPP={r:'l',l:'r',t:'b',b:'t'};
+const SHAPE_DEFAULTS={task:'New step',decision:'Decision?',sub:'Sub-process',doc:'Document',data:'Data store',note:'Add a note'};
+function svgPoint(e){const svg=$('#svgHost svg');const r=svg.getBoundingClientRect();const {W,H}=dgSize();return [(e.clientX-r.left)*W/r.width,(e.clientY-r.top)*H/r.height]}
+const byId=id=>S.dg.shapes.find(x=>x.id===id);
+function laneAt(y,skipId){const L=laneLayout(skipId);for(let i=0;i<L.length;i++)if(y<L[i].top+L[i].h)return i;return L.length-1}
+function shapeAt(x,y,exclude){for(const s of [...S.dg.shapes].reverse()){if(s.id===exclude)continue;const g=geo(s);if(x>=g.x-10&&x<=g.x+g.w+10&&y>=g.y-10&&y<=g.y+g.h+10)return s}return null}
+function nearestSide(g,x,y){let best='l',bd=1e9;['l','r','t','b'].forEach(sd=>{const [ax,ay]=anchor(g,sd);const d=(ax-x)**2+(ay-y)**2;if(d<bd){bd=d;best=sd}});return best}
+function overlaps(li,x,w,yy,h,skip){const lid=S.dg.lanes[li].id;return S.dg.shapes.some(s=>{if(s.id===skip||s.lane!==lid)return false;const sh=SZ[s.type],sy=ry(s);return x<s.x+sh[0]+24&&x+w+24>s.x&&yy<sy+sh[1]+24&&yy+h+24>sy})}
+function newShapeAt(type,x,y){const li=laneAt(y);const [w,h]=SZ[type];const id='n'+Date.now().toString(36)+Math.random().toString(36).slice(2,5);
+  let r=Math.max(16,Math.round((y-laneLayout()[li].top-h/2)/8)*8);if(Math.abs(r-(LANE_MIN-h)/2)<14)r=null;
+  S.dg.shapes.push({id,type,lane:S.dg.lanes[li].id,x:Math.max(LABEL_W+16,Math.round((x-w/2)/8)*8),ry:r,label:SHAPE_DEFAULTS[type]||'',sub:''});
+  S.selShape=id;S.selEdge=null;S.insp='shape';S.dgSaved=false;return id}
+function focusLabel(){const inp=document.querySelector('[data-on="slabel"]');if(inp){inp.focus();inp.select()}}
+function cloneType(s){return s.type==='start'||s.type==='end'?'task':s.type}
+const TYPE_NAME={task:'step',decision:'decision',sub:'sub-process',doc:'document',data:'data store',note:'note',end:'end point',start:'start point'};
+function quickAdd(fromId,side,type){type=type||'task';const s=byId(fromId),g=geo(s);const before=JSON.stringify(S.dg);let li=S.dg.lanes.findIndex(l=>l.id===s.lane);const [w,h]=SZ[type];let x,r=null,stacked=false;
+  if(side==='r'||side==='l'){x=side==='r'?g.x+g.w+64:g.x-64-w;r=ry(s)+(g.h-h)/2;if(Math.abs(r-(LANE_MIN-h)/2)<1)r=null}
+  else if(side==='b'){x=g.cx-w/2;if(li+1<S.dg.lanes.length)li++;else{r=ry(s)+g.h+48;stacked=true}}
+  else{x=g.cx-w/2;if(li>0)li--;else if(ry(s)-48-h>=16){r=ry(s)-48-h;stacked=true}else{toast('No lane above this one');return}}
+  x=Math.round(x/8)*8;const yy=r!=null?r:(LANE_MIN-h)/2;const step=(side==='l'?-1:1)*(w+48);let guard=0;
+  while(overlaps(li,x,w,yy,h)&&guard++<20)x+=step;
+  if(x<LABEL_W+16){x=g.x+g.w+64;while(overlaps(li,x,w,yy,h)&&guard++<40)x+=w+48}
+  S.undo.push(before);const id='n'+Date.now().toString(36);S.dg.shapes.push({id,type,lane:S.dg.lanes[li].id,x,ry:r,label:SHAPE_DEFAULTS[type]||'',sub:''});
+  if(stacked)toast('Added below in the same lane — the lane grew to fit');
+  S.dg.edges.push({a:fromId,b:id,fs:side,ts:OPP[side]});S.selShape=id;S.selEdge=null;S.insp='shape';S.dgSaved=false;render();focusLabel();toast('Added a '+TYPE_NAME[type]+' connected to '+lbl(fromId),'undo')}
+function drawDragLayer(){const L=$('#dragLayer');if(!L||!DRAG)return;const d=DRAG;const g=geo(byId(d.from));const p1=anchor(g,d.side);
+  const t=shapeAt(d.x,d.y,d.from);let h='';
+  if(t){const gt=geo(t),ts=nearestSide(gt,d.x,d.y);const pts=smartRoute(d.from,d.side,t.id,ts);
+    h+=`<rect x="${gt.x-6}" y="${gt.y-6}" width="${gt.w+12}" height="${gt.h+12}" rx="10" fill="rgba(25,118,210,.07)" stroke="#1976d2" stroke-width="2"/>`;
+    ['l','r','t','b'].forEach(sd=>{const [ax,ay]=anchor(gt,sd);h+=`<circle cx="${ax}" cy="${ay}" r="${sd===ts?6:4}" fill="${sd===ts?'#1976d2':'#fff'}" stroke="#1976d2" stroke-width="2"/>`});
+    h+=`<polyline points="${pts.map(p=>p.join(',')).join(' ')}" fill="none" stroke="#1976d2" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#ahd)"/>`;
+  }else{const w=SZ.task[0],hh=SZ.task[1];const ok=d.x>LABEL_W+8;
+    h+=`<polyline points="${p1.join(',')} ${d.x},${d.y}" fill="none" stroke="#1976d2" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#ahd)"/>`;
+    if(ok){const LL=laneLayout(),li=laneAt(d.y),gy=Math.max(LL[li].top+16,d.y-hh/2);
+      h+=`<rect x="${d.x-w/2}" y="${gy}" width="${w}" height="${hh}" rx="8" fill="rgba(255,255,255,.7)" stroke="#1976d2" stroke-dasharray="4 4"/><text x="${d.x}" y="${gy+hh/2+4}" font-size="12" text-anchor="middle" fill="#0d47a1">Drop to add a step</text>`}}
+  L.innerHTML=h}
+function cancelDrag(){DRAG=null;redrawCanvas()}
+document.addEventListener('pointerdown',e=>{
+  suppressClick=false;
+  if(S.route!=='swimlanes'||e.button!==0)return;const host=e.target.closest('#svgHost');if(!host)return;
+  const h=e.target.closest('[data-handle]'),g=e.target.closest('g.shape');
+  if(h&&S.tool==='select'){hidePicker();e.preventDefault();const [x,y]=svgPoint(e);DRAG={mode:'connect',from:h.dataset.id,side:h.dataset.handle,sx:x,sy:y,x,y,moved:false};try{host.setPointerCapture(e.pointerId)}catch(_){};return}
+  const lr=e.target.closest('[data-lane-resize]'),wr=e.target.closest('[data-width-resize]');
+  if(lr||wr){e.preventDefault();const [x,y]=svgPoint(e);const i=lr?+lr.dataset.laneResize:-1;DRAG={mode:lr?'lane':'width',i,top:lr?laneLayout()[i].top:0,sx:x,sy:y,moved:false};try{host.setPointerCapture(e.pointerId)}catch(_){}return}
+  if(g&&!e.target.classList.contains('hpad')){const [x,y]=svgPoint(e);const s=byId(g.dataset.id);const gg=geo(s);DRAG={mode:S.tool==='select'?'move':'click',id:s.id,sx:x,sy:y,ox:s.x,offY:y-gg.y,moved:false};try{host.setPointerCapture(e.pointerId)}catch(_){}}
+});
+document.addEventListener('pointermove',e=>{if(!DRAG)return;const [x,y]=svgPoint(e);DRAG.x=x;DRAG.y=y;
+  if(!DRAG.moved&&Math.hypot(x-DRAG.sx,y-DRAG.sy)>5){DRAG.moved=true;if(DRAG.mode!=='connect'&&DRAG.mode!=='click')snap();const sv=$('#svgHost svg');sv&&sv.classList.add('dragging')}
+  if(!DRAG.moved)return;
+  if(DRAG.mode==='move'){const s=byId(DRAG.id);s.x=Math.max(LABEL_W+8,Math.round((DRAG.ox+x-DRAG.sx)/8)*8);
+    const li=laneAt(y,s.id);s.lane=S.dg.lanes[li].id;s.ry=Math.max(16,Math.round((y-DRAG.offY-laneLayout(s.id)[li].top)/8)*8);
+    S.selShape=s.id;S.selEdge=null;redrawCanvas();const sv=$('#svgHost svg');sv&&sv.classList.add('dragging')}
+  else if(DRAG.mode==='lane'){const l=S.dg.lanes[DRAG.i];const fit=laneLayout()[DRAG.i].fit;l.h=Math.max(fit,Math.round((y-DRAG.top)/8)*8);if(l.h===fit)delete l.h;redrawCanvas()}
+  else if(DRAG.mode==='width'){const fit=dgFitW();S.dg.w=Math.max(fit,Math.round(x/8)*8);if(S.dg.w===fit)delete S.dg.w;redrawCanvas()}
+  else if(DRAG.mode==='connect')drawDragLayer()});
+document.addEventListener('pointerup',e=>{if(!DRAG)return;const d=DRAG;DRAG=null;suppressClick=true;
+  if(d.mode==='lane'||d.mode==='width'){if(d.moved){S.dgSaved=false;render()}return}
+  if(d.mode!=='connect'){if(!d.moved)ACT.shape({dataset:{id:d.id}},{shiftKey:e.shiftKey});else{S.dgSaved=false;render()}return}
+  if(!d.moved){hidePicker();quickAdd(d.from,d.side,cloneType(byId(d.from)));return}
+  const t=shapeAt(d.x,d.y,d.from);
+  if(t){const ts=nearestSide(geo(t),d.x,d.y);
+    if(S.dg.edges.some(x=>x.a===d.from&&x.b===t.id)){toast('These shapes are already connected');redrawCanvas();return}
+    snap();S.dg.edges.push({a:d.from,b:t.id,fs:d.side,ts});S.selEdge=S.dg.edges.length-1;S.selShape=null;S.insp='shape';S.dgSaved=false;render();toast('Connected '+lbl(d.from)+' → '+lbl(t.id));return}
+  if(d.x<LABEL_W+8){cancelDrag();return}
+  snap();const id=newShapeAt('task',d.x,d.y);S.dg.edges.push({a:d.from,b:id,fs:d.side,ts:nearestSide(geo(byId(id)),...anchor(geo(byId(d.from)),d.side))});
+  render();focusLabel();toast('Added a connected step')});
+document.addEventListener('pointercancel',()=>{if(DRAG)cancelDrag()});
+function closeCtx(){const c=$('#ctx');if(c)c.classList.remove('open')}
+document.addEventListener('contextmenu',e=>{if(S.route!=='swimlanes')return;const host=e.target.closest('#svgHost');if(!host)return;e.preventDefault();
+  const g=e.target.closest('g.shape'),eh=e.target.closest('[data-act="edge"]');let items='';
+  if(g){const id=g.dataset.id;if(!(id===S.selShape||S.extra.includes(id))){S.selShape=id;S.extra=[];S.selEdge=null;S.insp='shape';render()}
+    const n=selIds().length;
+    items=(n===1?`<button role="menuitem" data-act="ctxEdit">Edit label</button><button role="menuitem" data-act="dupshape">Duplicate<kbd>Ctrl+D</kbd></button><hr>`:'')+`<button role="menuitem" class="danger" data-act="delsel">Delete${n>1?' '+n+' shapes':''}<kbd>Del</kbd></button>`}
+  else if(eh){S.selEdge=+eh.dataset.i;S.selShape=null;S.extra=[];S.insp='shape';render();
+    items=`<button role="menuitem" data-act="ctxEdit">Edit label</button><button role="menuitem" data-act="ctxRev">Reverse direction</button><hr><button role="menuitem" class="danger" data-act="deledge">Delete connector<kbd>Del</kbd></button>`}
+  else items=`<button role="menuitem" data-act="selectAll">Select all shapes<kbd>Ctrl+A</kbd></button><button role="menuitem" data-act="undo" ${S.undo.length?'':'disabled'}>Undo<kbd>Ctrl+Z</kbd></button>`;
+  const c=$('#ctx');c.innerHTML=items;c.classList.add('open');const w=200,h=c.offsetHeight||120;
+  c.style.left=Math.min(e.clientX,innerWidth-w-8)+'px';c.style.top=Math.min(e.clientY,innerHeight-h-8)+'px';const f=c.querySelector('button:not([disabled])');f&&f.focus()});
+document.addEventListener('pointerdown',e=>{if(!e.target.closest('#ctx'))closeCtx();if(!e.target.closest('#picker')&&!e.target.closest('[data-handle]'))hidePicker()},true);
+/* draw.io-style shape picker: hover a blue arrow to choose what to add next */
+const PICK_TYPES=['task','decision','sub','doc','data','note','end'];
+const PICK_LABEL={task:'Task',decision:'Decision',sub:'Sub-process',doc:'Document',data:'Data',note:'Note',end:'End'};
+let pickTimer=null,pickHide=null;
+function hidePicker(){clearTimeout(pickTimer);clearTimeout(pickHide);const p=$('#picker');if(p)p.classList.remove('open')}
+function showPicker(h){if(DRAG||S.tool!=='select')return;const p=$('#picker');const id=h.dataset.id,side=h.dataset.handle;const from=byId(id);if(!from)return;
+  const dir={r:'Add to the right of',l:'Add to the left of',t:'Add above',b:'Add below'}[side];
+  p.innerHTML=`<div class="ph">${dir} “${esc(lbl(id).slice(0,22))}”</div><div class="pg">${PICK_TYPES.map(t=>`<button role="menuitem" data-act="pickAdd" data-id="${id}" data-side="${side}" data-type="${t}" title="Add a connected ${TYPE_NAME[t]}"><svg viewBox="0 0 24 24" aria-hidden="true">${TOOL_ICON[t]}</svg>${PICK_LABEL[t]}</button>`).join('')}</div>`;
+  p.classList.add('open');const r=h.getBoundingClientRect(),pw=p.offsetWidth,ph=p.offsetHeight;let x,y;
+  if(side==='r'){x=r.right+8;y=r.top+r.height/2-ph/2}else if(side==='l'){x=r.left-8-pw;y=r.top+r.height/2-ph/2}else if(side==='b'){x=r.left+r.width/2-pw/2;y=r.bottom+8}else{x=r.left+r.width/2-pw/2;y=r.top-8-ph}
+  p.style.left=Math.max(8,Math.min(x,innerWidth-pw-8))+'px';p.style.top=Math.max(64,Math.min(y,innerHeight-ph-8))+'px'}
+document.addEventListener('pointerover',e=>{if(S.route!=='swimlanes'||e.pointerType==='touch')return;
+  const h=e.target.closest&&e.target.closest('[data-handle]');
+  if(h){clearTimeout(pickHide);clearTimeout(pickTimer);pickTimer=setTimeout(()=>showPicker(h),380);return}
+  if(e.target.closest&&e.target.closest('#picker')){clearTimeout(pickHide);return}
+  if($('#picker').classList.contains('open')||pickTimer){clearTimeout(pickTimer);pickTimer=null;clearTimeout(pickHide);pickHide=setTimeout(hidePicker,280)}});
+window.addEventListener('scroll',hidePicker,true);
+window.addEventListener('scroll',closeCtx,true);
+
+/* inputs */
+const ON={
+  file:el=>handleImport(el.files[0]),
+  openjson:el=>{const f=el.files[0];if(!f)return;readFile(f,t=>{try{const o=JSON.parse(t);if(!o||typeof o!=='object')throw 0;
+      if(o.name)S.rmName=String(o.name);S.rmFile=f.name;S.file=null;S.roadmapReady=true;S.saved=true;go('roadmap');render();toast('Opened '+f.name+(o.items?' · '+o.items.length+' items':''))}
+    catch(_){toast('That file isn’t a roadmap JSON')}})},
+  tpl:()=>toast('Template applied'),
+  mapfield:el=>{S.cols[+el.dataset.i].field=el.value==="Choose a field…"?null:el.value;const {total,ok}=mapStats();
+    el.classList.toggle('warn',!S.cols[+el.dataset.i].field);const b=$('#mapBadge');b.textContent='Auto-mapped '+ok+' of '+total;b.className='badge '+(ok===total?'ok':'warn');$('#warnbox').innerHTML=warnings()},
+  statusmap:el=>{S.statusMap[el.dataset.j]=el.value;render()},
+  rmname:el=>{S.rmName=el.value;$('#jsonPrev').textContent=roadmapJSON(true)},
+  rmfile:el=>{S.rmFile=el.value},
+  ms:el=>{S.ms=el.checked;render()},
+  etitle:el=>{const e=S.epics.find(x=>x.key===S.sel);e.title=el.value;S.saved=false;const tl=document.querySelector('.tlscroll');if(tl)tl.innerHTML=timelineHTML()},
+  est:el=>{S.epics.find(x=>x.key===S.sel).st=el.value;S.saved=false;render()},
+  eteam:el=>{S.epics.find(x=>x.key===S.sel).team=el.value;S.saved=false;render()},
+  es:el=>{const e=S.epics.find(x=>x.key===S.sel);if(!el.value)return;const d=dayOf(el.value);if(d>=e.e){toast('Start must be before the end date');render();return}e.s=d;S.saved=false;render()},
+  ee:el=>{const e=S.epics.find(x=>x.key===S.sel);if(!el.value)return;const d=dayOf(el.value)+1;if(d<=e.s){toast('End must be after the start date');render();return}e.e=d;S.saved=false;render()},
+  enote:el=>{S.epics.find(x=>x.key===S.sel).note=el.value;S.saved=false},
+  dgpick:el=>{if(el.value!==S.dg.name){toast('This prototype includes one diagram');el.value=S.dg.name}},
+  slabel:el=>{const s=S.dg.shapes.find(x=>x.id===S.selShape);s.label=el.value;S.dgSaved=false;redrawCanvas()},
+  ssub:el=>{const s=S.dg.shapes.find(x=>x.id===S.selShape);s.sub=el.value;S.dgSaved=false;redrawCanvas()},
+  slane:el=>{const s=S.dg.shapes.find(x=>x.id===S.selShape);s.lane=el.value;s.ry=null;S.dgSaved=false;render()},
+  sowner:el=>{S.dg.shapes.find(x=>x.id===S.selShape).owner=el.value;S.dgSaved=false},
+  sjira:el=>{S.dg.shapes.find(x=>x.id===S.selShape).jira=el.value;S.dgSaved=false},
+  elabel:el=>{const e=S.dg.edges[S.selEdge];if(!e)return;e.label=el.value;S.dgSaved=false;redrawCanvas()},
+  efs:el=>{const e=S.dg.edges[S.selEdge];if(!e)return;e.fs=el.value;S.dgSaved=false;redrawCanvas()},
+  ets:el=>{const e=S.dg.edges[S.selEdge];if(!e)return;e.ts=el.value;S.dgSaved=false;redrawCanvas()},
+  lanename:el=>{S.dg.lanes[+el.dataset.i].name=el.value;S.dgSaved=false;redrawCanvas()},
+  dgname:el=>{S.dg.name=el.value;S.dgSaved=false;const h=document.querySelector('#frame h1');if(h)h.textContent=el.value},
+  page:el=>{S.page=el.value;renderPreview()},
+  scale:el=>{S.scale=el.value;renderPreview()},
+  wmon:el=>{S.wm.on=el.checked;render()},
+  preset:el=>{S.wm.preset=el.value;if(el.value.startsWith('Draft')){Object.assign(S.wm,{type:'text',text:'DRAFT — not for distribution',pos:'tiled',color:'#424242',op:12})}else if(el.value.startsWith('Company')){Object.assign(S.wm,{type:'image',pos:'corner',op:20})}else Object.assign(S.wm,{type:'text',text:'CONFIDENTIAL — {project}',pos:'diag',color:'#b71c1c',op:14});render()},
+  wmtext:el=>{S.wm.text=el.value;renderPreview()},
+  wmop:el=>{S.wm.op=+el.value;$('#opLbl').textContent=el.value+'%';renderPreview()},
+  logo:el=>{const f=el.files[0];if(!f)return;readFile(f,url=>{S.wm.img=url;render();toast('Logo added to the watermark')},true)},
+  stamp:el=>{S.stamp=el.checked;renderPreview()},
+  pslidesize:el=>{S.pptx.size=el.value;renderPreview()},
+  ptitle:el=>{S.pptx.title=el.checked;S.pslide=0;renderPreview()},
+  ptable:el=>{S.pptx.table=el.checked;S.pslide=0;renderPreview()},
+  pnotes:el=>{S.pptx.notes=el.checked;renderPreview()},
+  qwmon:el=>{S.wm.on=el.checked;refreshQuick();if(el.checked){const t=$('#qwmText');if(t){t.focus();t.select()}}},
+  qwmtext:el=>{S.wm.text=el.value;renderQuickPreview()},
+  qwmop:el=>{S.wm.op=+el.value;$('#qOp').textContent=el.value+'%';renderQuickPreview()},
+  qpage:el=>{S.page=el.value;renderQuickPreview()},
+  qscale:el=>{S.scale=el.value;renderQuickPreview()},
+  qstamp:el=>{S.stamp=el.checked;renderQuickPreview()}
+};
+function onInput(e){const el=e.target.closest('[data-on]');if(!el)return;const h=ON[el.dataset.on];if(!h)return;
+  const live=['elabel','wmtext','wmop','qwmtext','qwmop','slabel','ssub','lanename','dgname','rmname','rmfile','etitle','enote','sowner','sjira'];
+  if(e.type==='input'&&!live.includes(el.dataset.on))return;
+  if(e.type==='change'&&live.includes(el.dataset.on)&&el.dataset.on!=='wmop'&&el.dataset.on!=='qwmop')return;
+  h(el,e)}
+document.addEventListener('input',onInput);document.addEventListener('change',onInput);
+
+/* drag & drop on import */
+document.addEventListener('dragover',e=>{const d=e.target.closest&&e.target.closest('#drop');if(d){e.preventDefault();d.classList.add('over')}});
+document.addEventListener('dragleave',e=>{const d=e.target.closest&&e.target.closest('#drop');if(d)d.classList.remove('over')});
+document.addEventListener('drop',e=>{const d=e.target.closest&&e.target.closest('#drop');if(d){e.preventDefault();d.classList.remove('over');handleImport(e.dataTransfer.files[0])}});
+
+show(location.hash.slice(1)||'home');
+</script>
+</body>
+</html>

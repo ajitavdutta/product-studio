@@ -1,0 +1,238 @@
+{
+  "today": "2026-11-06",
+  "timelineStart": "2026-11-01",
+  "view": "pis",
+  "range": {
+    "start": "2026-10-05",
+    "endExclusive": "2027-06-14"
+  },
+  "pis": [
+    {
+      "name": "PI 4 · 2026",
+      "start": "2026-10-05",
+      "end": "2026-12-27",
+      "sprints": 6,
+      "ipSprint": true
+    },
+    {
+      "name": "PI 1 · 2027",
+      "start": "2026-12-28",
+      "end": "2027-03-21",
+      "sprints": 6,
+      "ipSprint": true
+    },
+    {
+      "name": "PI 2 · 2027",
+      "start": "2027-03-22",
+      "end": "2027-06-13",
+      "sprints": 6,
+      "ipSprint": true
+    }
+  ],
+  "columns": [
+    {
+      "row": "pi",
+      "label": "PI 4 · 2026",
+      "start": "2026-10-05",
+      "endExclusive": "2026-12-28",
+      "sub": "5 Oct – 27 Dec"
+    },
+    {
+      "row": "pi",
+      "label": "PI 1 · 2027",
+      "start": "2026-12-28",
+      "endExclusive": "2027-03-22",
+      "sub": "28 Dec – 21 Mar"
+    },
+    {
+      "row": "pi",
+      "label": "PI 2 · 2027",
+      "start": "2027-03-22",
+      "endExclusive": "2027-06-14",
+      "sub": "22 Mar – 13 Jun"
+    },
+    {
+      "row": "tick",
+      "label": "S1",
+      "start": "2026-10-05",
+      "endExclusive": "2026-10-19"
+    },
+    {
+      "row": "tick",
+      "label": "S2",
+      "start": "2026-10-19",
+      "endExclusive": "2026-11-02"
+    },
+    {
+      "row": "tick",
+      "label": "S3",
+      "start": "2026-11-02",
+      "endExclusive": "2026-11-16",
+      "current": true
+    },
+    {
+      "row": "tick",
+      "label": "S4",
+      "start": "2026-11-16",
+      "endExclusive": "2026-11-30"
+    },
+    {
+      "row": "tick",
+      "label": "S5",
+      "start": "2026-11-30",
+      "endExclusive": "2026-12-14"
+    },
+    {
+      "row": "tick",
+      "label": "IP",
+      "start": "2026-12-14",
+      "endExclusive": "2026-12-28",
+      "ip": true
+    },
+    {
+      "row": "tick",
+      "label": "S1",
+      "start": "2026-12-28",
+      "endExclusive": "2027-01-11"
+    },
+    {
+      "row": "tick",
+      "label": "S2",
+      "start": "2027-01-11",
+      "endExclusive": "2027-01-25"
+    },
+    {
+      "row": "tick",
+      "label": "S3",
+      "start": "2027-01-25",
+      "endExclusive": "2027-02-08"
+    },
+    {
+      "row": "tick",
+      "label": "S4",
+      "start": "2027-02-08",
+      "endExclusive": "2027-02-22"
+    },
+    {
+      "row": "tick",
+      "label": "S5",
+      "start": "2027-02-22",
+      "endExclusive": "2027-03-08"
+    },
+    {
+      "row": "tick",
+      "label": "IP",
+      "start": "2027-03-08",
+      "endExclusive": "2027-03-22",
+      "ip": true
+    },
+    {
+      "row": "tick",
+      "label": "S1",
+      "start": "2027-03-22",
+      "endExclusive": "2027-04-05"
+    },
+    {
+      "row": "tick",
+      "label": "S2",
+      "start": "2027-04-05",
+      "endExclusive": "2027-04-19"
+    },
+    {
+      "row": "tick",
+      "label": "S3",
+      "start": "2027-04-19",
+      "endExclusive": "2027-05-03"
+    },
+    {
+      "row": "tick",
+      "label": "S4",
+      "start": "2027-05-03",
+      "endExclusive": "2027-05-17"
+    },
+    {
+      "row": "tick",
+      "label": "S5",
+      "start": "2027-05-17",
+      "endExclusive": "2027-05-31"
+    },
+    {
+      "row": "tick",
+      "label": "IP",
+      "start": "2027-05-31",
+      "endExclusive": "2027-06-14",
+      "ip": true
+    }
+  ],
+  "compactDates": null,
+  "boundaries": [
+    {
+      "date": "2026-12-28",
+      "strong": true
+    },
+    {
+      "date": "2027-03-22",
+      "strong": true
+    },
+    {
+      "date": "2026-10-19",
+      "strong": false
+    },
+    {
+      "date": "2026-11-02",
+      "strong": false
+    },
+    {
+      "date": "2026-11-16",
+      "strong": false
+    },
+    {
+      "date": "2026-11-30",
+      "strong": false
+    },
+    {
+      "date": "2026-12-14",
+      "strong": false
+    },
+    {
+      "date": "2027-01-11",
+      "strong": false
+    },
+    {
+      "date": "2027-01-25",
+      "strong": false
+    },
+    {
+      "date": "2027-02-08",
+      "strong": false
+    },
+    {
+      "date": "2027-02-22",
+      "strong": false
+    },
+    {
+      "date": "2027-03-08",
+      "strong": false
+    },
+    {
+      "date": "2027-04-05",
+      "strong": false
+    },
+    {
+      "date": "2027-04-19",
+      "strong": false
+    },
+    {
+      "date": "2027-05-03",
+      "strong": false
+    },
+    {
+      "date": "2027-05-17",
+      "strong": false
+    },
+    {
+      "date": "2027-05-31",
+      "strong": false
+    }
+  ]
+}

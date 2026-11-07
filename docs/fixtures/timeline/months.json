@@ -1,0 +1,99 @@
+{
+  "today": "2026-11-06",
+  "timelineStart": "2026-11-01",
+  "view": "months",
+  "range": {
+    "start": "2026-11-01",
+    "endExclusive": "2027-05-01"
+  },
+  "pis": [
+    {
+      "name": "PI 4 · 2026",
+      "start": "2026-10-05",
+      "end": "2026-12-27",
+      "sprints": 6,
+      "ipSprint": true
+    },
+    {
+      "name": "PI 1 · 2027",
+      "start": "2026-12-28",
+      "end": "2027-03-21",
+      "sprints": 6,
+      "ipSprint": true
+    },
+    {
+      "name": "PI 2 · 2027",
+      "start": "2027-03-22",
+      "end": "2027-06-13",
+      "sprints": 6,
+      "ipSprint": true
+    }
+  ],
+  "columns": [
+    {
+      "row": "month",
+      "label": "Nov 2026",
+      "start": "2026-11-01",
+      "endExclusive": "2026-12-01",
+      "sub": "PI 4 · 2026"
+    },
+    {
+      "row": "month",
+      "label": "Dec",
+      "start": "2026-12-01",
+      "endExclusive": "2027-01-01",
+      "sub": "PI 4 · 2026"
+    },
+    {
+      "row": "month",
+      "label": "Jan 2027",
+      "start": "2027-01-01",
+      "endExclusive": "2027-02-01",
+      "sub": "PI 1 · 2027"
+    },
+    {
+      "row": "month",
+      "label": "Feb",
+      "start": "2027-02-01",
+      "endExclusive": "2027-03-01",
+      "sub": "PI 1 · 2027"
+    },
+    {
+      "row": "month",
+      "label": "Mar",
+      "start": "2027-03-01",
+      "endExclusive": "2027-04-01",
+      "sub": "PI 1 · 2027"
+    },
+    {
+      "row": "month",
+      "label": "Apr",
+      "start": "2027-04-01",
+      "endExclusive": "2027-05-01",
+      "sub": "PI 2 · 2027"
+    }
+  ],
+  "compactDates": null,
+  "boundaries": [
+    {
+      "date": "2026-12-01",
+      "strong": false
+    },
+    {
+      "date": "2027-01-01",
+      "strong": false
+    },
+    {
+      "date": "2027-02-01",
+      "strong": false
+    },
+    {
+      "date": "2027-03-01",
+      "strong": false
+    },
+    {
+      "date": "2027-04-01",
+      "strong": false
+    }
+  ]
+}

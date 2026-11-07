@@ -1,0 +1,161 @@
+{
+  "schemaVersion": 1,
+  "name": "Payments Platform H1 2027",
+  "source": {
+    "type": "jira-csv",
+    "file": "jira-export-payments-2026-11-06.csv",
+    "mappingTemplate": "Jira Cloud — Payments",
+    "importedAt": "2026-11-06T17:10:00+05:30"
+  },
+  "timeline": {
+    "start": "2026-11-01",
+    "sprintLengthDays": 14,
+    "pis": [
+      {
+        "name": "PI 4 · 2026",
+        "start": "2026-10-05",
+        "sprints": 6,
+        "ipSprint": true
+      },
+      {
+        "name": "PI 1 · 2027",
+        "start": "2026-12-28",
+        "sprints": 6,
+        "ipSprint": true
+      },
+      {
+        "name": "PI 2 · 2027",
+        "start": "2027-03-22",
+        "sprints": 6,
+        "ipSprint": true
+      }
+    ]
+  },
+  "lanes": [
+    "Checkout",
+    "Risk & Fraud",
+    "Platform",
+    "Merchant Experience"
+  ],
+  "items": [
+    {
+      "key": "PAY-142",
+      "title": "Saved cards & one-click checkout",
+      "lane": "Checkout",
+      "status": "In progress",
+      "start": "2026-11-16",
+      "end": "2027-01-29",
+      "progress": 61,
+      "issues": 18
+    },
+    {
+      "key": "PAY-155",
+      "title": "UPI AutoPay mandates",
+      "lane": "Checkout",
+      "status": "In progress",
+      "start": "2026-12-01",
+      "end": "2027-03-12",
+      "progress": 20,
+      "issues": 14
+    },
+    {
+      "key": "PAY-161",
+      "title": "Checkout A/B framework",
+      "lane": "Checkout",
+      "status": "Not started",
+      "start": "2027-02-01",
+      "end": "2027-03-05",
+      "progress": 0,
+      "issues": 9
+    },
+    {
+      "key": "RSK-031",
+      "title": "Real-time fraud scoring v2",
+      "lane": "Risk & Fraud",
+      "status": "At risk",
+      "start": "2026-11-09",
+      "end": "2027-02-19",
+      "progress": 45,
+      "issues": 22
+    },
+    {
+      "key": "RSK-036",
+      "title": "3DS2 frictionless flow",
+      "lane": "Risk & Fraud",
+      "status": "Not started",
+      "start": "2027-01-04",
+      "end": "2027-02-26",
+      "progress": 0,
+      "issues": 11
+    },
+    {
+      "key": "PLT-190",
+      "title": "PCI DSS 4.0 controls",
+      "lane": "Platform",
+      "status": "In progress",
+      "start": "2026-11-01",
+      "end": "2026-12-20",
+      "progress": 80,
+      "issues": 16
+    },
+    {
+      "key": "PLT-208",
+      "title": "Ledger service migration",
+      "lane": "Platform",
+      "status": "In progress",
+      "start": "2027-01-04",
+      "end": "2027-04-23",
+      "progress": 10,
+      "issues": 25
+    },
+    {
+      "key": "MX-070",
+      "title": "Settlement reports export",
+      "lane": "Merchant Experience",
+      "status": "At risk",
+      "start": "2026-11-02",
+      "end": "2026-12-18",
+      "progress": 30,
+      "issues": 8
+    },
+    {
+      "key": "MX-077",
+      "title": "Merchant payouts dashboard",
+      "lane": "Merchant Experience",
+      "status": "Not started",
+      "start": "2027-02-01",
+      "end": "2027-04-09",
+      "progress": 0,
+      "issues": 13
+    },
+    {
+      "key": "MX-081",
+      "title": "Dispute self-service",
+      "lane": "Merchant Experience",
+      "status": "Not started",
+      "start": "2027-03-01",
+      "end": "2027-04-30",
+      "progress": 0,
+      "issues": 12
+    }
+  ],
+  "milestones": [
+    {
+      "name": "Beta",
+      "date": "2027-01-15"
+    },
+    {
+      "name": "GA",
+      "date": "2027-04-20"
+    },
+    {
+      "name": "Code freeze",
+      "start": "2027-03-15",
+      "end": "2027-03-31",
+      "kind": "freeze"
+    }
+  ],
+  "linkedDiagrams": [
+    "refund-flow.swimlane.json"
+  ]
+}

@@ -1,0 +1,349 @@
+{
+  "schemaVersion": 1,
+  "kind": "diagram",
+  "id": "5b1f6c0e-2c1d-4c8e-9d43-7a1b2f3e4d50",
+  "name": "Customer refund flow",
+  "version": 3,
+  "owner": "Payments PM",
+  "linkedRoadmapId": "0d3c9a52-6f0b-4b7e-8a51-2f1e9c7d6b31",
+  "orientation": "horizontal",
+  "width": 1040,
+  "lanes": [
+    {
+      "id": "cust",
+      "name": "Customer",
+      "position": 1000,
+      "height": 132
+    },
+    {
+      "id": "sup",
+      "name": "Support",
+      "position": 2000,
+      "height": 132
+    },
+    {
+      "id": "fin",
+      "name": "Finance",
+      "position": 3000,
+      "height": 132
+    },
+    {
+      "id": "plat",
+      "name": "Payments Platform",
+      "position": 4000,
+      "height": 132
+    }
+  ],
+  "shapes": [
+    {
+      "id": "S",
+      "type": "start",
+      "laneId": "cust",
+      "x": 128,
+      "y": 46
+    },
+    {
+      "id": "A",
+      "type": "task",
+      "laneId": "cust",
+      "x": 216,
+      "y": 34,
+      "label": "Request refund",
+      "sub": "App or web",
+      "owner": "Customer"
+    },
+    {
+      "id": "E",
+      "type": "task",
+      "laneId": "cust",
+      "x": 400,
+      "y": 34,
+      "label": "Sees decline",
+      "sub": "Email + in-app"
+    },
+    {
+      "id": "X1",
+      "type": "end",
+      "laneId": "cust",
+      "x": 584,
+      "y": 46
+    },
+    {
+      "id": "I",
+      "type": "task",
+      "laneId": "cust",
+      "x": 768,
+      "y": 34,
+      "label": "Refund received",
+      "sub": "In 5–7 days"
+    },
+    {
+      "id": "X2",
+      "type": "end",
+      "laneId": "cust",
+      "x": 952,
+      "y": 46
+    },
+    {
+      "id": "B",
+      "type": "task",
+      "laneId": "sup",
+      "x": 216,
+      "y": 34,
+      "label": "Review request",
+      "sub": "Agent · L1",
+      "owner": "Support L1"
+    },
+    {
+      "id": "D",
+      "type": "decision",
+      "laneId": "sup",
+      "x": 400,
+      "y": 22,
+      "label": "In policy?"
+    },
+    {
+      "id": "F",
+      "type": "task",
+      "laneId": "fin",
+      "x": 400,
+      "y": 34,
+      "label": "Approve refund",
+      "sub": "SLA 2 days",
+      "owner": "Finance ops",
+      "jiraKey": "PAY-188"
+    },
+    {
+      "id": "N",
+      "type": "note",
+      "laneId": "fin",
+      "x": 584,
+      "y": 34,
+      "label": "Over ₹10,000 needs a second approver"
+    },
+    {
+      "id": "G",
+      "type": "task",
+      "laneId": "plat",
+      "x": 400,
+      "y": 34,
+      "label": "Issue refund",
+      "sub": "Payment gateway API"
+    },
+    {
+      "id": "H",
+      "type": "task",
+      "laneId": "plat",
+      "x": 584,
+      "y": 34,
+      "label": "Post to ledger",
+      "sub": "Ledger service"
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from": "S",
+      "to": "A",
+      "fromSide": "r",
+      "toSide": "l",
+      "style": "flow",
+      "points": [
+        [
+          168,
+          66
+        ],
+        [
+          216,
+          66
+        ]
+      ]
+    },
+    {
+      "id": "c2",
+      "from": "A",
+      "to": "B",
+      "fromSide": "b",
+      "toSide": "t",
+      "style": "flow",
+      "points": [
+        [
+          284,
+          98
+        ],
+        [
+          284,
+          166
+        ]
+      ]
+    },
+    {
+      "id": "c3",
+      "from": "B",
+      "to": "D",
+      "fromSide": "r",
+      "toSide": "l",
+      "style": "flow",
+      "points": [
+        [
+          352,
+          198
+        ],
+        [
+          400,
+          198
+        ]
+      ]
+    },
+    {
+      "id": "c4",
+      "from": "D",
+      "to": "E",
+      "fromSide": "t",
+      "toSide": "b",
+      "style": "flow",
+      "points": [
+        [
+          468,
+          154
+        ],
+        [
+          468,
+          98
+        ]
+      ],
+      "label": "No"
+    },
+    {
+      "id": "c5",
+      "from": "E",
+      "to": "X1",
+      "fromSide": "r",
+      "toSide": "l",
+      "style": "flow",
+      "points": [
+        [
+          536,
+          66
+        ],
+        [
+          584,
+          66
+        ]
+      ]
+    },
+    {
+      "id": "c6",
+      "from": "D",
+      "to": "F",
+      "fromSide": "b",
+      "toSide": "t",
+      "style": "flow",
+      "points": [
+        [
+          468,
+          242
+        ],
+        [
+          468,
+          298
+        ]
+      ],
+      "label": "Yes"
+    },
+    {
+      "id": "c7",
+      "from": "F",
+      "to": "G",
+      "fromSide": "b",
+      "toSide": "t",
+      "style": "flow",
+      "points": [
+        [
+          468,
+          362
+        ],
+        [
+          468,
+          430
+        ]
+      ]
+    },
+    {
+      "id": "c8",
+      "from": "G",
+      "to": "H",
+      "fromSide": "r",
+      "toSide": "l",
+      "style": "flow",
+      "points": [
+        [
+          536,
+          462
+        ],
+        [
+          584,
+          462
+        ]
+      ]
+    },
+    {
+      "id": "c9",
+      "from": "H",
+      "to": "I",
+      "fromSide": "r",
+      "toSide": "b",
+      "style": "flow",
+      "points": [
+        [
+          720,
+          462
+        ],
+        [
+          836,
+          462
+        ],
+        [
+          836,
+          98
+        ]
+      ]
+    },
+    {
+      "id": "c10",
+      "from": "I",
+      "to": "X2",
+      "fromSide": "r",
+      "toSide": "l",
+      "style": "flow",
+      "points": [
+        [
+          904,
+          66
+        ],
+        [
+          952,
+          66
+        ]
+      ]
+    },
+    {
+      "id": "c11",
+      "from": "F",
+      "to": "N",
+      "fromSide": "r",
+      "toSide": "l",
+      "style": "association",
+      "points": [
+        [
+          536,
+          330
+        ],
+        [
+          584,
+          330
+        ]
+      ]
+    }
+  ]
+}
