@@ -1,0 +1,32 @@
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "8000:8000"
+    environment:
+      PS_DATABASE_URL: sqlite:////data/product_studio.db
+      PS_CORS_ORIGINS: '["http://localhost:5173"]'
+    volumes:
+      - backend-data:/data
+
+  frontend:
+    # ASSUMPTION: Node 24 LTS here and in CI; package.json engines still allows >=20.
+    image: node:24-alpine
+    working_dir: /app/frontend
+    command: sh -c "corepack enable && pnpm install --frozen-lockfile && pnpm dev --host"
+    ports:
+      - "5173:5173"
+    environment:
+      VITE_API_PROXY_TARGET: http://backend:8000
+      COREPACK_ENABLE_DOWNLOAD_PROMPT: "0"
+    volumes:
+      - ./frontend:/app/frontend
+      - ./shared:/app/shared
+      # Keep the container's Linux node_modules separate from the host's.
+      - frontend-node-modules:/app/frontend/node_modules
+    depends_on:
+      - backend
+
+volumes:
+  backend-data:
+  frontend-node-modules:

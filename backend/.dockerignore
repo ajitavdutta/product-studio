@@ -1,0 +1,11 @@
+# Host virtualenvs and caches are platform-specific; the image builds its own.
+.venv/
+__pycache__/
+*.pyc
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+*.db
+.env
+.env.*
+tests/render/out/

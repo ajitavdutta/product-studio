@@ -1,0 +1,122 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+          cache-dependency-glob: backend/uv.lock
+      - run: uv python install 3.12
+      - name: Install Cairo (CairoSVG)
+        run: sudo apt-get update && sudo apt-get install -y libcairo2
+      - run: uv sync --locked --directory backend
+      - name: Lint
+        run: |
+          uv run --directory backend ruff check .
+          uv run --directory backend ruff format --check .
+      - name: Type check
+        run: uv run --directory backend mypy --strict app
+      - name: Test
+        run: uv run --directory backend pytest -q
+      - name: Migrations apply and match the models
+        run: |
+          uv run --directory backend alembic upgrade head
+          uv run --directory backend alembic check
+
+  frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v4
+        with:
+          package_json_file: frontend/package.json
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: pnpm
+          cache-dependency-path: frontend/pnpm-lock.yaml
+      - run: pnpm -C frontend install --frozen-lockfile
+      - run: pnpm -C frontend lint
+      - run: pnpm -C frontend typecheck
+      - run: pnpm -C frontend test
+
+  e2e:
+    needs: [backend, frontend]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+          cache-dependency-glob: backend/uv.lock
+      - run: uv python install 3.12
+      - name: Install Cairo (CairoSVG)
+        run: sudo apt-get update && sudo apt-get install -y libcairo2
+      - run: uv sync --locked --directory backend
+      - uses: pnpm/action-setup@v4
+        with:
+          package_json_file: frontend/package.json
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: pnpm
+          cache-dependency-path: frontend/pnpm-lock.yaml
+      - run: pnpm -C frontend install --frozen-lockfile
+      - name: Read the Playwright version from the lockfile
+        id: playwright-version
+        run: |
+          version=$(grep -m1 -oE "^  '@playwright/test@[0-9.]+'" frontend/pnpm-lock.yaml | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')
+          test -n "$version"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+      - name: Cache Playwright browsers
+        id: playwright-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ steps.playwright-version.outputs.version }}
+      - name: Install Chromium and its system deps
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+        run: pnpm -C frontend exec playwright install --with-deps chromium
+      - name: Install Chromium system deps only (browser cached)
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
+        run: pnpm -C frontend exec playwright install-deps chromium
+      - name: Start make dev
+        run: |
+          nohup make dev > dev.log 2>&1 &
+          for _ in $(seq 1 60); do
+            if curl -sf http://localhost:8000/api/health > /dev/null && curl -sf http://localhost:5173 > /dev/null; then
+              exit 0
+            fi
+            sleep 1
+          done
+          echo "Servers did not start within 60 s"
+          cat dev.log
+          exit 1
+      - run: make e2e
+      - name: API types match the OpenAPI schema
+        run: |
+          pnpm -C frontend gen:api
+          git diff --exit-code frontend/src/api/types.ts
+      - name: Upload Playwright report
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: |
+            frontend/playwright-report
+            dev.log
+          retention-days: 7

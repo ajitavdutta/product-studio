@@ -58,7 +58,7 @@ shared/design-tokens.json          Colours, type, spacing — used by the UI the
 1. Copy everything in this kit into the root of an empty repository, including the hidden `.claude/`, `.mcp.json` and `.gitignore`. Then run `git init`, if needed, and commit.
 2. Install the tools the agents will call:
    - **uv**, with Python 3.12+;
-   - **Node 20+** and **pnpm**;
+   - **Node 20+** and **pnpm** 12.18.0: `npm i -g pnpm@12.18.0`, or `corepack enable` (it reads `packageManager` from `frontend/package.json`);
    - **Cairo**, for CairoSVG: `brew install cairo` on macOS, or `apt install libcairo2` on Debian/Ubuntu.
 3. Run `claude` in the repo root.
    - The first time, approve the project's hooks and the `playwright` MCP server when Claude Code asks.
@@ -104,6 +104,33 @@ After the milestones are built, these commands are useful:
 - `/verify`, at any time.
 
 **Running unattended.** To run headless, use `claude -p "/milestone M2" --permission-mode acceptEdits`. The allow list in `settings.json` already covers the build and test commands. Commits still ask, so in headless mode review and commit the work yourself afterwards.
+
+## Run the app
+
+Once M0 is built, the app runs locally or in Docker.
+
+**Prerequisites:** uv with Python 3.12+, Node 20+, pnpm 12.18.0 (`npm i -g pnpm@12.18.0` or `corepack enable`), and Cairo (`brew install cairo` or `apt install libcairo2`).
+
+```
+make install   # uv sync, pnpm install, Playwright's Chromium
+make dev       # migrates the database, then serves the app on http://localhost:5173
+               # and the API on http://localhost:8000 (check http://localhost:5173/api/health)
+make test      # pytest + vitest
+make lint      # ruff, mypy, eslint, tsc
+make e2e       # Playwright journeys; needs `make dev` running in another terminal
+make gen       # regenerate frontend/src/api/types.ts from the running API's OpenAPI schema
+```
+
+**Docker:** `docker compose up` builds the backend image (Cairo and the Roboto fonts installed system-wide) and runs the Vite dev server in `node:24-alpine`. The app is on http://localhost:5173 and the API on http://localhost:8000. The SQLite file lives in the `backend-data` volume.
+
+**Environment variables** (backend, read from the environment or `backend/.env`):
+
+| Variable | Default | Meaning |
+|---|---|---|
+| `PS_DATABASE_URL` | `sqlite:///./product_studio.db` | SQLAlchemy URL; Alembic uses the same one |
+| `PS_CORS_ORIGINS` | `["http://localhost:5173"]` | JSON list of allowed browser origins |
+
+The frontend dev server reads `VITE_API_PROXY_TARGET` (default `http://localhost:8000`) to decide where `/api` is proxied.
 
 ## Guard rails
 
