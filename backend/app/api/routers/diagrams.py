@@ -1,5 +1,4 @@
 from typing import Annotated
-from uuid import UUID
 
 from fastapi import APIRouter, Depends, UploadFile, status
 from fastapi.responses import JSONResponse
@@ -66,38 +65,46 @@ def import_diagram_json(file: UploadFile, session: SessionDep) -> DiagramRead:
     response_model_exclude_none=True,
     responses=problem_responses(404),
 )
-def get_diagram(diagram_id: UUID, session: SessionDep) -> DiagramRead:
-    return service.get_diagram(session, diagram_id)
+def get_diagram(diagram_id: str, session: SessionDep) -> DiagramRead:
+    return service.get_diagram(session, service.parse_document_id(diagram_id, "diagram"))
 
 
 @router.patch(
     "/{diagram_id}", response_model=PatchResult, responses=problem_responses(404, 409, 422)
 )
-def patch_diagram(diagram_id: UUID, patch: DocumentPatch, session: SessionDep) -> PatchResult:
+def patch_diagram(diagram_id: str, patch: DocumentPatch, session: SessionDep) -> PatchResult:
     """Autosave: apply ops made against `baseVersion` (G-2)."""
-    return service.patch_document(session, "diagram", diagram_id, patch)
+    return service.patch_document(
+        session, "diagram", service.parse_document_id(diagram_id, "diagram"), patch
+    )
 
 
 @router.get(
     "/{diagram_id}/delete-impact", response_model=DeleteImpact, responses=problem_responses(404)
 )
-def get_diagram_delete_impact(diagram_id: UUID, session: SessionDep) -> DeleteImpact:
+def get_diagram_delete_impact(diagram_id: str, session: SessionDep) -> DeleteImpact:
     """What deleting this diagram would unlink, for the confirmation dialog."""
-    return service.delete_impact(session, "diagram", diagram_id)
+    return service.delete_impact(
+        session, "diagram", service.parse_document_id(diagram_id, "diagram")
+    )
 
 
 @router.delete("/{diagram_id}", response_model=DeleteImpact, responses=problem_responses(404, 409))
-def delete_diagram(diagram_id: UUID, session: SessionDep) -> DeleteImpact:
+def delete_diagram(diagram_id: str, session: SessionDep) -> DeleteImpact:
     """Delete the diagram and remove it from its roadmap's links (the roadmap is kept)."""
-    return service.delete_document(session, "diagram", diagram_id)
+    return service.delete_document(
+        session, "diagram", service.parse_document_id(diagram_id, "diagram")
+    )
 
 
 @router.get(
     "/{diagram_id}/document", response_model=DiagramDocument, responses=problem_responses(404)
 )
-def download_diagram(diagram_id: UUID, session: SessionDep) -> JSONResponse:
+def download_diagram(diagram_id: str, session: SessionDep) -> JSONResponse:
     """The exact diagram document, as a `.swimlane.json` attachment (Save JSON)."""
-    body, file_name = service.download(session, "diagram", diagram_id)
+    body, file_name = service.download(
+        session, "diagram", service.parse_document_id(diagram_id, "diagram")
+    )
     # file_name comes from file_name_for, so it is already limited to [a-z0-9.-].
     return JSONResponse(
         content=body, headers={"Content-Disposition": f'attachment; filename="{file_name}"'}

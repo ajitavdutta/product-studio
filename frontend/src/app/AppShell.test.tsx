@@ -1,10 +1,50 @@
-import { act, screen, within } from '@testing-library/react';
-import { afterEach, describe, expect, it } from 'vitest';
+import { act, screen, waitFor, within } from '@testing-library/react';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { apiRequest } from '../api/client';
+import type { DocumentSummary } from '../api/useRoadmap';
+import { createTestQueryClient } from '../test/providers';
 import { renderApp } from '../test/renderApp';
-import { DEMO_DIAGRAM_ID, DEMO_ROADMAP_ID } from './demoDocuments';
 import { useSaveStateStore } from './saveState';
 
+vi.mock('../api/client', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('../api/client')>()),
+  apiRequest: vi.fn(),
+}));
+
+const apiRequestMock = vi.mocked(apiRequest);
+
+const LATEST_ROADMAP: DocumentSummary = {
+  id: '0d3c9a52-6f0b-4b7e-8a51-2f1e9c7d6b31',
+  kind: 'roadmap',
+  name: 'Payments Platform H1 2027',
+  fileName: 'payments-platform-h1-2027.json',
+  schemaVersion: 1,
+  revision: 3,
+  updatedAt: '2026-11-05T12:00:00Z',
+};
+const OLDER_ROADMAP: DocumentSummary = {
+  ...LATEST_ROADMAP,
+  id: '7a0e2b9c-1d3f-4e5a-8b6c-9d0e1f2a3b4c',
+  name: 'Mobile app 2027',
+  fileName: 'mobile-app-2027.json',
+  updatedAt: '2026-10-28T12:00:00Z',
+};
+
+/** Serve the two document lists the nav and Home read; every other request never settles. */
+function serveLists(roadmaps: DocumentSummary[], diagrams: DocumentSummary[] = []) {
+  apiRequestMock.mockImplementation((_method, path) => {
+    if (path === '/roadmaps') return Promise.resolve(roadmaps);
+    if (path === '/diagrams') return Promise.resolve(diagrams);
+    return new Promise(() => undefined);
+  });
+}
+
+beforeEach(() => {
+  serveLists([]);
+});
+
 afterEach(() => {
+  vi.resetAllMocks();
   act(() => {
     useSaveStateStore.getState().set(null);
   });
@@ -27,16 +67,37 @@ describe('AppShell', () => {
     expect(screen.queryByRole('status')).not.toBeInTheDocument();
   });
 
-  it('G-1 Roadmap and Swimlanes link to the seeded demo documents', () => {
-    renderApp('/');
+  it('G-1 Roadmap links to the most recently updated roadmap', async () => {
+    serveLists([LATEST_ROADMAP, OLDER_ROADMAP]);
 
-    expect({
-      roadmap: within(mainNav()).getByRole('link', { name: 'Roadmap' }).getAttribute('href'),
-      swimlanes: within(mainNav()).getByRole('link', { name: 'Swimlanes' }).getAttribute('href'),
-    }).toEqual({
-      roadmap: `/roadmaps/${DEMO_ROADMAP_ID}`,
-      swimlanes: `/diagrams/${DEMO_DIAGRAM_ID}`,
+    renderApp('/', undefined, createTestQueryClient());
+
+    await waitFor(() => {
+      expect(within(mainNav()).getByRole('link', { name: 'Roadmap' })).toHaveAttribute(
+        'href',
+        `/roadmaps/${LATEST_ROADMAP.id}`,
+      );
     });
+  });
+
+  it('G-1 Roadmap falls back to Import when there are none', async () => {
+    renderApp('/', undefined, createTestQueryClient());
+
+    // Wait for the empty list so the assertion isn't satisfied by the loading fallback.
+    expect(
+      await screen.findByText('No roadmaps yet. Import a Jira export to make one.'),
+    ).toBeVisible();
+    expect(within(mainNav()).getByRole('link', { name: 'Roadmap' })).toHaveAttribute(
+      'href',
+      '/import',
+    );
+  });
+
+  it('G-1 Swimlanes falls back to Home when there are no diagrams', async () => {
+    renderApp('/', undefined, createTestQueryClient());
+
+    expect(await screen.findByText('No diagrams yet.')).toBeVisible();
+    expect(within(mainNav()).getByRole('link', { name: 'Swimlanes' })).toHaveAttribute('href', '/');
   });
 
   it('G-1 marks nothing active on Home', () => {

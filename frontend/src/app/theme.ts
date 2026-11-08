@@ -84,6 +84,8 @@ export const theme = createTheme({
     fontWeightMedium: weights.medium,
     fontWeightBold: weights.bold,
     h1: { fontSize: size.h1, fontWeight: weights.medium },
+    // Prototype `.stat .v`: the number on a stat card. Render it with a non-heading component.
+    h2: { fontSize: size.stat, fontWeight: weights.medium, lineHeight: 'normal' },
     subtitle1: { fontSize: size.title, fontWeight: weights.medium },
     subtitle2: { fontSize: size.subtitle, fontWeight: weights.medium },
     body1: { fontSize: size.subtitle },

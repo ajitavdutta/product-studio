@@ -65,6 +65,14 @@ def _not_found(kind: DocumentKind) -> NotFoundError:
     return NotFoundError(f"We couldn't find that {KIND_NOUNS[kind]}. It may have been deleted.")
 
 
+def parse_document_id(raw: str, kind: DocumentKind) -> UUID:
+    """The path id as a UUID; anything else is a plain "not found", like a missing document."""
+    try:
+        return UUID(raw)
+    except ValueError as exc:
+        raise _not_found(kind) from exc
+
+
 def _conflict(kind: DocumentKind) -> ConflictError:
     return ConflictError(
         f"This {KIND_NOUNS[kind]} changed somewhere else. Reload to see the latest version."

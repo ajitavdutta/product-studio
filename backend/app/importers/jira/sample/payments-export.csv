@@ -1,0 +1,56 @@
+﻿Summary,Issue key,Issue id,Issue Type,Status,Priority,Assignee,Created,Sprint,Sprint,Fix versions,Labels,Labels,Components,Custom field (Story Points),Custom field (Start date),Due date,Parent,Epic Link,Custom field (Team),Description
+Saved cards & one-click checkout,PAY-142,10001,Epic,In Progress,High,PM,20/Oct/26 12:00 AM,,,2027.1,roadmap,h1-2027,Wallet,,,,,,Checkout,Epic for Saved cards & one-click checkout
+Saved cards & one-click checkout: API contract,PAY-1421,10002,Story,To Do,Low,Asha,25/Oct/26 12:00 AM,PAY Sprint 25,,2027.1,,payments,Wallet,8,16/Nov/26 12:00 AM,29/Nov/26 12:00 AM,PAY-142,,Checkout,
+Saved cards & one-click checkout: UI flow,PAY-1422,10003,Story,Done,Medium,Asha,25/Oct/26 12:00 AM,PAY Sprint 26,PAY Sprint 27,2027.1,growth,,Wallet,1,30/Nov/26 12:00 AM,14/Dec/26 12:00 AM,PAY-142,,Checkout,
+Saved cards & one-click checkout: Edge cases,PAY-1423,10004,Story,Done,High,Karan,25/Oct/26 12:00 AM,PAY Sprint 27,PAY Sprint 28,2027.1,,,Wallet,1,15/Dec/26 12:00 AM,29/Dec/26 12:00 AM,PAY-142,,Checkout,
+Saved cards & one-click checkout: Load test,PAY-1424,10005,Story,In Progress,Medium,Asha,25/Oct/26 12:00 AM,PAY Sprint 28,PAY Sprint 29,2027.1,growth,payments,Wallet,8,30/Dec/26 12:00 AM,13/Jan/27 12:00 AM,PAY-142,,Checkout,
+Saved cards & one-click checkout: Docs & rollout,PAY-1425,10006,Story,Done,High,Asha,25/Oct/26 12:00 AM,PAY Sprint 29,PAY Sprint 30,2027.1,,,Wallet,8,14/Jan/27 12:00 AM,29/Jan/27 12:00 AM,PAY-142,,Checkout,
+UPI AutoPay mandates,PAY-155,10007,Epic,In Progress,High,PM,20/Oct/26 12:00 AM,,,2027.1,roadmap,h1-2027,Wallet,,,,,,Checkout,Epic for UPI AutoPay mandates
+UPI AutoPay mandates: API contract,PAY-1551,10008,Story,To Do,Medium,Karan,25/Oct/26 12:00 AM,PAY Sprint 26,PAY Sprint 28,2027.1,,payments,Wallet,1,01/Dec/26 12:00 AM,02/Jan/27 12:00 AM,PAY-155,,Checkout,
+UPI AutoPay mandates: UI flow,PAY-1552,10009,Story,To Do,Medium,Asha,25/Oct/26 12:00 AM,,,2027.1,growth,,Wallet,8,,,PAY-155,,Checkout,
+UPI AutoPay mandates: Edge cases,PAY-1553,10010,Story,To Do,Medium,Meera,25/Oct/26 12:00 AM,PAY Sprint 30,PAY Sprint 33,2027.1,,,Wallet,5,06/Feb/27 12:00 AM,12/Mar/27 12:00 AM,PAY-155,,Checkout,
+Checkout A/B framework,PAY-161,10011,Epic,To Do,High,PM,20/Oct/26 12:00 AM,,,2027.1,roadmap,h1-2027,Wallet,,,,,,Checkout,Epic for Checkout A/B framework
+Checkout A/B framework: API contract,PAY-1611,10012,Story,To Do,Medium,Ravi,25/Oct/26 12:00 AM,PAY Sprint 30,PAY Sprint 31,2027.1,,payments,Wallet,3,01/Feb/27 12:00 AM,08/Feb/27 12:00 AM,PAY-161,,Checkout,
+Checkout A/B framework: UI flow,PAY-1612,10013,Story,To Do,Medium,Asha,25/Oct/26 12:00 AM,PAY Sprint 31,,2027.1,growth,,Wallet,8,09/Feb/27 12:00 AM,16/Feb/27 12:00 AM,PAY-161,,Checkout,
+Checkout A/B framework: Edge cases,PAY-1613,10014,Story,To Do,Medium,Ravi,25/Oct/26 12:00 AM,PAY Sprint 31,PAY Sprint 32,2027.1,,,Wallet,5,17/Feb/27 12:00 AM,24/Feb/27 12:00 AM,PAY-161,,Checkout,
+Checkout A/B framework: Load test,PAY-1614,10015,Story,To Do,Low,Karan,25/Oct/26 12:00 AM,PAY Sprint 32,,2027.1,growth,payments,Wallet,3,25/Feb/27 12:00 AM,05/Mar/27 12:00 AM,PAY-161,,Checkout,
+Real-time fraud scoring v2,RSK-031,10016,Epic,Blocked,High,PM,20/Oct/26 12:00 AM,,,2027.1,roadmap,h1-2027,,,,,,,Risk & Fraud,Epic for Real-time fraud scoring v2
+Real-time fraud scoring v2: API contract,RSK-311,10017,Story,In Progress,Low,Meera,25/Oct/26 12:00 AM,PAY Sprint 24,PAY Sprint 25,2027.1,,payments,,8,09/Nov/26 12:00 AM,25/Nov/26 12:00 AM,,RSK-031,Risk & Fraud,
+Real-time fraud scoring v2: UI flow,RSK-312,10018,Story,In Progress,High,Meera,25/Oct/26 12:00 AM,PAY Sprint 25,PAY Sprint 26,2027.1,growth,,,5,26/Nov/26 12:00 AM,12/Dec/26 12:00 AM,,RSK-031,Risk & Fraud,
+Real-time fraud scoring v2: Edge cases,RSK-313,10019,Story,Done,High,Asha,25/Oct/26 12:00 AM,PAY Sprint 26,PAY Sprint 28,2027.1,,,,1,13/Dec/26 12:00 AM,29/Dec/26 12:00 AM,,RSK-031,Risk & Fraud,
+Real-time fraud scoring v2: Load test,RSK-314,10020,Story,To Do,Low,Karan,25/Oct/26 12:00 AM,PAY Sprint 28,PAY Sprint 29,2027.1,growth,payments,,2,30/Dec/26 12:00 AM,15/Jan/27 12:00 AM,,RSK-031,Risk & Fraud,
+Real-time fraud scoring v2: Docs & rollout,RSK-315,10021,Story,In Progress,High,Ravi,25/Oct/26 12:00 AM,PAY Sprint 29,PAY Sprint 30,2027.1,,,,5,16/Jan/27 12:00 AM,01/Feb/27 12:00 AM,,RSK-031,Risk & Fraud,
+Real-time fraud scoring v2: Analytics events,RSK-316,10022,Story,Blocked,High,Asha,25/Oct/26 12:00 AM,PAY Sprint 30,PAY Sprint 31,2027.1,growth,,,1,02/Feb/27 12:00 AM,19/Feb/27 12:00 AM,,RSK-031,Risk & Fraud,
+3DS2 frictionless flow,RSK-036,10023,Epic,To Do,High,PM,20/Oct/26 12:00 AM,,,2027.1,roadmap,h1-2027,,,,,,,Risk & Fraud,Epic for 3DS2 frictionless flow
+3DS2 frictionless flow: API contract,RSK-361,10024,Story,To Do,Medium,Meera,25/Oct/26 12:00 AM,PAY Sprint 28,PAY Sprint 29,2027.1,,payments,,5,04/Jan/27 12:00 AM,13/Jan/27 12:00 AM,RSK-036,,Risk & Fraud,
+3DS2 frictionless flow: UI flow,RSK-362,10025,Story,To Do,Low,Asha,25/Oct/26 12:00 AM,PAY Sprint 29,,2027.1,growth,,,1,14/Jan/27 12:00 AM,24/Jan/27 12:00 AM,RSK-036,,Risk & Fraud,
+3DS2 frictionless flow: Edge cases,RSK-363,10026,Story,To Do,Low,Meera,25/Oct/26 12:00 AM,PAY Sprint 30,,2027.1,,,,8,25/Jan/27 12:00 AM,03/Feb/27 12:00 AM,RSK-036,,Risk & Fraud,
+3DS2 frictionless flow: Load test,RSK-364,10027,Story,To Do,Low,Karan,25/Oct/26 12:00 AM,PAY Sprint 30,PAY Sprint 31,2027.1,growth,payments,,3,04/Feb/27 12:00 AM,14/Feb/27 12:00 AM,RSK-036,,Risk & Fraud,
+3DS2 frictionless flow: Docs & rollout,RSK-365,10028,Story,To Do,Low,Karan,25/Oct/26 12:00 AM,PAY Sprint 31,PAY Sprint 32,2027.1,,,,3,15/Feb/27 12:00 AM,26/Feb/27 12:00 AM,RSK-036,,Risk & Fraud,
+PCI DSS 4.0 controls,PLT-190,10029,Epic,In Progress,High,PM,20/Oct/26 12:00 AM,,,2027.1,roadmap,h1-2027,,,,,,,Platform,Epic for PCI DSS 4.0 controls
+PCI DSS 4.0 controls: API contract,PLT-1901,10030,Story,In Progress,High,Asha,25/Oct/26 12:00 AM,PAY Sprint 23,PAY Sprint 25,2027.1,,payments,,2,01/Nov/26 12:00 AM,16/Nov/26 12:00 AM,PLT-190,,Platform,
+PCI DSS 4.0 controls: UI flow,PLT-1902,10031,Story,Done,High,Ravi,25/Oct/26 12:00 AM,PAY Sprint 25,PAY Sprint 26,2027.1,growth,,,2,17/Nov/26 12:00 AM,02/Dec/26 12:00 AM,PLT-190,,Platform,
+PCI DSS 4.0 controls: Edge cases,PLT-1903,10032,Story,Done,High,Karan,25/Oct/26 12:00 AM,PAY Sprint 26,PAY Sprint 27,2027.1,,,,5,03/Dec/26 12:00 AM,20/Dec/26 12:00 AM,PLT-190,,Platform,
+Ledger service migration,PLT-208,10033,Epic,In Progress,High,PM,20/Oct/26 12:00 AM,,,2027.1,roadmap,h1-2027,,,,,,,Platform,Epic for Ledger service migration
+Ledger service migration: API contract,PLT-2081,10034,Story,In Progress,Medium,Karan,25/Oct/26 12:00 AM,PAY Sprint 28,PAY Sprint 31,2027.1,,payments,,8,04/Jan/27 12:00 AM,08/Feb/27 12:00 AM,PLT-208,,Platform,
+Ledger service migration: UI flow,PLT-2082,10035,Story,To Do,High,Karan,25/Oct/26 12:00 AM,PAY Sprint 31,PAY Sprint 33,2027.1,growth,,,3,09/Feb/27 12:00 AM,16/Mar/27 12:00 AM,PLT-208,,Platform,
+Ledger service migration: Edge cases,PLT-2083,10036,Story,In Progress,Low,Karan,25/Oct/26 12:00 AM,PAY Sprint 33,PAY Sprint 36,2027.1,,,,2,17/Mar/27 12:00 AM,23/Apr/27 12:00 AM,PLT-208,,Platform,
+Settlement reports export,MX-070,10037,Epic,Blocked,High,PM,20/Oct/26 12:00 AM,,,2027.1,roadmap,h1-2027,,,,,,,Merchant Experience,Epic for Settlement reports export
+Settlement reports export: API contract,MX-701,10038,Story,Done,Low,Ravi,25/Oct/26 12:00 AM,PAY Sprint 24,,2027.1,,payments,,3,02/Nov/26 12:00 AM,12/Nov/26 12:00 AM,MX-070,,Merchant Experience,
+Settlement reports export: UI flow,MX-702,10039,Story,Done,High,Asha,25/Oct/26 12:00 AM,PAY Sprint 24,PAY Sprint 25,2027.1,growth,,,2,13/Nov/26 12:00 AM,24/Nov/26 12:00 AM,MX-070,,Merchant Experience,
+Settlement reports export: Edge cases,MX-703,10040,Story,To Do,High,Meera,25/Oct/26 12:00 AM,PAY Sprint 25,PAY Sprint 26,2027.1,,,,8,25/Nov/26 12:00 AM,05/Dec/26 12:00 AM,MX-070,,Merchant Experience,
+Settlement reports export: Load test,MX-704,10041,Story,Blocked,Low,Meera,25/Oct/26 12:00 AM,PAY Sprint 26,PAY Sprint 27,2027.1,growth,payments,,2,06/Dec/26 12:00 AM,18/Dec/26 12:00 AM,MX-070,,Merchant Experience,
+Merchant payouts dashboard,MX-077,10042,Epic,To Do,High,PM,20/Oct/26 12:00 AM,,,2027.1,roadmap,h1-2027,,,,,,,Merchant Experience,Epic for Merchant payouts dashboard
+Merchant payouts dashboard: API contract,MX-771,10043,Story,To Do,Low,Karan,25/Oct/26 12:00 AM,PAY Sprint 30,PAY Sprint 32,2027.1,,payments,,5,01/Feb/27 12:00 AM,22/Feb/27 12:00 AM,MX-077,,,
+Merchant payouts dashboard: UI flow,MX-772,10044,Story,To Do,High,Karan,25/Oct/26 12:00 AM,PAY Sprint 32,PAY Sprint 33,2027.1,growth,,,1,23/Feb/27 12:00 AM,16/Mar/27 12:00 AM,MX-077,,Merchant Experience,
+Merchant payouts dashboard: Edge cases,MX-773,10045,Story,To Do,High,Karan,25/Oct/26 12:00 AM,PAY Sprint 33,PAY Sprint 35,2027.1,,,,1,17/Mar/27 12:00 AM,09/Apr/27 12:00 AM,MX-077,,Merchant Experience,
+Dispute self-service,MX-081,10046,Epic,To Do,High,PM,20/Oct/26 12:00 AM,,,2027.1,roadmap,h1-2027,,,,,,,Merchant Experience,Epic for Dispute self-service
+Dispute self-service: API contract,MX-811,10047,Story,To Do,Medium,Asha,25/Oct/26 12:00 AM,PAY Sprint 32,PAY Sprint 33,2027.1,,payments,,1,01/Mar/27 12:00 AM,15/Mar/27 12:00 AM,MX-081,,Merchant Experience,
+Dispute self-service: UI flow,MX-812,10048,Story,To Do,Low,Ravi,25/Oct/26 12:00 AM,PAY Sprint 33,PAY Sprint 34,2027.1,growth,,,8,16/Mar/27 12:00 AM,30/Mar/27 12:00 AM,MX-081,,Merchant Experience,
+Dispute self-service: Edge cases,MX-813,10049,Story,To Do,Medium,Meera,25/Oct/26 12:00 AM,PAY Sprint 34,PAY Sprint 35,2027.1,,,,8,31/Mar/27 12:00 AM,14/Apr/27 12:00 AM,MX-081,,Merchant Experience,
+Dispute self-service: Load test,MX-814,10050,Story,To Do,Medium,Asha,25/Oct/26 12:00 AM,PAY Sprint 35,PAY Sprint 36,2027.1,growth,payments,,2,15/Apr/27 12:00 AM,30/Apr/27 12:00 AM,MX-081,,Merchant Experience,
+Wallet top-up limits,PAY-170,10051,Epic,To Do,Medium,PM,30/Oct/26 12:00 AM,,,,,,,,,,,,Checkout,
+Velocity rules UI,RSK-040,10052,Epic,To Do,Medium,PM,30/Oct/26 12:00 AM,,,,,,,,,,,,Risk & Fraud,
+Idempotency keys,PLT-215,10053,Epic,To Do,Medium,PM,30/Oct/26 12:00 AM,,,,,,,,,,,,Platform,
+GST invoice templates,MX-090,10054,Epic,To Do,Medium,PM,30/Oct/26 12:00 AM,,,,,,,,,,,,Merchant Experience,
+EMI on cards,PAY-174,10055,Epic,To Do,Medium,PM,30/Oct/26 12:00 AM,,,,,,,,,,,,Checkout,

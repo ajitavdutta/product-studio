@@ -401,6 +401,110 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/imports/jira": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Upload Jira Export
+         * @description Read a Jira CSV, JSON or XML export (20 MB at most) and suggest its mapping.
+         */
+        post: operations["upload_jira_export_api_imports_jira_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/imports/jira/sample": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Sample Export Info
+         * @description The bundled sample's file name and issue count, for the sample button.
+         */
+        get: operations["get_sample_export_info_api_imports_jira_sample_get"];
+        put?: never;
+        /**
+         * Start Sample Import
+         * @description Start an import from the bundled sample export.
+         */
+        post: operations["start_sample_import_api_imports_jira_sample_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/imports/{import_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Import
+         * @description The import as uploaded, until it expires an hour later.
+         */
+        get: operations["get_import_api_imports__import_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/imports/{import_id}/preview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Preview Import
+         * @description The roadmap this mapping would create, with counts and warnings. Saves nothing.
+         */
+        post: operations["preview_import_api_imports__import_id__preview_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/imports/{import_id}/commit": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Commit Import
+         * @description Create the roadmap, save the mapping template and end the import (IMP-12).
+         */
+        post: operations["commit_import_api_imports__import_id__commit_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -445,6 +549,11 @@ export interface components {
             /** File */
             file: string;
         };
+        /** Body_upload_jira_export_api_imports_jira_post */
+        Body_upload_jira_export_api_imports_jira_post: {
+            /** File */
+            file: string;
+        };
         /** Connector */
         Connector: {
             /** Id */
@@ -484,6 +593,18 @@ export interface components {
                 number,
                 number
             ][];
+        };
+        /** CustomStatus */
+        CustomStatus: {
+            /** Id */
+            id: string;
+            /** Name */
+            name: string;
+            /**
+             * Color
+             * @enum {string}
+             */
+            color: "blue" | "deepOrange" | "blueGrey" | "purple" | "teal" | "brown";
         };
         /** DeleteImpact */
         DeleteImpact: {
@@ -752,6 +873,212 @@ export interface components {
              */
             status: "ok";
         };
+        /**
+         * ImportColumn
+         * @description One row of the Map table; repeated columns are already merged.
+         */
+        ImportColumn: {
+            /**
+             * Id
+             * @description Stable within a session: the normalised name or field id
+             */
+            id: string;
+            /**
+             * Name
+             * @description Original header, e.g. Custom field (Story Points)
+             */
+            name: string;
+            /**
+             * Label
+             * @description Header without its Custom field (…) wrapper
+             */
+            label: string;
+            /**
+             * Fieldid
+             * @description Jira field id, e.g. customfield_10016
+             */
+            fieldId?: string | null;
+            /**
+             * Samples
+             * @description Up to 5 non-empty values
+             */
+            samples: string[];
+            /**
+             * Fill
+             * @description Fraction of rows with a value
+             */
+            fill: number;
+            /**
+             * Repeatcount
+             * @description How many header cells were merged
+             * @default 1
+             */
+            repeatCount: number;
+            /** Suggestedfield */
+            suggestedField?: ("key" | "title" | "type" | "epic" | "team" | "status" | "sprint" | "release" | "points" | "start" | "end" | "tags" | "ignore") | null;
+            /** Confidence */
+            confidence?: ("template" | "exact" | "alias" | "sniffed") | null;
+            /**
+             * Note
+             * @description e.g. Used when Parent is empty
+             */
+            note?: string | null;
+        };
+        /** ImportCommit */
+        ImportCommit: {
+            /**
+             * Columns
+             * @description Column id → roadmap field; missing ids count as unmapped
+             */
+            columns: {
+                [key: string]: "key" | "title" | "type" | "epic" | "team" | "status" | "sprint" | "release" | "points" | "start" | "end" | "tags" | "ignore";
+            };
+            /**
+             * Statusmap
+             * @description Jira status → roadmap status id
+             */
+            statusMap: {
+                [key: string]: string;
+            };
+            /** Customstatuses */
+            customStatuses?: components["schemas"]["CustomStatus"][];
+            rollup?: components["schemas"]["RollupRules"];
+            /** Name */
+            name: string;
+            /**
+             * Updatetemplate
+             * @description Save the changed entries to the mapping template
+             * @default true
+             */
+            updateTemplate: boolean;
+        };
+        /**
+         * ImportMapping
+         * @description Body of preview and commit.
+         *
+         *     Checks that need the session's columns (unknown ids, a field used twice) live in
+         *     `check_mapping_columns`, which the import service calls with them.
+         */
+        ImportMapping: {
+            /**
+             * Columns
+             * @description Column id → roadmap field; missing ids count as unmapped
+             */
+            columns: {
+                [key: string]: "key" | "title" | "type" | "epic" | "team" | "status" | "sprint" | "release" | "points" | "start" | "end" | "tags" | "ignore";
+            };
+            /**
+             * Statusmap
+             * @description Jira status → roadmap status id
+             */
+            statusMap: {
+                [key: string]: string;
+            };
+            /** Customstatuses */
+            customStatuses?: components["schemas"]["CustomStatus"][];
+            rollup?: components["schemas"]["RollupRules"];
+            /** Name */
+            name: string;
+        };
+        /** ImportPreview */
+        ImportPreview: {
+            /** Epics */
+            epics: number;
+            /** Issues */
+            issues: number;
+            /** Teams */
+            teams: number;
+            /** Milestones */
+            milestones: number;
+            /** Warnings */
+            warnings: string[];
+            /** Firstepics */
+            firstEpics: components["schemas"]["PreviewEpic"][];
+            /**
+             * Moreepics
+             * @description Epics beyond the first five
+             */
+            moreEpics: number;
+            /**
+             * Unmappedcolumns
+             * @description Labels of listed columns with no field
+             */
+            unmappedColumns: string[];
+            /**
+             * Missingrequired
+             * @description Required fields not mapped yet (IMP-10)
+             */
+            missingRequired: ("key" | "title")[];
+            /**
+             * Filename
+             * @description File name Save JSON will use
+             */
+            fileName: string;
+            /** Sizeestimatebytes */
+            sizeEstimateBytes: number;
+            /** @description Exactly what commit will save */
+            document: components["schemas"]["RoadmapDocument"];
+        };
+        /** ImportSessionRead */
+        ImportSessionRead: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Filename */
+            fileName: string;
+            /**
+             * Size
+             * @description Bytes uploaded
+             */
+            size: number;
+            /**
+             * Format
+             * @enum {string}
+             */
+            format: "csv" | "json" | "xml";
+            /**
+             * Formatlabel
+             * @description e.g. Jira CSV
+             */
+            formatLabel: string;
+            /**
+             * Encoding
+             * @description Text encoding the file was read with
+             * @enum {string}
+             */
+            encoding: "utf-8-sig" | "cp1252";
+            /** Rowcount */
+            rowCount: number;
+            /**
+             * Columns
+             * @description Columns listed in the Map table
+             */
+            columns: components["schemas"]["ImportColumn"][];
+            /**
+             * Ignoredcolumns
+             * @description Original names, for +N other columns
+             */
+            ignoredColumns: string[];
+            /** Statuses */
+            statuses: components["schemas"]["StatusSuggestion"][];
+            /**
+             * Templateid
+             * @description Mapping template applied first
+             */
+            templateId?: string | null;
+            /**
+             * Suggestedname
+             * @description Default roadmap name
+             */
+            suggestedName: string;
+            /**
+             * Createdat
+             * Format: date-time
+             */
+            createdAt: string;
+        };
         /** IssueCounts */
         IssueCounts: {
             /** Total */
@@ -791,7 +1118,7 @@ export interface components {
              * @description Jira column name or custom-field id → roadmap field
              */
             columnMap: {
-                [key: string]: string;
+                [key: string]: "key" | "title" | "type" | "epic" | "team" | "status" | "sprint" | "release" | "points" | "start" | "end" | "tags" | "ignore";
             };
             /**
              * Statusmap
@@ -815,7 +1142,7 @@ export interface components {
              * @description Jira column name or custom-field id → roadmap field
              */
             columnMap: {
-                [key: string]: string;
+                [key: string]: "key" | "title" | "type" | "epic" | "team" | "status" | "sprint" | "release" | "points" | "start" | "end" | "tags" | "ignore";
             };
             /**
              * Statusmap
@@ -843,7 +1170,7 @@ export interface components {
             jiraSite?: string | null;
             /** Columnmap */
             columnMap?: {
-                [key: string]: string;
+                [key: string]: "key" | "title" | "type" | "epic" | "team" | "status" | "sprint" | "release" | "points" | "start" | "end" | "tags" | "ignore";
             } | null;
             /** Statusmap */
             statusMap?: {
@@ -906,6 +1233,17 @@ export interface components {
              * @default true
              */
             ipSprint: boolean;
+        };
+        /** PreviewEpic */
+        PreviewEpic: {
+            /** Key */
+            key: string;
+            /** Title */
+            title: string;
+            /** Start */
+            start?: string | null;
+            /** End */
+            end?: string | null;
         };
         /** ProblemRead */
         ProblemRead: {
@@ -1121,6 +1459,39 @@ export interface components {
             /** Pis */
             pis: components["schemas"]["ProgramIncrement"][];
         };
+        /**
+         * RollupRules
+         * @description The four roll-up switches (IMP-8).
+         */
+        RollupRules: {
+            /**
+             * Rollupstories
+             * @default true
+             */
+            rollUpStories: boolean;
+            /**
+             * Usesprintdates
+             * @default true
+             */
+            useSprintDates: boolean;
+            /**
+             * Unscheduledtray
+             * @default true
+             */
+            unscheduledTray: boolean;
+            /**
+             * Fixversionsasmilestones
+             * @default false
+             */
+            fixVersionsAsMilestones: boolean;
+        };
+        /** SampleExportInfo */
+        SampleExportInfo: {
+            /** Filename */
+            fileName: string;
+            /** Rowcount */
+            rowCount: number;
+        };
         /** SettingsRead */
         SettingsRead: {
             /**
@@ -1153,6 +1524,21 @@ export interface components {
             /** Defaultpresetid */
             defaultPresetId?: string | null;
             piCadence?: components["schemas"]["PiCadence"] | null;
+        };
+        /** StatusSuggestion */
+        StatusSuggestion: {
+            /** Jirastatus */
+            jiraStatus: string;
+            /**
+             * Count
+             * @description Rows with this Jira status
+             */
+            count: number;
+            /**
+             * Statusid
+             * @description Suggested roadmap status id
+             */
+            statusId: string;
         };
         /** Story */
         Story: {
@@ -2453,6 +2839,231 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    upload_jira_export_api_imports_jira_post: {
+        parameters: {
+            query?: {
+                /** @description Mapping template to apply first (IMP-9) */
+                templateId?: string | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": components["schemas"]["Body_upload_jira_export_api_imports_jira_post"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ImportSessionRead"];
+                };
+            };
+            /** @description Request Entity Too Large */
+            413: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProblemRead"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProblemRead"];
+                };
+            };
+        };
+    };
+    get_sample_export_info_api_imports_jira_sample_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SampleExportInfo"];
+                };
+            };
+        };
+    };
+    start_sample_import_api_imports_jira_sample_post: {
+        parameters: {
+            query?: {
+                /** @description Mapping template to apply first (IMP-9) */
+                templateId?: string | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ImportSessionRead"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProblemRead"];
+                };
+            };
+        };
+    };
+    get_import_api_imports__import_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                import_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ImportSessionRead"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProblemRead"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    preview_import_api_imports__import_id__preview_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                import_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ImportMapping"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ImportPreview"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProblemRead"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProblemRead"];
+                };
+            };
+        };
+    };
+    commit_import_api_imports__import_id__commit_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                import_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ImportCommit"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RoadmapRead"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProblemRead"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProblemRead"];
                 };
             };
         };

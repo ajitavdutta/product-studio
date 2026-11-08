@@ -6,6 +6,7 @@ from app.api.routers import (
     assets,
     diagrams,
     health,
+    imports,
     mapping_templates,
     roadmaps,
     watermark_presets,
@@ -35,6 +36,7 @@ def create_app() -> FastAPI:
     api_router.include_router(watermark_presets.router)
     api_router.include_router(settings_router.router)
     api_router.include_router(assets.router)
+    api_router.include_router(imports.router)
     app.include_router(api_router)
     return app
 

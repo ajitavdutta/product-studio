@@ -204,6 +204,7 @@ async def test_get_missing_returns_404_detail(client: AsyncClient) -> None:
 
 
 async def test_import_json_route_is_not_read_as_an_id(client: AsyncClient) -> None:
-    response = await client.get("/api/roadmaps/import-json")
+    # Reaching the import route means a 422 for the missing file, not a 404 or 405.
+    response = await client.post("/api/roadmaps/import-json")
 
-    assert response.status_code in {405, 422}
+    assert response.status_code == 422

@@ -1,5 +1,4 @@
 from typing import Annotated
-from uuid import UUID
 
 from fastapi import APIRouter, Depends, UploadFile, status
 from fastapi.responses import JSONResponse
@@ -65,38 +64,46 @@ def import_roadmap_json(file: UploadFile, session: SessionDep) -> RoadmapRead:
     response_model_exclude_none=True,
     responses=problem_responses(404),
 )
-def get_roadmap(roadmap_id: UUID, session: SessionDep) -> RoadmapRead:
-    return service.get_roadmap(session, roadmap_id)
+def get_roadmap(roadmap_id: str, session: SessionDep) -> RoadmapRead:
+    return service.get_roadmap(session, service.parse_document_id(roadmap_id, "roadmap"))
 
 
 @router.patch(
     "/{roadmap_id}", response_model=PatchResult, responses=problem_responses(404, 409, 422)
 )
-def patch_roadmap(roadmap_id: UUID, patch: DocumentPatch, session: SessionDep) -> PatchResult:
+def patch_roadmap(roadmap_id: str, patch: DocumentPatch, session: SessionDep) -> PatchResult:
     """Autosave: apply ops made against `baseVersion` (G-2)."""
-    return service.patch_document(session, "roadmap", roadmap_id, patch)
+    return service.patch_document(
+        session, "roadmap", service.parse_document_id(roadmap_id, "roadmap"), patch
+    )
 
 
 @router.get(
     "/{roadmap_id}/delete-impact", response_model=DeleteImpact, responses=problem_responses(404)
 )
-def get_roadmap_delete_impact(roadmap_id: UUID, session: SessionDep) -> DeleteImpact:
+def get_roadmap_delete_impact(roadmap_id: str, session: SessionDep) -> DeleteImpact:
     """What deleting this roadmap would unlink, for the confirmation dialog."""
-    return service.delete_impact(session, "roadmap", roadmap_id)
+    return service.delete_impact(
+        session, "roadmap", service.parse_document_id(roadmap_id, "roadmap")
+    )
 
 
 @router.delete("/{roadmap_id}", response_model=DeleteImpact, responses=problem_responses(404, 409))
-def delete_roadmap(roadmap_id: UUID, session: SessionDep) -> DeleteImpact:
+def delete_roadmap(roadmap_id: str, session: SessionDep) -> DeleteImpact:
     """Delete the roadmap and unlink its diagrams (they are kept)."""
-    return service.delete_document(session, "roadmap", roadmap_id)
+    return service.delete_document(
+        session, "roadmap", service.parse_document_id(roadmap_id, "roadmap")
+    )
 
 
 @router.get(
     "/{roadmap_id}/document", response_model=RoadmapDocument, responses=problem_responses(404)
 )
-def download_roadmap(roadmap_id: UUID, session: SessionDep) -> JSONResponse:
+def download_roadmap(roadmap_id: str, session: SessionDep) -> JSONResponse:
     """The exact roadmap document, as a `.json` attachment (Save JSON)."""
-    body, file_name = service.download(session, "roadmap", roadmap_id)
+    body, file_name = service.download(
+        session, "roadmap", service.parse_document_id(roadmap_id, "roadmap")
+    )
     # file_name comes from file_name_for, so it is already limited to [a-z0-9.-].
     return JSONResponse(
         content=body, headers={"Content-Disposition": f'attachment; filename="{file_name}"'}

@@ -4,7 +4,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { ApiError, apiRequest, type HttpMethod } from '../../api/client';
 import { settingsKeys, type SettingsRead } from '../../api/useSettings';
 import type { WatermarkPresetRead } from '../../api/useWatermarkPresets';
-import { createTestQueryClient } from '../../test/providers';
+import { createTestQueryClient, seedEmptyDocumentLists } from '../../test/providers';
 import { renderApp } from '../../test/renderApp';
 
 vi.mock('../../api/client', async (importOriginal) => ({
@@ -47,7 +47,7 @@ function mockServer({
 
 async function openSettings() {
   const user = userEvent.setup();
-  const queryClient = createTestQueryClient();
+  const queryClient = seedEmptyDocumentLists(createTestQueryClient());
   renderApp('/', undefined, queryClient);
   await user.click(screen.getByRole('button', { name: 'Settings' }));
   const dialog = await screen.findByRole('dialog', { name: 'Settings' });
@@ -152,7 +152,7 @@ describe('SettingsDialog', () => {
   it('G-4 shows an error with Retry when the settings fail to load', async () => {
     apiRequestMock.mockRejectedValue(new ApiError(500, 'Boom'));
     const user = userEvent.setup();
-    renderApp('/', undefined, createTestQueryClient());
+    renderApp('/', undefined, seedEmptyDocumentLists(createTestQueryClient()));
 
     await user.click(screen.getByRole('button', { name: 'Settings' }));
 

@@ -42,11 +42,13 @@ test.describe('desktop journeys', () => {
     page,
   }) => {
     await page.goto('/');
-
-    await page
+    const roadmapLink = page
       .getByRole('navigation', { name: 'Main' })
-      .getByRole('link', { name: 'Roadmap' })
-      .click();
+      .getByRole('link', { name: 'Roadmap' });
+    // The link falls back to /import until the roadmap list has loaded.
+    await expect(roadmapLink).toHaveAttribute('href', /^\/roadmaps\//);
+
+    await roadmapLink.click();
 
     await expect(page.getByRole('heading', { name: DEMO_ROADMAP_NAME })).toBeVisible();
     await expect(page.getByRole('banner').getByRole('status')).toHaveText(
@@ -122,10 +124,11 @@ test.describe('desktop journeys', () => {
 test('G-5 demo roadmap page has no horizontal scroll at 390px', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== 'mobile', 'Mobile-only smoke test');
   await page.goto('/');
-  await page
+  const roadmapLink = page
     .getByRole('navigation', { name: 'Main' })
-    .getByRole('link', { name: 'Roadmap' })
-    .click();
+    .getByRole('link', { name: 'Roadmap' });
+  await expect(roadmapLink).toHaveAttribute('href', /^\/roadmaps\//);
+  await roadmapLink.click();
   await expect(page.getByRole('heading', { name: DEMO_ROADMAP_NAME })).toBeVisible();
 
   const scrollWidth = await page.evaluate(() => document.documentElement.scrollWidth);

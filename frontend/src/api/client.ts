@@ -106,3 +106,11 @@ export async function apiUpload<T>(path: string, file: Blob, fileName: string): 
   // No Content-Type header: the browser sets the multipart boundary itself.
   return send<T>(path, { method: 'POST', headers: { Accept: 'application/json' }, body: form });
 }
+
+/**
+ * The backend URL of a saved document's `.json` file, for an `<a download>` link, so the
+ * browser downloads the server's file rather than building one itself.
+ */
+export function documentDownloadUrl(kind: 'roadmap' | 'diagram', id: string): string {
+  return `${API_BASE}/${kind}s/${encodeURIComponent(id)}/document`;
+}

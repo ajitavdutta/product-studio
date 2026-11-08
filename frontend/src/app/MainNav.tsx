@@ -1,7 +1,8 @@
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
 import { matchPath, Link as RouterLink, useLocation } from 'react-router';
-import { DEMO_DIAGRAM_ID, DEMO_ROADMAP_ID } from './demoDocuments';
+import { useDiagrams } from '../api/useDiagram';
+import { useRoadmaps } from '../api/useRoadmap';
 
 interface NavItem {
   label: string;
@@ -10,14 +11,26 @@ interface NavItem {
   activePrefix: string;
 }
 
-// ASSUMPTION: with no document open, Roadmap and Swimlanes open the seeded example documents.
-// Their real UUIDs are used (not a `demo` id) because `id` is a UUID in the document schema.
-const NAV_ITEMS: readonly NavItem[] = [
-  { label: 'Import', to: '/import', activePrefix: '/import' },
-  { label: 'Roadmap', to: `/roadmaps/${DEMO_ROADMAP_ID}`, activePrefix: '/roadmaps' },
-  { label: 'Swimlanes', to: `/diagrams/${DEMO_DIAGRAM_ID}`, activePrefix: '/diagrams' },
-  { label: 'Exports', to: '/exports', activePrefix: '/exports' },
-];
+// Roadmap and Swimlanes open the most recently updated document (the lists come back newest
+// first). With none, or while the lists load or fail, Roadmap offers Import and Swimlanes Home.
+function useNavItems(): readonly NavItem[] {
+  const latestRoadmap = useRoadmaps().data?.at(0);
+  const latestDiagram = useDiagrams().data?.at(0);
+  return [
+    { label: 'Import', to: '/import', activePrefix: '/import' },
+    {
+      label: 'Roadmap',
+      to: latestRoadmap ? `/roadmaps/${latestRoadmap.id}` : '/import',
+      activePrefix: '/roadmaps',
+    },
+    {
+      label: 'Swimlanes',
+      to: latestDiagram ? `/diagrams/${latestDiagram.id}` : '/',
+      activePrefix: '/diagrams',
+    },
+    { label: 'Exports', to: '/exports', activePrefix: '/exports' },
+  ];
+}
 
 // Below the mobile breakpoint the bar wraps and links shrink to a 44px touch target.
 const MOBILE_LINK_MIN_HEIGHT = 44;
@@ -25,17 +38,18 @@ const UNDERLINE_WIDTH = 2;
 
 export function MainNav() {
   const { pathname } = useLocation();
+  const navItems = useNavItems();
   return (
     <Box
       component="nav"
       aria-label="Main"
       sx={{ display: 'flex', alignSelf: 'stretch', gap: 0.25 }}
     >
-      {NAV_ITEMS.map((item) => {
+      {navItems.map((item) => {
         const active = matchPath({ path: item.activePrefix, end: false }, pathname) !== null;
         return (
           <Link
-            key={item.to}
+            key={item.label}
             component={RouterLink}
             to={item.to}
             underline="none"

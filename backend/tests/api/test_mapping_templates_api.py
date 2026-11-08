@@ -78,3 +78,25 @@ async def test_mapping_template_empty_name_422(client: AsyncClient) -> None:
     response = await client.post("/api/mapping-templates", json=template_body(""))
 
     assert response.status_code == 422
+
+
+async def test_IMP_9_column_map_rejects_unknown_field(client: AsyncClient) -> None:
+    body = {**template_body(), "columnMap": {"Issue key": "key", "Story Points": "effort"}}
+
+    response = await client.post("/api/mapping-templates", json=body)
+
+    assert (response.status_code, response.json()["detail"]) == (
+        422,
+        "“Story Points” is mapped to “effort”, which isn't a roadmap field. Use one of: key, "
+        "title, type, epic, team, status, sprint, release, points, start, end, tags, ignore.",
+    )
+
+
+async def test_IMP_9_column_map_patch_rejects_unknown_field(client: AsyncClient) -> None:
+    created = (await client.post("/api/mapping-templates", json=template_body())).json()
+
+    response = await client.patch(
+        f"/api/mapping-templates/{created['id']}", json={"columnMap": {"Sprint": "iteration"}}
+    )
+
+    assert (response.status_code, response.json()["errors"][0]["path"]) == (422, "/columnMap")

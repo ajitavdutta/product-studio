@@ -32,6 +32,19 @@ COLUMNS_BY_TABLE = {
     },
     "assets": {"id", "kind", "mime", "bytes", "sha256"},
     "settings": {"key", "value"},
+    "import_sessions": {
+        "id",
+        "file_name",
+        "format",
+        "encoding",
+        "size",
+        "row_count",
+        "columns",
+        "rows",
+        "extras",
+        "template_id",
+        "created_at",
+    },
 }
 TABLES_ADDED_IN_0002 = {"mapping_templates", "watermark_presets", "assets", "settings"}
 
@@ -88,3 +101,21 @@ def test_downgrade_to_0001_drops_new_tables(alembic_config: Config, tmp_database
     command.downgrade(alembic_config, "0001")
 
     assert table_names(tmp_database_url) & TABLES_ADDED_IN_0002 == set()
+
+
+def test_upgrade_head_creates_import_sessions(
+    alembic_config: Config, tmp_database_url: str
+) -> None:
+    command.upgrade(alembic_config, "head")
+
+    assert column_names(tmp_database_url, "import_sessions") == COLUMNS_BY_TABLE["import_sessions"]
+
+
+def test_downgrade_to_0002_drops_import_sessions(
+    alembic_config: Config, tmp_database_url: str
+) -> None:
+    command.upgrade(alembic_config, "head")
+
+    command.downgrade(alembic_config, "0002")
+
+    assert "import_sessions" not in table_names(tmp_database_url)

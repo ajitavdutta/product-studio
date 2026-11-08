@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { ApiError, apiRequest, apiUpload } from './client';
+import { ApiError, apiRequest, apiUpload, documentDownloadUrl } from './client';
 
 function jsonResponse(status: number, body: unknown): Response {
   return new Response(JSON.stringify(body), {
@@ -155,5 +155,15 @@ describe('apiUpload', () => {
     await expect(apiUpload('/roadmaps/import-json', new Blob(['x']), 'big.json')).rejects.toMatchObject(
       { status: 413, detail: 'This file is larger than 20 MB' },
     );
+  });
+});
+
+describe('documentDownloadUrl', () => {
+  it('points at the backend document file for a roadmap', () => {
+    expect(documentDownloadUrl('roadmap', 'abc')).toBe('/api/roadmaps/abc/document');
+  });
+
+  it('points at the backend document file for a diagram', () => {
+    expect(documentDownloadUrl('diagram', 'abc')).toBe('/api/diagrams/abc/document');
   });
 });

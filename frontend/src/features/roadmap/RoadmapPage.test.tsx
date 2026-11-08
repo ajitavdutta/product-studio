@@ -4,7 +4,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { ApiError, apiRequest } from '../../api/client';
 import type { RoadmapRead } from '../../api/useRoadmap';
 import { useSaveStateStore } from '../../app/saveState';
-import { createTestQueryClient } from '../../test/providers';
+import { createTestQueryClient, seedEmptyDocumentLists } from '../../test/providers';
 import { renderApp } from '../../test/renderApp';
 
 vi.mock('../../api/client', async (importOriginal) => ({
@@ -28,7 +28,7 @@ const ROADMAP: RoadmapRead = {
 };
 
 function renderRoadmap() {
-  renderApp(`/roadmaps/${ROADMAP_ID}`, undefined, createTestQueryClient());
+  renderApp(`/roadmaps/${ROADMAP_ID}`, undefined, seedEmptyDocumentLists(createTestQueryClient()));
 }
 
 afterEach(() => {
