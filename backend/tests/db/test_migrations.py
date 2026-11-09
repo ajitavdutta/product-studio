@@ -45,6 +45,16 @@ COLUMNS_BY_TABLE = {
         "template_id",
         "created_at",
     },
+    "roadmap_resyncs": {
+        "id",
+        "roadmap_id",
+        "base_revision",
+        "file_name",
+        "template_id",
+        "changes",
+        "warnings",
+        "created_at",
+    },
 }
 TABLES_ADDED_IN_0002 = {"mapping_templates", "watermark_presets", "assets", "settings"}
 
@@ -119,3 +129,23 @@ def test_downgrade_to_0002_drops_import_sessions(
     command.downgrade(alembic_config, "0002")
 
     assert "import_sessions" not in table_names(tmp_database_url)
+
+
+def test_RM_15_upgrade_head_creates_roadmap_resyncs(
+    alembic_config: Config, tmp_database_url: str
+) -> None:
+    command.upgrade(alembic_config, "head")
+
+    assert column_names(tmp_database_url, "roadmap_resyncs") == COLUMNS_BY_TABLE["roadmap_resyncs"]
+
+
+def test_RM_15_downgrade_to_0003_drops_roadmap_resyncs(
+    alembic_config: Config, tmp_database_url: str
+) -> None:
+    command.upgrade(alembic_config, "head")
+
+    command.downgrade(alembic_config, "0003")
+
+    assert table_names(tmp_database_url) & {"roadmap_resyncs", "import_sessions"} == {
+        "import_sessions"
+    }

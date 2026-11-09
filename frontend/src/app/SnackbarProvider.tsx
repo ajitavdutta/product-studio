@@ -1,5 +1,6 @@
 import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
+import Portal from '@mui/material/Portal';
 import Snackbar, { type SnackbarCloseReason } from '@mui/material/Snackbar';
 import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from 'react';
 
@@ -54,6 +55,11 @@ export function SnackbarProvider({ children }: { children: ReactNode }) {
     setOpen(false);
   };
 
+  const handleExited = (id: number) => {
+    // A newer message may already have replaced this one.
+    setCurrent((previous) => (previous?.id === id ? null : previous));
+  };
+
   const handleUndo = () => {
     if (current?.kind === 'undo') current.onUndo();
     setOpen(false);
@@ -62,39 +68,52 @@ export function SnackbarProvider({ children }: { children: ReactNode }) {
   return (
     <SnackbarContext value={api}>
       {children}
+      {/*
+        A fresh portal per message, removed once it has closed. Created after any open
+        dialog, it is not among the elements MUI hides from screen readers behind that
+        dialog, so messages raised inside a dialog are still announced (NF-2).
+      */}
       {current && (
-        <Snackbar
-          key={current.id}
-          open={open}
-          onClose={handleClose}
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-          autoHideDuration={
-            current.kind === 'undo' ? UNDO_SNACKBAR_DURATION_MS : SNACKBAR_DURATION_MS
-          }
-          message={current.kind === 'error' ? undefined : current.message}
-          action={
-            current.kind === 'undo' ? (
-              <Button
-                size="small"
-                onClick={handleUndo}
-                sx={{
-                  typography: 'caption',
-                  color: 'neutral.snackbarAction',
-                  textTransform: 'uppercase',
-                  fontWeight: 'fontWeightBold',
-                }}
-              >
-                Undo
-              </Button>
-            ) : undefined
-          }
-        >
-          {current.kind === 'error' ? (
-            <Alert severity="error" variant="filled" onClose={handleClose}>
-              {current.message}
-            </Alert>
-          ) : undefined}
-        </Snackbar>
+        <Portal key={current.id}>
+          <Snackbar
+            open={open}
+            onClose={handleClose}
+            slotProps={{
+              transition: {
+                onExited: () => {
+                  handleExited(current.id);
+                },
+              },
+            }}
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+            autoHideDuration={
+              current.kind === 'undo' ? UNDO_SNACKBAR_DURATION_MS : SNACKBAR_DURATION_MS
+            }
+            message={current.kind === 'error' ? undefined : current.message}
+            action={
+              current.kind === 'undo' ? (
+                <Button
+                  size="small"
+                  onClick={handleUndo}
+                  sx={{
+                    typography: 'caption',
+                    color: 'neutral.snackbarAction',
+                    textTransform: 'uppercase',
+                    fontWeight: 'fontWeightBold',
+                  }}
+                >
+                  Undo
+                </Button>
+              ) : undefined
+            }
+          >
+            {current.kind === 'error' ? (
+              <Alert severity="error" variant="filled" onClose={handleClose}>
+                {current.message}
+              </Alert>
+            ) : undefined}
+          </Snackbar>
+        </Portal>
       )}
     </SnackbarContext>
   );

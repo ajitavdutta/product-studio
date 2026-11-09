@@ -7,7 +7,7 @@ Every function takes the session first and has no user parameter (ADR-5).
 
 import datetime as dt
 import json
-from dataclasses import replace
+from dataclasses import dataclass, replace
 from pathlib import Path, PurePosixPath
 from typing import Any, Final, Literal
 from uuid import UUID, uuid4
@@ -17,7 +17,7 @@ from sqlalchemy.orm import Session
 
 from app.core import clock
 from app.documents.errors import to_problem
-from app.importers.jira.build import EPIC_TYPE, ImportData, build_roadmap
+from app.importers.jira.build import EPIC_TYPE, BuildResult, ImportData, build_roadmap
 from app.importers.jira.columns import merge_repeated_columns, value_for
 from app.importers.jira.csv_reader import read_csv
 from app.importers.jira.detect import DETECT_HEAD_BYTES, decode, detect_format
@@ -34,12 +34,14 @@ from app.schemas.document_api import RoadmapRead
 from app.schemas.documents import RoadmapDocument, dump_document
 from app.schemas.imports import (
     DEFAULT_STATUS_IDS,
+    CustomStatus,
     ImportColumn,
     ImportCommit,
     ImportFormat,
     ImportMapping,
     ImportPreview,
     ImportSessionRead,
+    MatchConfidence,
     PreviewEpic,
     RoadmapField,
     SampleExportInfo,
@@ -70,6 +72,12 @@ TEMPLATE_NAME_SUFFIX: Final = " mapping"
 PREVIEW_EPIC_COUNT: Final = 5
 SAMPLE_PATH: Final = (
     Path(__file__).resolve().parents[1] / "importers/jira/sample/payments-export.csv"
+)
+# Re-sync has no Map screen, so only columns matched by name are trusted; sniffed ones are not.
+RESYNC_CONFIDENCES: Final[frozenset[MatchConfidence]] = frozenset({"template", "exact", "alias"})
+RESYNC_MISSING_COLUMNS_MESSAGE: Final = (
+    "Couldn't find the Key and Summary columns in this file. "
+    "Import it from the Import page instead."
 )
 # Stored beside each ImportColumn so the builder can find the column's cells in a stored row.
 SOURCE_INDEXES_KEY: Final = "sourceIndexes"
@@ -116,6 +124,11 @@ def _template(session: Session, template_id: str | None) -> MappingTemplateRead 
     except ValidationError as exc:
         # A template saved before columnMap values were checked (the plan's M1 deferral).
         raise to_problem(exc) from exc
+
+
+def load_template(session: Session, template_id: str | None) -> MappingTemplateRead | None:
+    """The template with this id, or None for no id; an unknown id is a plain 422."""
+    return _template(session, template_id)
 
 
 def _status_suggestions(
@@ -203,6 +216,75 @@ def create_session(
     repository.add(session, row)
     session.commit()
     return _to_read(row)
+
+
+@dataclass(frozen=True, slots=True)
+class UploadBuild:
+    result: BuildResult
+    # Jira statuses `status_map` doesn't cover → rows with that status, in file order.
+    unmapped_statuses: dict[str, int]
+
+
+def _unmapped_statuses(
+    parsed: ParsedExport, groups: list[ColumnGroup], status_id: str | None, mapped: set[str]
+) -> dict[str, int]:
+    group = next((group for group in groups if group.id == status_id), None)
+    if group is None:
+        return {}
+    counts: dict[str, int] = {}
+    for row in parsed.rows:
+        value = value_for(group, row)
+        if value is not None and value not in mapped:
+            counts[value] = counts.get(value, 0) + 1
+    return counts
+
+
+def build_from_upload(
+    file_name: str | None,
+    data: bytes,
+    column_map: dict[str, RoadmapField] | None,
+    status_map: dict[str, str],
+    custom_statuses: list[CustomStatus],
+    settings: SettingsRead,
+    now: dt.datetime,
+) -> UploadBuild:
+    """Build a roadmap straight from an upload, with no Map screen (RM-15 re-sync).
+
+    Columns are mapped by `column_map` (a template) and by name only. Raises
+    `InvalidInputError` for an unreadable file or when Key or Title can't be found.
+    """
+    safe_name = _safe_file_name(file_name)
+    parsed = _parse(safe_name, data)
+    groups = merge_repeated_columns(parsed)
+    suggestions = suggest_mapping(groups, column_map)
+    columns = {
+        column.id: column.suggested_field
+        for column in suggestions
+        if column.suggested_field is not None and column.confidence in RESYNC_CONFIDENCES
+    }
+    if not set(REQUIRED_FIELDS) <= set(columns.values()):
+        raise InvalidInputError(RESYNC_MISSING_COLUMNS_MESSAGE)
+    mapping = ImportMapping(
+        columns=columns,
+        status_map=status_map,
+        custom_statuses=custom_statuses,
+        name=_suggested_name(safe_name),
+    )
+    import_data = ImportData(
+        session_id=uuid4(),
+        file_name=safe_name,
+        format=parsed.format,
+        template_id=None,
+        columns=suggestions,
+        groups=groups,
+        rows=parsed.rows,
+        extras=parsed.extras,
+    )
+    status_column = next((key for key, field in columns.items() if field == "status"), None)
+    return UploadBuild(
+        result=build_roadmap(import_data, mapping, settings, now),
+        unmapped_statuses=_unmapped_statuses(parsed, groups, status_column, set(status_map)),
+    )
 
 
 def _sample_bytes() -> bytes:

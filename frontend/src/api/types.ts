@@ -133,6 +133,46 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/roadmaps/{roadmap_id}/resync": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Create Roadmap Resync
+         * @description Diff the roadmap against a newer Jira export (20 MB at most); nothing is written yet.
+         */
+        post: operations["create_roadmap_resync_api_roadmaps__roadmap_id__resync_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/roadmaps/{roadmap_id}/resync/{resync_id}/apply": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Apply Roadmap Resync
+         * @description Apply the chosen changes of a re-sync made against the current revision (RM-15).
+         */
+        post: operations["apply_roadmap_resync_api_roadmaps__roadmap_id__resync__resync_id__apply_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/diagrams": {
         parameters: {
             query?: never;
@@ -533,6 +573,23 @@ export interface components {
             size: number;
             /** Sha256 */
             sha256: string;
+        };
+        /** Body_create_roadmap_resync_api_roadmaps__roadmap_id__resync_post */
+        Body_create_roadmap_resync_api_roadmaps__roadmap_id__resync_post: {
+            /** File */
+            file: string;
+            /**
+             * Templateid
+             * @description Mapping template to use instead of the roadmap's own
+             */
+            templateId?: string | null;
+            /**
+             * Mapping
+             * @description template (default): templateId, else the roadmap's own template. auto: no template; columns are matched by name only. Don't send templateId with it.
+             * @default template
+             * @enum {string}
+             */
+            mapping: "template" | "auto";
         };
         /** Body_import_diagram_json_api_diagrams_import_json_post */
         Body_import_diagram_json_api_diagrams_import_json_post: {
@@ -1285,6 +1342,64 @@ export interface components {
              */
             sprintNames?: string[] | null;
         };
+        /** ResyncApply */
+        ResyncApply: {
+            /**
+             * Baseversion
+             * @description Must still equal the roadmap's revision
+             */
+            baseVersion: number;
+            /**
+             * Changeids
+             * @description Ids of the changes to apply
+             */
+            changeIds: string[];
+        };
+        /** ResyncChange */
+        ResyncChange: {
+            /**
+             * Id
+             * @description Stable within one diff, e.g. dates:PAY-155
+             */
+            id: string;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "new" | "removed" | "dates" | "status" | "progress" | "stories";
+            /**
+             * Itemkey
+             * @description Jira key of the item, e.g. PAY-155
+             */
+            itemKey: string;
+            /** Itemtitle */
+            itemTitle: string;
+            /**
+             * Before
+             * @description Display string, e.g. 12 Mar 2027 or 0%
+             */
+            before?: string | null;
+            /**
+             * After
+             * @description Display string, e.g. 4 stories
+             */
+            after?: string | null;
+            /**
+             * Conflict
+             * @description The PM edited this by hand; unchecked by default
+             */
+            conflict: boolean;
+            /**
+             * Conflictreason
+             * @description e.g. You changed the dates by hand
+             */
+            conflictReason?: string | null;
+            /**
+             * Alreadyapplied
+             * @description The roadmap already has the incoming value: shown, not selectable
+             */
+            alreadyApplied: boolean;
+        };
         /** RoadmapDocument */
         RoadmapDocument: {
             /** Schemaversion */
@@ -1355,6 +1470,11 @@ export interface components {
             jiraUrl?: string | null;
             /** Position */
             position: number;
+            /**
+             * Editedfields
+             * @description Fields the PM changed by hand; re-sync keeps them
+             */
+            editedFields?: ("title" | "statusId" | "laneId" | "start" | "end")[] | null;
         };
         /** RoadmapLane */
         RoadmapLane: {
@@ -1405,6 +1525,40 @@ export interface components {
             updatedAt: string;
             document: components["schemas"]["RoadmapDocument"];
         };
+        /** RoadmapResyncRead */
+        RoadmapResyncRead: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Roadmapid
+             * Format: uuid
+             */
+            roadmapId: string;
+            /**
+             * Baserevision
+             * @description Roadmap revision the diff was made against
+             */
+            baseRevision: number;
+            /** Filename */
+            fileName: string;
+            /**
+             * Templatename
+             * @description Mapping template used, if any
+             */
+            templateName?: string | null;
+            /** Changes */
+            changes: components["schemas"]["ResyncChange"][];
+            /**
+             * Unchanged
+             * @description Items with no change
+             */
+            unchanged: number;
+            /** Warnings */
+            warnings: string[];
+        };
         /** RoadmapSource */
         RoadmapSource: {
             /**
@@ -1429,6 +1583,11 @@ export interface components {
              * @description Mapping template used, if any
              */
             mappingTemplateId?: string | null;
+            /**
+             * Syncedat
+             * @description Last re-sync from Jira
+             */
+            syncedAt?: string | null;
         };
         /** RoadmapStatus */
         RoadmapStatus: {
@@ -2012,6 +2171,113 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_roadmap_resync_api_roadmaps__roadmap_id__resync_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                roadmap_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": components["schemas"]["Body_create_roadmap_resync_api_roadmaps__roadmap_id__resync_post"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RoadmapResyncRead"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProblemRead"];
+                };
+            };
+            /** @description Request Entity Too Large */
+            413: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProblemRead"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProblemRead"];
+                };
+            };
+        };
+    };
+    apply_roadmap_resync_api_roadmaps__roadmap_id__resync__resync_id__apply_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                roadmap_id: string;
+                resync_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ResyncApply"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RoadmapRead"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProblemRead"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProblemRead"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProblemRead"];
                 };
             };
         };

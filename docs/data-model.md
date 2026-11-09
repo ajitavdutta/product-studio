@@ -9,16 +9,17 @@ The Pydantic models in `backend/app/schemas/` are the contract, and TypeScript t
 | `schemaVersion` | int | Bump on breaking change and add a migration |
 | `id` | uuid | |
 | `name` | str | |
-| `source` | `{type: "jira-csv" \| "jira-json" \| "jira-xml" \| "json", file, importedAt, mappingTemplateId?}` | |
-| `timeline` | `{start: date, sprintLengthDays: 14, pis: [{id, name, start: date, sprints: int, ipSprint: bool, sprintNames?: [str]}]}` | PI cadence (`RM-4`) |
+| `source` | `{type: "jira-csv" \| "jira-json" \| "jira-xml" \| "json", file, importedAt, mappingTemplateId?, syncedAt?: datetime}` | `syncedAt` is the last re-sync from Jira (`RM-15`); the panel shows `syncedAt ?? importedAt` |
+| `timeline` | `{start: date, sprintLengthDays: 14, pis: [{id, name, start: date, sprints: int, ipSprint: bool, sprintNames?: [str]}]}` | PI cadence (`RM-4`). Sorted by `start`, a PI may not start before the previous one ends (`start + sprints × sprintLengthDays`); gaps are allowed |
 | `lanes` | `[{id, name, color, position: float}]` | Teams. `color` is a token key |
 | `statuses` | `[{id, name, color, jiraStatuses: [str]}]` | Defaults: not-started, in-progress, at-risk, done |
-| `items` | `[{id, key, title, type, laneId, statusId, start?: date, end?: date, progress: 0–100, issues: {total, done, inProgress}, stories?: [{key, title, statusId}], notes?: str, jiraUrl?: str, position: float}]` | Items without `start`/`end` are unscheduled |
-| `milestones` | `[{id, name, kind: "milestone" \| "freeze", date?: date, start?: date, end?: date}]` | |
+| `items` | `[{id, key, title, type, laneId, statusId, start?: date, end?: date, progress: 0–100, issues: {total, done, inProgress}, stories?: [{key, title, statusId}], notes?: str, jiraUrl?: str, position: float, editedFields?: ["title" \| "statusId" \| "laneId" \| "start" \| "end"]}]` | Items without `start`/`end` are unscheduled. `editedFields` lists fields the PM changed by hand, each at most once; re-sync keeps them (`RM-15`) |
+| `milestones` | `[{id, name, kind: "milestone" \| "freeze", date?: date, start?: date, end?: date}]` | `name` is 1–120 characters and not blank. A `milestone` has `date` and no `start`/`end`; a `freeze` has `start` and `end` (end ≥ start) and no `date` |
 | `linkedDiagrams` | `[uuid]` | |
 
 Rules:
 - `end` is inclusive in the document and in the UI. The timeline maths uses an exclusive end (`end + 1 day`).
+- Every date (`timeline.start`, PI `start`, item `start`/`end`, milestone `date`/`start`/`end`) must be between 1900-01-01 and 2999-12-31, the same bounds as the editor's date inputs. Outside that, the document is rejected with "… has a date outside the supported range (1900-01-01 to 2999-12-31)".
 - Progress is derived from `issues` when they are present; otherwise it is the manual value.
 
 ## Diagram document (`kind: "diagram"`, `schemaVersion: 1`)
@@ -38,6 +39,7 @@ Rules:
 - `watermark_presets (id, name, type, text?, image_asset_id?, position, opacity, color, is_default)`
 - `assets (id, kind, mime, bytes, sha256)`: uploaded logos
 - `settings (key, value JSON)`: displayName, jiraBaseUrl, defaultPresetId, piCadence
+- `roadmap_resyncs (id, roadmap_id → documents ON DELETE CASCADE, base_revision, file_name, template_id?, changes JSON, warnings JSON, created_at)`: a re-sync diff between upload and apply (`RM-15`), kept for 1 hour
 - `exports (id, source_kind, source_id, format, options JSON, file_name, size, created_at, file_asset_id)`
 
 ## Migrations

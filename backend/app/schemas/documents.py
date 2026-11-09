@@ -11,7 +11,8 @@ Validator messages are plain sentences shown to the user as they are.
 import datetime as dt
 from collections import Counter
 from collections.abc import Iterable
-from typing import Any, Literal, Self
+from itertools import pairwise
+from typing import Any, Final, Literal, Self
 from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
@@ -20,6 +21,11 @@ from pydantic.alias_generators import to_camel
 from app.documents.geometry import LANE_MIN_HEIGHT, MIN_WIDTH, bad_connector_ids
 
 CURRENT_SCHEMA_VERSION = 1
+MILESTONE_NAME_MAX_LENGTH: Final = 120
+# Same bounds as the editor's date inputs (frontend/src/lib/roadmap/milestones.ts); they stop a
+# mistyped year such as 0007 from being saved.
+DATE_MIN: Final = dt.date(1900, 1, 1)
+DATE_MAX: Final = dt.date(2999, 12, 31)
 
 DocumentKind = Literal["roadmap", "diagram"]
 
@@ -27,6 +33,7 @@ TeamColor = Literal["blue", "deepOrange", "blueGrey", "purple", "teal", "brown"]
 ShapeType = Literal["start", "end", "task", "decision", "sub", "doc", "data", "note"]
 Side = Literal["l", "r", "t", "b"]
 DiagramFill = Literal["white", "blue", "green", "amber", "purple"]
+EditableField = Literal["title", "statusId", "laneId", "start", "end"]
 
 
 class DocumentModel(BaseModel):
@@ -67,6 +74,7 @@ class RoadmapSource(DocumentModel):
     file: str = Field(..., description="Name of the imported file")
     imported_at: dt.datetime = Field(..., description="When the file was imported")
     mapping_template_id: str | None = Field(None, description="Mapping template used, if any")
+    synced_at: dt.datetime | None = Field(None, description="Last re-sync from Jira")
 
 
 class ProgramIncrement(DocumentModel):
@@ -131,15 +139,32 @@ class RoadmapItem(DocumentModel):
     notes: str | None = None
     jira_url: str | None = None
     position: float
+    edited_fields: list[EditableField] | None = Field(
+        None, description="Fields the PM changed by hand; re-sync keeps them"
+    )
+
+    @model_validator(mode="after")
+    def _edited_fields_unique(self) -> Self:
+        if _first_duplicate(self.edited_fields or []) is not None:
+            raise ValueError(f"Item {self.key} lists an edited field twice")
+        return self
 
 
 class Milestone(DocumentModel):
     id: str
-    name: str
+    name: str = Field(..., min_length=1, max_length=MILESTONE_NAME_MAX_LENGTH)
     kind: Literal["milestone", "freeze"]
     date: dt.date | None = Field(None, description="Required for a milestone")
     start: dt.date | None = Field(None, description="Required for a freeze")
     end: dt.date | None = Field(None, description="Required for a freeze")
+
+    @field_validator("name", mode="before")
+    @classmethod
+    def _name_given(cls, value: object) -> object:
+        # Whitespace-only counts as blank; the stored name keeps its spacing (lossless rule).
+        if isinstance(value, str) and not value.strip():
+            raise ValueError("Give the milestone a name")
+        return value
 
 
 class RoadmapDocument(DocumentModel):
@@ -159,6 +184,7 @@ class RoadmapDocument(DocumentModel):
 
     @model_validator(mode="after")
     def _check_consistency(self) -> Self:
+        self._check_date_range()
         _require_unique((lane.id for lane in self.lanes), "lanes")
         _require_unique((status.id for status in self.statuses), "statuses")
         _require_unique((item.id for item in self.items), "items")
@@ -170,7 +196,29 @@ class RoadmapDocument(DocumentModel):
             _check_item(item, lane_ids, status_ids)
         for milestone in self.milestones:
             _check_milestone(milestone)
+        _check_pis_do_not_overlap(self.timeline)
         return self
+
+    def _check_date_range(self) -> None:
+        _require_in_range("The timeline has a start date", [self.timeline.start])
+        for pi in self.timeline.pis:
+            _require_in_range(f"{pi.name} has a start date", [pi.start])
+        for item in self.items:
+            _require_in_range(f"Item {item.key} has a date", [item.start, item.end])
+        for milestone in self.milestones:
+            noun = "Milestone" if milestone.kind == "milestone" else "Freeze"
+            _require_in_range(
+                f"{noun} “{milestone.name}” has a date",
+                [milestone.date, milestone.start, milestone.end],
+            )
+
+
+def _require_in_range(subject: str, dates: Iterable[dt.date | None]) -> None:
+    if any(date is not None and not DATE_MIN <= date <= DATE_MAX for date in dates):
+        raise ValueError(
+            f"{subject} outside the supported range ({DATE_MIN.isoformat()} to "
+            f"{DATE_MAX.isoformat()})"
+        )
 
 
 def _check_item(item: RoadmapItem, lane_ids: set[str], status_ids: set[str]) -> None:
@@ -192,6 +240,11 @@ def _check_item(item: RoadmapItem, lane_ids: set[str], status_ids: set[str]) -> 
 
 
 def _check_milestone(milestone: Milestone) -> None:
+    has_date = milestone.date is not None
+    has_range = milestone.start is not None or milestone.end is not None
+    # A kind change in the editor must swap date for range in one save, never carry both.
+    if (milestone.kind == "milestone" and has_range) or (milestone.kind == "freeze" and has_date):
+        raise ValueError(f"Milestone “{milestone.name}” can't have both a date and a date range")
     if milestone.kind == "milestone":
         if milestone.date is None:
             raise ValueError(f"Milestone “{milestone.name}” needs a date")
@@ -200,6 +253,17 @@ def _check_milestone(milestone: Milestone) -> None:
         raise ValueError(f"Freeze “{milestone.name}” needs a start and an end date")
     if milestone.end < milestone.start:
         raise ValueError(f"Freeze “{milestone.name}” ends before it starts")
+
+
+def _check_pis_do_not_overlap(timeline: RoadmapTimeline) -> None:
+    """Each PI must start on or after the previous one's end; gaps are allowed (RM-4)."""
+    ordered = sorted(timeline.pis, key=lambda pi: pi.start)
+    for previous, current in pairwise(ordered):
+        previous_end = previous.start + dt.timedelta(
+            days=previous.sprints * timeline.sprint_length_days
+        )
+        if current.start < previous_end:
+            raise ValueError(f"{current.name} starts before {previous.name} ends")
 
 
 # --- Diagram ---------------------------------------------------------------------------

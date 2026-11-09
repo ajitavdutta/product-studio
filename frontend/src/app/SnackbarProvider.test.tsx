@@ -1,4 +1,5 @@
 import { act, fireEvent, render, screen } from '@testing-library/react';
+import Dialog from '@mui/material/Dialog';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   SNACKBAR_DURATION_MS,
@@ -40,6 +41,11 @@ function advance(ms: number) {
   act(() => {
     vi.advanceTimersByTime(ms);
   });
+}
+
+/** True when the element or an ancestor is hidden from screen readers. */
+function hasAriaHiddenAncestor(element: HTMLElement): boolean {
+  return element.closest('[aria-hidden="true"]') !== null;
 }
 
 describe('SnackbarProvider', () => {
@@ -112,5 +118,51 @@ describe('SnackbarProvider', () => {
     vi.spyOn(console, 'error').mockImplementation(() => undefined);
 
     expect(() => render(<Trigger onClick={vi.fn()} />)).toThrow(/inside <SnackbarProvider>/);
+  });
+
+  it('NF-2 a message raised inside an open dialog is not hidden from screen readers', () => {
+    render(
+      <SnackbarProvider>
+        <Dialog open aria-label="Milestones">
+          <Trigger
+            onClick={(api) => {
+              api.error("Couldn't save that change");
+            }}
+          />
+        </Dialog>
+      </SnackbarProvider>,
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: 'Trigger' }));
+
+    expect(hasAriaHiddenAncestor(screen.getByRole('alert'))).toBe(false);
+  });
+
+  it('NF-2 a message shown before a dialog opens is announced again when re-raised', () => {
+    function Harness({ dialogOpen }: { dialogOpen: boolean }) {
+      return (
+        <SnackbarProvider>
+          <Trigger
+            onClick={(api) => {
+              api.notify('Deleted Beta launch');
+            }}
+          />
+          <Dialog open={dialogOpen} aria-label="Milestones">
+            <Trigger
+              onClick={(api) => {
+                api.notify('Deleted Code freeze');
+              }}
+            />
+          </Dialog>
+        </SnackbarProvider>
+      );
+    }
+    const { rerender } = render(<Harness dialogOpen={false} />);
+    fireEvent.click(screen.getByRole('button', { name: 'Trigger' }));
+    rerender(<Harness dialogOpen />);
+
+    fireEvent.click(screen.getByRole('button', { name: 'Trigger' }));
+
+    expect(hasAriaHiddenAncestor(screen.getByText('Deleted Code freeze'))).toBe(false);
   });
 });

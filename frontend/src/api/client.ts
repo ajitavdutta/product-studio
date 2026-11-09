@@ -97,12 +97,18 @@ export async function apiRequest<T>(method: HttpMethod, path: string, body?: unk
 }
 
 /**
- * POST `file` to `/api<path>` as multipart form data in the field `file`, and
- * return the parsed JSON body. Errors behave exactly as in `apiRequest`.
+ * POST `file` to `/api<path>` as multipart form data in the field `file`, plus any extra
+ * text `fields`, and return the parsed JSON body. Errors behave exactly as in `apiRequest`.
  */
-export async function apiUpload<T>(path: string, file: Blob, fileName: string): Promise<T> {
+export async function apiUpload<T>(
+  path: string,
+  file: Blob,
+  fileName: string,
+  fields: Readonly<Record<string, string>> = {},
+): Promise<T> {
   const form = new FormData();
   form.append('file', file, fileName);
+  for (const [name, value] of Object.entries(fields)) form.append(name, value);
   // No Content-Type header: the browser sets the multipart boundary itself.
   return send<T>(path, { method: 'POST', headers: { Accept: 'application/json' }, body: form });
 }

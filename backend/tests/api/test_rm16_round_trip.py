@@ -23,3 +23,21 @@ async def test_RM_16_v0_file_imports_then_downloads_as_v1(client: AsyncClient) -
     downloaded = await client.get(f"/api/roadmaps/{created.json()['id']}/document")
 
     assert (created.status_code, downloaded.json()) == (201, expected)
+
+
+async def test_RM_15_edited_fields_and_synced_at_round_trip(
+    client: AsyncClient, roadmap_example: dict[str, Any]
+) -> None:
+    roadmap_example["items"][0]["editedFields"] = ["title", "start", "end"]
+    roadmap_example["source"]["syncedAt"] = "2026-11-07T09:30:00+05:30"
+    await client.post("/api/roadmaps", json=roadmap_example)
+    roadmap_id = roadmap_example["id"]
+    downloaded = (await client.get(f"/api/roadmaps/{roadmap_id}/document")).json()
+    await client.delete(f"/api/roadmaps/{roadmap_id}")
+
+    reimported = await client.post(
+        "/api/roadmaps/import-json",
+        files={"file": ("plan.json", json.dumps(downloaded).encode(), "application/json")},
+    )
+
+    assert (downloaded, reimported.json()["document"]) == (roadmap_example, roadmap_example)

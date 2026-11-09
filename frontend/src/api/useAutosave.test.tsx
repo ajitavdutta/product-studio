@@ -266,6 +266,23 @@ describe('useAutosave', () => {
     expect(cachedRoadmap(queryClient)).toEqual(roadmapRead(3));
   });
 
+  it('RM-4 rolls back and shows the server reason when a save is rejected as invalid', async () => {
+    const invalid: Handler = () =>
+      Promise.reject(new ApiError(422, 'PI 1 · 2027 starts before PI 4 · 2026 ends'));
+    mockServer([invalid]);
+    const { result, queryClient } = renderAutosave();
+
+    act(() => {
+      result.current.save(rename('Mine'), 'immediate');
+    });
+    await settle();
+
+    expect(screen.getByRole('alert')).toHaveTextContent(
+      "Couldn't save that change: PI 1 · 2027 starts before PI 4 · 2026 ends",
+    );
+    expect(cachedRoadmap(queryClient)).toEqual(roadmapRead(3));
+  });
+
   it('G-2 rejects an op that cannot apply without sending anything', async () => {
     mockServer([saved(4)]);
     const { result } = renderAutosave();
@@ -319,5 +336,41 @@ describe('useAutosave', () => {
     unmount();
 
     expect(useSaveStateStore.getState().state).toBeNull();
+  });
+
+  it('RM-15 replace swaps in the server copy, drops pending text and remounts fields', async () => {
+    mockServer([saved(10)]);
+    const { result, queryClient } = renderAutosave();
+    const synced = roadmapRead(9, { name: 'Synced' });
+
+    act(() => {
+      result.current.save(rename('Typing'), 'text');
+    });
+    act(() => {
+      result.current.replace(synced);
+    });
+    await settle(TEXT_DEBOUNCE_MS);
+
+    expect({
+      cached: cachedRoadmap(queryClient),
+      patches: patchCalls().length,
+      state: result.current.state,
+      reloads: result.current.reloads,
+    }).toEqual({ cached: synced, patches: 0, state: 'saved', reloads: 1 });
+  });
+
+  it('RM-15 the next edit after replace uses the replaced revision', async () => {
+    mockServer([saved(10)]);
+    const { result } = renderAutosave();
+
+    act(() => {
+      result.current.replace(roadmapRead(9));
+    });
+    act(() => {
+      result.current.save(rename('After'), 'immediate');
+    });
+    await settle();
+
+    expect(patchCalls()[0]?.[2]).toEqual({ baseVersion: 9, ops: rename('After') });
   });
 });

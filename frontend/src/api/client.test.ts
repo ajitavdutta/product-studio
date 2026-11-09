@@ -96,7 +96,9 @@ describe('ApiError errors list', () => {
   });
 
   it('RM-16 exposes the server errors list on 422', async () => {
-    const errors = [{ path: '/items/0/end', message: 'Item PAY-142 has an end date before its start date' }];
+    const errors = [
+      { path: '/items/0/end', message: 'Item PAY-142 has an end date before its start date' },
+    ];
     fetchMock.mockResolvedValue(jsonResponse(422, { detail: errors[0]?.message, errors }));
 
     await expect(apiRequest('POST', '/roadmaps/import-json')).rejects.toMatchObject({
@@ -139,6 +141,17 @@ describe('apiUpload', () => {
     }).toEqual({ url: '/api/roadmaps/import-json', method: 'POST', fileName: 'plan.json' });
   });
 
+  it('RM-15 sends extra fields as form fields beside the file', async () => {
+    fetchMock.mockResolvedValue(jsonResponse(201, { id: 'r1' }));
+
+    await apiUpload('/roadmaps/r1/resync', new Blob(['Key']), 'export.csv', {
+      templateId: 'tpl-1',
+    });
+
+    const body = fetchMock.mock.calls[0]?.[1]?.body;
+    expect(body instanceof FormData ? body.get('templateId') : undefined).toBe('tpl-1');
+  });
+
   it('apiUpload throws ApiError status 0 on network failure', async () => {
     fetchMock.mockRejectedValue(new TypeError('Failed to fetch'));
 
@@ -152,9 +165,9 @@ describe('apiUpload', () => {
   it('throws ApiError with the server detail on 413', async () => {
     fetchMock.mockResolvedValue(jsonResponse(413, { detail: 'This file is larger than 20 MB' }));
 
-    await expect(apiUpload('/roadmaps/import-json', new Blob(['x']), 'big.json')).rejects.toMatchObject(
-      { status: 413, detail: 'This file is larger than 20 MB' },
-    );
+    await expect(
+      apiUpload('/roadmaps/import-json', new Blob(['x']), 'big.json'),
+    ).rejects.toMatchObject({ status: 413, detail: 'This file is larger than 20 MB' });
   });
 });
 

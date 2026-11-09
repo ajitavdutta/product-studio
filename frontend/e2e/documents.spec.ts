@@ -1,6 +1,7 @@
 import { expect, test, type APIRequestContext, type TestInfo } from '@playwright/test';
 
 // The ids and names `make seed` loads from docs/examples (run it before these journeys).
+const DEMO_ROADMAP_ID = '0d3c9a52-6f0b-4b7e-8a51-2f1e9c7d6b31';
 const DEMO_ROADMAP_NAME = 'Payments Platform H1 2027';
 const DEMO_ROADMAP_FILE = 'payments-platform-h1-2027.json';
 const DEMO_DIAGRAM_ID = '5b1f6c0e-2c1d-4c8e-9d43-7a1b2f3e4d50';
@@ -38,19 +39,17 @@ test.describe('desktop journeys', () => {
   // These journeys write shared seeded data; run them once, not once per viewport.
   test.skip(({ viewport }) => viewport?.width !== DESKTOP_WIDTH, 'Desktop journey');
 
-  test('G-1 Roadmap nav opens the demo roadmap and shows Saved to payments-platform-h1-2027.json', async ({
+  test('G-1 the demo roadmap shows the main nav and Saved to payments-platform-h1-2027.json', async ({
     page,
   }) => {
-    await page.goto('/');
-    const roadmapLink = page
-      .getByRole('navigation', { name: 'Main' })
-      .getByRole('link', { name: 'Roadmap' });
-    // The link falls back to /import until the roadmap list has loaded.
-    await expect(roadmapLink).toHaveAttribute('href', /^\/roadmaps\//);
-
-    await roadmapLink.click();
+    // Opened by URL, not through the Roadmap link: that link opens the latest roadmap, and
+    // other journeys create roadmaps in parallel.
+    await page.goto(`/roadmaps/${DEMO_ROADMAP_ID}`);
 
     await expect(page.getByRole('heading', { name: DEMO_ROADMAP_NAME })).toBeVisible();
+    await expect(
+      page.getByRole('navigation', { name: 'Main' }).getByRole('link', { name: 'Roadmap' }),
+    ).toHaveAttribute('href', /^\/roadmaps\//);
     await expect(page.getByRole('banner').getByRole('status')).toHaveText(
       `Saved to ${DEMO_ROADMAP_FILE}`,
     );
@@ -123,12 +122,8 @@ test.describe('desktop journeys', () => {
 
 test('G-5 demo roadmap page has no horizontal scroll at 390px', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== 'mobile', 'Mobile-only smoke test');
-  await page.goto('/');
-  const roadmapLink = page
-    .getByRole('navigation', { name: 'Main' })
-    .getByRole('link', { name: 'Roadmap' });
-  await expect(roadmapLink).toHaveAttribute('href', /^\/roadmaps\//);
-  await roadmapLink.click();
+  // By URL: the Roadmap link opens the latest roadmap, which parallel journeys may have made.
+  await page.goto(`/roadmaps/${DEMO_ROADMAP_ID}`);
   await expect(page.getByRole('heading', { name: DEMO_ROADMAP_NAME })).toBeVisible();
 
   const scrollWidth = await page.evaluate(() => document.documentElement.scrollWidth);

@@ -18,6 +18,8 @@ type PatchResult = components['schemas']['PatchResult'];
 type DocumentPatch = components['schemas']['DocumentPatch'];
 
 const CONFLICT_STATUS = 409;
+/** The server rejected the edited document; its `detail` says why in plain language. */
+const INVALID_STATUS = 422;
 const SAVE_FAILED_MESSAGE = "Couldn't save that change";
 const RELOADED_MESSAGE = "Couldn't save — reloaded the latest version";
 
@@ -170,7 +172,8 @@ function createAutosaveEngine({ queryClient, kind, id, notifyError }: EngineDeps
         await (isRetry ? giveUpAndReload() : retryOnFresh(batch));
         return;
       }
-      rollBack();
+      const invalid = error instanceof ApiError && error.status === INVALID_STATUS;
+      rollBack(invalid ? `${SAVE_FAILED_MESSAGE}: ${error.detail}` : SAVE_FAILED_MESSAGE);
     }
   }
 
@@ -232,7 +235,7 @@ function createAutosaveEngine({ queryClient, kind, id, notifyError }: EngineDeps
     publish(true);
   }
 
-  function rollBack(): void {
+  function rollBack(message = SAVE_FAILED_MESSAGE): void {
     const cached = readCache();
     if (cached && confirmed) {
       writeCache({
@@ -243,7 +246,18 @@ function createAutosaveEngine({ queryClient, kind, id, notifyError }: EngineDeps
     }
     dropPending();
     inFlight = false;
-    notifyError(SAVE_FAILED_MESSAGE);
+    notifyError(message);
+    publish(true);
+  }
+
+  /**
+   * Swap in a copy the server already saved by other means (RM-15 re-sync apply): drop
+   * unsent edits, which were made against the old revision, and remount uncontrolled fields.
+   * Callers only do this while nothing is in flight; the Apply button waits for "saved".
+   */
+  function replace(read: DocumentRead): void {
+    dropPending();
+    writeCache(read);
     publish(true);
   }
 
@@ -254,6 +268,7 @@ function createAutosaveEngine({ queryClient, kind, id, notifyError }: EngineDeps
   return {
     save,
     flush,
+    replace,
     subscribe: (listener: () => void) => {
       listeners.add(listener);
       return () => listeners.delete(listener);
@@ -306,6 +321,7 @@ export function useAutosave(kind: DocumentKind, id: string) {
   return {
     save: engine.save,
     flush: engine.flush,
+    replace: engine.replace,
     state: snapshot.state,
     reloads: snapshot.reloads,
   };

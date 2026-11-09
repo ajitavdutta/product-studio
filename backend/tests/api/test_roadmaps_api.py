@@ -208,3 +208,62 @@ async def test_import_json_route_is_not_read_as_an_id(client: AsyncClient) -> No
     response = await client.post("/api/roadmaps/import-json")
 
     assert response.status_code == 422
+
+
+async def test_RM_9_editor_patch_insert_and_remove_milestone(
+    client: AsyncClient, roadmap_example: dict[str, Any]
+) -> None:
+    await client.post("/api/roadmaps", json=roadmap_example)
+    demo = {"id": "ms-demo", "name": "Demo day", "kind": "milestone", "date": "2027-02-10"}
+    url = f"/api/roadmaps/{ROADMAP_ID}"
+
+    insert_op = {"op": "insert", "path": "/milestones", "value": demo}
+
+    inserted = await client.patch(url, json={"baseVersion": 0, "ops": [insert_op]})
+    after_insert = (await client.get(url)).json()["document"]["milestones"]
+    removed = await client.patch(
+        url, json={"baseVersion": 1, "ops": [{"op": "remove", "path": "/milestones/ms-demo"}]}
+    )
+    after_remove = (await client.get(url)).json()["document"]["milestones"]
+    backwards = await client.patch(
+        url,
+        json={
+            "baseVersion": 2,
+            "ops": [{"op": "set", "path": "/milestones/ms-freeze/end", "value": "2027-03-01"}],
+        },
+    )
+
+    assert (
+        inserted.json()["revision"],
+        after_insert[-1],
+        removed.json()["revision"],
+        after_remove,
+        backwards.status_code,
+        backwards.json()["detail"],
+    ) == (
+        1,
+        demo,
+        2,
+        roadmap_example["milestones"],
+        422,
+        "Freeze “Code freeze” ends before it starts",
+    )
+
+
+async def test_NF_3_patch_milestone_year_7_returns_plain_422(
+    client: AsyncClient, roadmap_example: dict[str, Any]
+) -> None:
+    await client.post("/api/roadmaps", json=roadmap_example)
+
+    response = await client.patch(
+        f"/api/roadmaps/{ROADMAP_ID}",
+        json={
+            "baseVersion": 0,
+            "ops": [{"op": "set", "path": "/milestones/ms-beta/date", "value": "0007-11-01"}],
+        },
+    )
+
+    assert (response.status_code, response.json()["detail"]) == (
+        422,
+        "Milestone “Beta launch” has a date outside the supported range (1900-01-01 to 2999-12-31)",
+    )

@@ -1,3 +1,4 @@
+import roadmapExample from '../../../../docs/examples/roadmap.example.json';
 import { screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vitest';
@@ -96,7 +97,8 @@ describe('HomePage', () => {
       revision: 1,
       createdAt: '2026-11-06T09:00:00Z',
       updatedAt: '2026-11-06T09:00:00Z',
-      document: { name: ROADMAP.name } as RoadmapRead['document'],
+      // The editor needs a full document to render.
+      document: { ...(roadmapExample as RoadmapRead['document']), name: ROADMAP.name },
     };
     apiUploadMock.mockResolvedValue(imported);
     renderHome();

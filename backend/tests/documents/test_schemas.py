@@ -1,5 +1,6 @@
 import json
 import logging
+from pathlib import Path
 from typing import Any
 
 import pytest
@@ -199,3 +200,131 @@ def test_lane_min_height_matches_design_tokens() -> None:
         TOKENS["diagram"]["laneMinHeight"],
         TOKENS["diagram"]["minWidth"],
     ) == (LANE_MIN_HEIGHT, MIN_WIDTH)
+
+
+def test_RM_15_edited_fields_round_trip(roadmap_example: dict[str, Any]) -> None:
+    item(roadmap_example, "PAY-142")["editedFields"] = ["start", "end"]
+    roadmap_example["source"]["syncedAt"] = "2026-11-07T09:30:00+05:30"
+
+    dumped = dump_document(RoadmapDocument.model_validate(roadmap_example))
+
+    assert dumped == roadmap_example
+
+
+def test_RM_15_duplicate_edited_field_rejected(roadmap_example: dict[str, Any]) -> None:
+    item(roadmap_example, "PAY-142")["editedFields"] = ["start", "title", "start"]
+
+    assert "Item PAY-142 lists an edited field twice" in roadmap_error(roadmap_example)
+
+
+def test_RM_15_unknown_edited_field_rejected(roadmap_example: dict[str, Any]) -> None:
+    item(roadmap_example, "PAY-142")["editedFields"] = ["notes"]
+
+    with pytest.raises(ValidationError):
+        RoadmapDocument.model_validate(roadmap_example)
+
+
+def test_RM_4_overlapping_pis_rejected(roadmap_example: dict[str, Any]) -> None:
+    # PI 4 · 2026 starts 2026-10-05 with 6 × 14 days, so it ends 2026-12-28.
+    roadmap_example["timeline"]["pis"][1]["start"] = "2026-12-27"
+
+    assert "PI 1 · 2027 starts before PI 4 · 2026 ends" in roadmap_error(roadmap_example)
+
+
+def test_RM_4_overlap_checked_in_start_order(roadmap_example: dict[str, Any]) -> None:
+    pis = roadmap_example["timeline"]["pis"]
+    pis.reverse()
+    pis[0]["start"] = "2027-03-01"  # PI 2 · 2027 now starts inside PI 1 · 2027
+
+    assert "PI 2 · 2027 starts before PI 1 · 2027 ends" in roadmap_error(roadmap_example)
+
+
+def test_RM_4_contiguous_and_gapped_pis_accepted(roadmap_example: dict[str, Any]) -> None:
+    contiguous = RoadmapDocument.model_validate(roadmap_example)
+    roadmap_example["timeline"]["pis"][2]["start"] = "2027-04-05"
+
+    gapped = RoadmapDocument.model_validate(roadmap_example)
+
+    assert (len(contiguous.timeline.pis), len(gapped.timeline.pis)) == (3, 3)
+
+
+@pytest.mark.parametrize("blank_name", ["", "   "])
+def test_RM_9_editor_blank_milestone_name_rejected(
+    roadmap_example: dict[str, Any], blank_name: str
+) -> None:
+    roadmap_example["milestones"][0]["name"] = blank_name
+
+    assert "Give the milestone a name" in roadmap_error(roadmap_example)
+
+
+def test_RM_9_editor_milestone_name_over_120_rejected(roadmap_example: dict[str, Any]) -> None:
+    roadmap_example["milestones"][0]["name"] = "x" * 121
+
+    with pytest.raises(ValidationError):
+        RoadmapDocument.model_validate(roadmap_example)
+
+
+def test_RM_9_editor_milestone_with_range_rejected(roadmap_example: dict[str, Any]) -> None:
+    roadmap_example["milestones"][0]["start"] = "2027-01-10"
+
+    assert "Milestone “Beta launch” can't have both a date and a date range" in roadmap_error(
+        roadmap_example
+    )
+
+
+def test_RM_9_editor_freeze_with_date_rejected(roadmap_example: dict[str, Any]) -> None:
+    roadmap_example["milestones"][2]["date"] = "2027-03-20"
+
+    assert "Milestone “Code freeze” can't have both a date and a date range" in roadmap_error(
+        roadmap_example
+    )
+
+
+def test_RM_4_v1_from_v0_fixture_still_validates() -> None:
+    fixture = json.loads(
+        (Path(__file__).parent / "fixtures" / "roadmap.v1-from-v0.json").read_text("utf-8")
+    )
+
+    assert RoadmapDocument.model_validate(fixture).kind == "roadmap"
+
+
+DATE_RANGE_TEXT = "outside the supported range (1900-01-01 to 2999-12-31)"
+
+
+def test_NF_3_milestone_date_year_7_rejected(roadmap_example: dict[str, Any]) -> None:
+    roadmap_example["milestones"][0]["date"] = "0007-11-01"
+
+    assert f"Milestone “Beta launch” has a date {DATE_RANGE_TEXT}" in roadmap_error(roadmap_example)
+
+
+def test_NF_3_freeze_end_after_2999_rejected(roadmap_example: dict[str, Any]) -> None:
+    roadmap_example["milestones"][2]["end"] = "3000-01-01"
+
+    assert f"Freeze “Code freeze” has a date {DATE_RANGE_TEXT}" in roadmap_error(roadmap_example)
+
+
+def test_NF_3_item_start_out_of_range_rejected(roadmap_example: dict[str, Any]) -> None:
+    item(roadmap_example, "PAY-142")["start"] = "1899-12-31"
+
+    assert f"Item PAY-142 has a date {DATE_RANGE_TEXT}" in roadmap_error(roadmap_example)
+
+
+def test_NF_3_pi_start_out_of_range_rejected(roadmap_example: dict[str, Any]) -> None:
+    roadmap_example["timeline"]["pis"][2]["start"] = "3027-03-22"
+
+    assert f"PI 2 · 2027 has a start date {DATE_RANGE_TEXT}" in roadmap_error(roadmap_example)
+
+
+def test_NF_3_timeline_start_out_of_range_rejected(roadmap_example: dict[str, Any]) -> None:
+    roadmap_example["timeline"]["start"] = "0026-11-01"
+
+    assert f"The timeline has a start date {DATE_RANGE_TEXT}" in roadmap_error(roadmap_example)
+
+
+@pytest.mark.parametrize("boundary", ["1900-01-01", "2999-12-31"])
+def test_NF_3_milestone_on_range_boundary_accepted(
+    roadmap_example: dict[str, Any], boundary: str
+) -> None:
+    roadmap_example["milestones"][0]["date"] = boundary
+
+    assert RoadmapDocument.model_validate(roadmap_example).milestones[0].date is not None
